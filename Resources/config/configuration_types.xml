@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service class="Sts\KafkaBundle\Configuration\RawConfigurations" id="sts_kafka.raw.configurations"/>
+        <service id="Sts\KafkaBundle\Configuration\RawConfigurations" alias="sts_kafka.raw.configurations"/>
+        <service class="Sts\KafkaBundle\Configuration\ConfigurationResolver" id="sts_kafka.configuration.resolver">
+            <argument type="service" id="sts_kafka.raw.configurations"/>
+        </service>
+        <service id="Sts\KafkaBundle\Configuration\ConfigurationResolver" alias="sts_kafka.configuration.resolver"/>
+        <service class="Sts\KafkaBundle\Configuration\Type\Topics" id="sts_kafka.configuration.topics">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\DryRun" id="sts_kafka.configuration.dry.run">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\GroupId" id="sts_kafka.configuration.group.id">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\Brokers" id="sts_kafka.configuration.brokers">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod" id="sts_kafka.configuration.offset.store.method">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\Partition" id="sts_kafka.configuration.partition">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\Offset" id="sts_kafka.configuration.offset">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\Timeout" id="sts_kafka.configuration.timeout">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\AutoOffsetReset" id="sts_kafka.configuration.auto.offset.reset">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\AutoCommitInterval" id="sts_kafka.configuration.auto.commit.interval">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\Decoder" id="sts_kafka.configuration.decoder">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\SchemaRegistry" id="sts_kafka.configuration.schema.registry">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+    </services>
+</container>

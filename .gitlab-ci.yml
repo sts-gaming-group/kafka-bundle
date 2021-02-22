@@ -1,0 +1,38 @@
+cache:
+  key: $CI_COMMIT_REF_SLUG-$CI_PIPELINE_ID
+  paths:
+    - composer.lock
+    - vendor/
+
+stages:
+  - build
+  - lint
+  - unit_tests
+  - functional_tests
+  - phpstan
+
+build:
+  stage: build
+  script:
+    - curl -sS https://getcomposer.org/installer | php
+    - /usr/bin/php7.4 composer.phar install
+
+lint:
+  stage: lint
+  script:
+    - ./vendor/bin/phpcs --standard=PSR2 --ignore=vendor/*,var/*,bin/*,config/* -n . -v
+
+phpstan:
+  stage: phpstan
+  script:
+    - vendor/bin/phpstan analyse
+
+unit_tests:
+  stage: unit_tests
+  script:
+    - /usr/bin/php7.4 ./vendor/bin/simple-phpunit --testsuite unit_tests
+
+functional_tests:
+  stage: functional_tests
+  script:
+    - /usr/bin/php7.4 ./vendor/bin/simple-phpunit --testsuite functional_tests

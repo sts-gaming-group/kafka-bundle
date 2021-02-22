@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service class="Sts\KafkaBundle\Configuration\RawConfigurations" id="sts_kafka.raw.configurations"/>
+        <service id="Sts\KafkaBundle\Configuration\RawConfigurations" alias="sts_kafka.raw.configurations"/>
+        <service class="Sts\KafkaBundle\Configuration\ConfigurationResolver" id="sts_kafka.configuration.resolver">
+            <argument type="service" id="sts_kafka.raw.configurations"/>
+        </service>
+        <service id="Sts\KafkaBundle\Configuration\ConfigurationResolver" alias="sts_kafka.configuration.resolver"/>
+    </services>
+</container>

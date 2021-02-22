@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\ConsumerFactory" id="sts_kafka.rd.kafka.consumer.factory"/>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\ConsumerFactory" alias="sts_kafka.rd.kafka.consumer.factory"/>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
+                 id="sts_kafka.rd.kafka.topic.configuration.factory"/>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
+                 alias="sts_kafka.rd.kafka.topic.configuration.factory"/>
+        <service class="Sts\KafkaBundle\Factory\DecoderFactory" id="sts_kafka.decoder.factory"/>
+        <service id="Sts\KafkaBundle\Factory\DecoderFactory" alias="sts_kafka.decoder.factory"/>
+        <service class="Sts\KafkaBundle\Factory\MessageFactory" id="sts_kafka.message.factory">
+            <argument type="service" id="sts_kafka.decoder.factory"/>
+        </service>
+        <service id="Sts\KafkaBundle\Factory\MessageFactory" alias="sts_kafka.message.factory"/>
+    </services>
+</container>
