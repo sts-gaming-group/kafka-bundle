@@ -44,6 +44,13 @@ class ConfigurationResolver
         return $configurationContainer;
     }
 
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param ConsumerInterface $consumer
+     * @param InputInterface $input
+     * @param array $config
+     * @return mixed
+     */
     private function getValue(
         ConfigurationInterface $configuration,
         ConsumerInterface $consumer,

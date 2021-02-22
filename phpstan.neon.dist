@@ -18,3 +18,12 @@ parameters:
         -
             message: '/expects Symfony\\Component\\Config\\Definition\\ConfigurationInterface/'
             path: DependencyInjection/StsKafkaExtension.php
+        -
+            message: '/Conf::set\(\) expects string/'
+            path: RdKafka/Factory/ConsumerFactory.php
+        -
+            message: '/RdKafka\\Message\|null given/'
+            path: Consumer/Client/ConsumerClient.php
+        -
+            message: '/provide\(\) expects string/'
+            path: Command/ConsumeCommand.php
