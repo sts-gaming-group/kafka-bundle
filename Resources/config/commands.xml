@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service class="Sts\KafkaBundle\Command\ConsumeCommand" id="sts_kafka.consume.command">
+            <tag name="console.command"/>
+            <argument type="service" id="sts_kafka.raw.configurations"/>
+            <argument type="service" id="sts_kafka.consumer.provider"/>
+            <argument type="service" id="sts_kafka.configuration.resolver"/>
+            <argument type="service" id="sts_kafka.consumer.client"/>
+        </service>
+    </services>
+</container>

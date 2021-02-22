@@ -1,0 +1,29 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+parameters:
+    bootstrapFiles:
+        - vendor/bin/.phpunit/phpunit/vendor/autoload.php
+    level: max
+    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: false
+    paths:
+        - %currentWorkingDirectory%
+    excludePaths:
+        - vendor/*
+        - var/*
+        - bin/*
+        - config/*
+    ignoreErrors:
+        -
+            message: '/expects Symfony\\Component\\Config\\Definition\\ConfigurationInterface/'
+            path: DependencyInjection/StsKafkaExtension.php
+        -
+            message: '/Conf::set\(\) expects string/'
+            path: RdKafka/Factory/ConsumerFactory.php
+        -
+            message: '/RdKafka\\Message\|null given/'
+            path: Consumer/Client/ConsumerClient.php
+        -
+            message: '/provide\(\) expects string/'
+            path: Command/ConsumeCommand.php
