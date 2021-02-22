@@ -187,4 +187,11 @@ public function consume(ConfigurationContainer $configuration, Message $message)
 }
 ```
 
+### Debug
+
+You can show current configuration that will be passed to Consumer by adding --describe to command
+```
+bin/console kafka:consumers:consume example_consumer --describe
+```
+
 # To be continued...
