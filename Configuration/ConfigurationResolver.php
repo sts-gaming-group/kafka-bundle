@@ -93,8 +93,8 @@ class ConfigurationResolver
         return array_key_exists($consumer, $config['consumers']) &&
             array_key_exists($configuration, $config['consumers'][$consumer]) &&
             $config['consumers'][$consumer][$configuration] &&
-            null !== $config[$configuration] &&
-            [] !== $config[$configuration];
+            null !== $config['consumers'][$consumer][$configuration] &&
+            [] !== $config['consumers'][$consumer][$configuration];
     }
 
     private function isGlobalConfigurationSet(array $config, string $configuration): bool
