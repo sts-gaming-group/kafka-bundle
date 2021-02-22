@@ -86,6 +86,10 @@ class ConfigurationResolver
 
     private function isConfigurationSetForConsumer(array $config, string $configuration, string $consumer): bool
     {
+        if (!array_key_exists('consumers', $config)) {
+            return false;
+        }
+
         return array_key_exists($consumer, $config['consumers']) &&
             array_key_exists($configuration, $config['consumers'][$consumer]) &&
             $config['consumers'][$consumer][$configuration] &&
