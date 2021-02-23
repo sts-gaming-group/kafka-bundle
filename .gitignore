@@ -8,5 +8,6 @@ phpunit.xml
 #local dev exclude
 .env
 /bin/console
-/DependencyInjection/Kernel.php
+/src/DependencyInjection/Kernel.php
 /config/
+/tests/cache/
