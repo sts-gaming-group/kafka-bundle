@@ -21,12 +21,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Sts\\KafkaBundle\\": ""
+      "Sts\\KafkaBundle\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Sts\\KafkaBundle\\Tests\\": "Tests/"
+      "Sts\\KafkaBundle\\Tests\\": "tests/"
     }
   },
   "require-dev": {

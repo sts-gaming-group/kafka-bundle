@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <imports>
+        <import resource="../../src/Resources/config/"/>
+    </imports>
+
+    <services>
+        <service class="Sts\KafkaBundle\Consumer\ConsumerProvider" id="sts_kafka.consumer.provider" public="true"/>
+        <service class="Sts\KafkaBundle\Tests\Dummy\DummyConsumerOne" id="sts_kafka.test.dummy.consumer.one">
+            <tag name="sts_kafka.kafka.consumer"/>
+        </service>
+        <service class="Sts\KafkaBundle\Tests\Dummy\DummyConsumerTwo" id="sts_kafka.test.dummy.consumer.two">
+            <tag name="sts_kafka.kafka.consumer"/>
+        </service>
+    </services>
+</container>

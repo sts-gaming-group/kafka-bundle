@@ -10,8 +10,8 @@ use Symfony\Component\Console\Input\InputOption;
 class AutoOffsetReset implements ConfigurationInterface
 {
     public const NAME = 'auto_offset_reset';
-    private const SMALLEST = 'smallest';
-    private const LARGEST = 'largest';
+    public const SMALLEST = 'smallest';
+    public const LARGEST = 'largest';
 
     public function getName(): string
     {
