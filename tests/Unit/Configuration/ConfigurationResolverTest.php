@@ -57,6 +57,7 @@ class ConfigurationResolverTest extends TestCase
 
     /**
      * @dataProvider getConsumerConfigurationEmptyValues
+     * @param mixed $emptyValue
      */
     public function testInputEmptyValues($emptyValue): void
     {
@@ -121,6 +122,7 @@ class ConfigurationResolverTest extends TestCase
 
     /**
      * @dataProvider getConsumerConfigurationEmptyValues
+     * @param mixed $emptyValue
      */
     public function testConsumerConfigurationNullValue($emptyValue): void
     {
