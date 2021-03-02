@@ -26,8 +26,10 @@ class EnableAutoOffsetStore implements GlobalConfigurationInterface
 
     public function getDescription(): string
     {
-        return 'Automatically store offset of last message provided to application. 
-            The offset store is an in-memory store of the next offset to (auto-)commit for each partition. 
-            Defaults to true. Must be passed as a string `true` or `false`';
+        return <<<EOT
+        Automatically store offset of last message provided to application. 
+        The offset store is an in-memory store of the next offset to (auto-)commit for each partition. 
+        Defaults to true. Must be passed as a string `true` or `false`
+        EOT;
     }
 }

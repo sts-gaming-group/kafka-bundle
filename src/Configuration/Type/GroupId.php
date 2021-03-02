@@ -28,8 +28,10 @@ class GroupId implements GlobalConfigurationInterface
 
     public function getDescription(): string
     {
-        return 'Client group id string. All clients sharing the same group.id belong to the same group. 
-        Must be a non empty string';
+        return <<<EOT
+        Client group id string. All clients sharing the same group.id belong to the same group. 
+        Must be a non empty string
+        EOT;
     }
 
     public function isValueValid($value): bool

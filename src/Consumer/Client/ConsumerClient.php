@@ -46,7 +46,7 @@ class ConsumerClient
 
     public function consume(ConsumerInterface $consumer, ResolvedConfiguration $resolvedConfiguration): bool
     {
-        $this->checkForRdKafka();
+        $this->isKafkaExtensionLoaded();
 
         $rdKafkaConsumer = $this->consumerFactory->create($resolvedConfiguration);
         $queue = $rdKafkaConsumer->newQueue();

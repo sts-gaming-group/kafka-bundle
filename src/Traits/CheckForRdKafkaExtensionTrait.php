@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Traits;
 
 trait CheckForRdKafkaExtensionTrait
 {
-    public function checkForRdKafka(): void
+    public function isKafkaExtensionLoaded(): void
     {
         if (!extension_loaded('rdkafka')) {
             throw new \RuntimeException('rdkafka extension missing in PHP');

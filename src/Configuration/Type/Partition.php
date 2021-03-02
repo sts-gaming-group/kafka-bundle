@@ -26,8 +26,10 @@ class Partition implements ConfigurationInterface, CastValueInterface
     public function getDescription(): string
     {
         return sprintf(
-            'Which partition consumer should consume from. Defaults to %s. 
-        Must be an integer equal to or greater than 0.',
+            <<<EOT
+        Which partition consumer should consume from. Defaults to %s. 
+        Must be an integer equal to or greater than 0.
+        EOT,
             self::DEFAULT_VALUE
         );
     }

@@ -23,8 +23,10 @@ class RegisterMissingSubjects implements DecoderConfigurationInterface
     public function getDescription(): string
     {
         return sprintf(
-            'If you want to auto-register missing subjects set this to true. Defaults to %s.
-             Refer to flix-tech/avro-serde-php composer package for more information.',
+            <<<EOT
+        If you want to auto-register missing subjects set this to true. Defaults to %s.
+        Refer to flix-tech/avro-serde-php composer package for more information.
+        EOT,
             self::DEFAULT_VALUE
         );
     }

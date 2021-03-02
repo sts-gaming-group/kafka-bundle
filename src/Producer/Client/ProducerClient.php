@@ -21,7 +21,7 @@ class ProducerClient
 
     public function produce(ProducerInterface $producer): bool
     {
-        $this->checkForRdKafka();
+        $this->isKafkaExtensionLoaded();
 
         $resolvedConfiguration = $this->configurationResolver->resolveForProducer($producer);
 

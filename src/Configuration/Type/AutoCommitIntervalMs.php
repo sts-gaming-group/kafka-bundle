@@ -30,8 +30,10 @@ class AutoCommitIntervalMs implements TopicConfigurationInterface
     public function getDescription(): string
     {
         return sprintf(
-            'The frequency in milliseconds that the consumer offsets are auto-committed to Kafka if enable_auto_commit is set to true. 
-            Defaults to %s. Must be a numeric string.',
+            <<<EOT
+            The frequency in milliseconds that the consumer offsets are auto-committed to Kafka.
+            Enable auto commit must be set to true. Defaults to %s. Must be a numeric string.
+            EOT,
             self::DEFAULT_VALUE
         );
     }

@@ -32,10 +32,12 @@ class AutoOffsetReset implements TopicConfigurationInterface
     public function getDescription(): string
     {
         return sprintf(
-            'What to do when there is no initial offset in Kafka or if the current offset does not exist any more on the server (e.g. because that data has been deleted)
-                    Available options: 
-                    %s - automatically reset the offset to the smallest offset, 
-                    %s - automatically reset the offset to the largest offset',
+            <<<EOT
+        What to do when there is no initial offset in Kafka or if the current offset does not exist any more on the server.
+        Available options: 
+        %s - automatically reset the offset to the smallest offset, 
+        %s - automatically reset the offset to the largest offset
+        EOT,
             self::SMALLEST,
             self::LARGEST
         );
