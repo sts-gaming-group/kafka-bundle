@@ -58,6 +58,7 @@ class ResolvedConfiguration
 
         return $topicConfigurations;
     }
+
     public function getGlobalConfigurations(): array
     {
         $globalConfigurations = [];

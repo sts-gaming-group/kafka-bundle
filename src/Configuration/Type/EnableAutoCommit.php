@@ -26,9 +26,11 @@ class EnableAutoCommit implements GlobalConfigurationInterface
 
     public function getDescription(): string
     {
-        return 'If true, periodically commit offset of the last message handed to the application. 
-        This committed offset will be used when the process restarts to pick up where it left off. 
-        If false, the application will have to call rd_kafka_offset_store() to store an offset (optional).
-        Defaults to true. Must be passed as a string `true` or `false`';
+        return <<<EOT
+If true, periodically commit offset of the last message handed to the application. 
+This committed offset will be used when the process restarts to pick up where it left off. 
+If false, the application will have to call rd_kafka_offset_store() to store an offset (optional).
+Defaults to true. Must be passed as a string `true` or `false`
+EOT;
     }
 }

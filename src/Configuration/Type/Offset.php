@@ -37,7 +37,7 @@ class Offset implements ConfigurationInterface, CastValueInterface
 
     public function cast($validatedValue): int
     {
-        return (int)$validatedValue;
+        return (int) $validatedValue;
     }
 
     public static function getDefaultValue(): int

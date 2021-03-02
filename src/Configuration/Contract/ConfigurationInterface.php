@@ -9,7 +9,6 @@ interface ConfigurationInterface
     public function getName(): string;
     public function getMode(): int;
     public function getDescription(): string;
-
     /**
      * @param mixed $value
      * @return bool

@@ -38,6 +38,6 @@ class Timeout implements ConfigurationInterface, CastValueInterface
 
     public function cast($validatedValue): int
     {
-        return (int)$validatedValue;
+        return (int) $validatedValue;
     }
 }

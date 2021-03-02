@@ -40,6 +40,6 @@ class LogLevel implements GlobalConfigurationInterface, CastValueInterface
 
     public function cast($validatedValue): int
     {
-        return (int)$validatedValue;
+        return (int) $validatedValue;
     }
 }

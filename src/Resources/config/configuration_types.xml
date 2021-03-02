@@ -14,7 +14,8 @@
         <service class="Sts\KafkaBundle\Configuration\Type\Brokers" id="sts_kafka.configuration.brokers">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod" id="sts_kafka.configuration.offset.store.method">
+        <service class="Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod"
+                 id="sts_kafka.configuration.offset.store.method">
             <tag name="sts_kafka.configuration.type"/>
         </service>
         <service class="Sts\KafkaBundle\Configuration\Type\Partition" id="sts_kafka.configuration.partition">
@@ -26,10 +27,12 @@
         <service class="Sts\KafkaBundle\Configuration\Type\Timeout" id="sts_kafka.configuration.timeout">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\AutoOffsetReset" id="sts_kafka.configuration.auto.offset.reset">
+        <service class="Sts\KafkaBundle\Configuration\Type\AutoOffsetReset"
+                 id="sts_kafka.configuration.auto.offset.reset">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\AutoCommitIntervalMs" id="sts_kafka.configuration.auto.commit.interval.ms">
+        <service class="Sts\KafkaBundle\Configuration\Type\AutoCommitIntervalMs"
+                 id="sts_kafka.configuration.auto.commit.interval.ms">
             <tag name="sts_kafka.configuration.type"/>
         </service>
         <service class="Sts\KafkaBundle\Configuration\Type\Decoder" id="sts_kafka.configuration.decoder">
@@ -38,19 +41,23 @@
         <service class="Sts\KafkaBundle\Configuration\Type\SchemaRegistry" id="sts_kafka.configuration.schema.registry">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore" id="sts_kafka.configuration.enable.auto.offset.store">
+        <service class="Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore"
+                 id="sts_kafka.configuration.enable.auto.offset.store">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\EnableAutoCommit" id="sts_kafka.configuration.enable.auto.commit">
+        <service class="Sts\KafkaBundle\Configuration\Type\EnableAutoCommit"
+                 id="sts_kafka.configuration.enable.auto.commit">
             <tag name="sts_kafka.configuration.type"/>
         </service>
         <service class="Sts\KafkaBundle\Configuration\Type\LogLevel" id="sts_kafka.configuration.log.level">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas" id="sts_kafka.configuration.register.missing.schemas">
+        <service class="Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas"
+                 id="sts_kafka.configuration.register.missing.schemas">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects" id="sts_kafka.configuration.register.missing.subjects">
+        <service class="Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects"
+                 id="sts_kafka.configuration.register.missing.subjects">
             <tag name="sts_kafka.configuration.type"/>
         </service>
     </services>
