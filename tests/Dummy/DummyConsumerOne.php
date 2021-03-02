@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Tests\Dummy;
 
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
 use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Consumer\Message;
+use Sts\KafkaBundle\RdKafka\Context;
 
 class DummyConsumerOne implements ConsumerInterface
 {
     public const NAME = 'dummy_consumer_one';
 
-    public function consume(ConfigurationContainer $configuration, Message $message): bool
+    public function consume(Message $message, Context $context): bool
     {
-       return true;
+        return true;
     }
 
     public function getName(): string

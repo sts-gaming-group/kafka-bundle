@@ -8,15 +8,14 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\ValidatedConfigurationInterface;
-use Sts\KafkaBundle\Configuration\RawConfigurations;
+use Sts\KafkaBundle\Configuration\RawConfiguration;
 use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Input\InputInterface;
 
 class ConfigurationResolverTest extends TestCase
 {
-    private MockObject $rawConfigurations;
+    private MockObject $rawConfiguration;
     private MockObject $configurationOne;
     private MockObject $configurationTwo;
     private MockObject $consumer;
@@ -24,9 +23,9 @@ class ConfigurationResolverTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->rawConfigurations = $this->createMock(RawConfigurations::class);
+        $this->rawConfiguration = $this->createMock(RawConfiguration::class);
         $this->configurationOne = $this->createMock(ConfigurationInterface::class);
-        $this->configurationTwo = $this->createMock(ValidatedConfigurationInterface::class);
+        $this->configurationTwo = $this->createMock(ConfigurationInterface::class);
         $this->consumer = $this->createMock(ConsumerInterface::class);
         $this->input = $this->createMock(InputInterface::class);
     }
@@ -37,22 +36,22 @@ class ConfigurationResolverTest extends TestCase
             ->method('getName')
             ->willReturn('config_1');
 
-        $this->rawConfigurations->expects($this->exactly(2))
+        $this->configurationOne->expects($this->once())
+            ->method('isValueValid')
+            ->willReturn(true);
+
+        $this->rawConfiguration->expects($this->once())
             ->method('getConfigurations')
             ->willReturn([$this->configurationOne]);
 
         $this->input->expects($this->once())
-            ->method('hasOption')
-            ->willReturn(true);
-
-        $this->input->expects($this->exactly(3))
             ->method('getOption')
             ->willReturn('value_1');
 
-        $configurationResolver = new ConfigurationResolver($this->rawConfigurations, []);
-        $configurationContainer = $configurationResolver->resolve($this->consumer, $this->input);
+        $configurationResolver = new ConfigurationResolver($this->rawConfiguration, []);
+        $configurationContainer = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
 
-        $this->assertEquals('value_1', $configurationContainer->getConfiguration('config_1'));
+        $this->assertEquals('value_1', $configurationContainer->getConfigurationValue('config_1'));
     }
 
     /**
@@ -65,29 +64,30 @@ class ConfigurationResolverTest extends TestCase
             $this->markTestSkipped('Input can still contain an empty string.');
         }
 
-        $this->configurationOne->expects($this->exactly(2))
+        $this->configurationOne->expects($this->once())
             ->method('getName')
             ->willReturn('config_1');
 
-        $this->configurationOne->expects($this->once())
-            ->method('getDefaultValue')
-            ->willReturn('default_value_1');
+        $this->configurationOne->expects($this->never())
+            ->method('isValueValid');
 
-        $this->rawConfigurations->expects($this->exactly(2))
+        $this->configurationOne->expects($this->never())
+            ->method('getDescription');
+
+        $this->rawConfiguration->expects($this->once())
             ->method('getConfigurations')
             ->willReturn([$this->configurationOne]);
 
         $this->input->expects($this->once())
-            ->method('hasOption')
-            ->willReturn(true);
+            ->method('getParameterOption')
+            ->willReturn(false);
 
         $this->input->method('getOption')
             ->willReturn($emptyValue);
 
-        $configurationResolver = new ConfigurationResolver($this->rawConfigurations, []);
-        $configurationContainer = $configurationResolver->resolve($this->consumer, $this->input);
-
-        $this->assertEquals('default_value_1', $configurationContainer->getConfiguration('config_1'));
+        $this->expectException(InvalidConfigurationException::class);
+        $configurationResolver = new ConfigurationResolver($this->rawConfiguration, []);
+        $configurationResolver->resolveForConsumer($this->consumer, $this->input);
     }
 
     public function testConfigurationSetForConsumer(): void
@@ -96,73 +96,34 @@ class ConfigurationResolverTest extends TestCase
             ->method('getName')
             ->willReturn('config_1');
 
-        $this->rawConfigurations->expects($this->exactly(2))
+        $this->rawConfiguration->expects($this->once())
             ->method('getConfigurations')
             ->willReturn([$this->configurationOne]);
 
         $this->input->expects($this->once())
-            ->method('hasOption')
+            ->method('getParameterOption')
             ->willReturn(false);
 
         $this->input->expects($this->never())
             ->method('getOption');
 
         $consumerClass = get_class($this->consumer);
-        $configurationResolver = new ConfigurationResolver($this->rawConfigurations, [
+        $configurationResolver = new ConfigurationResolver($this->rawConfiguration, [
             'consumers' => [
                 $consumerClass => [
                     'config_1' => 'consumer_value_1'
                 ]
             ]
         ]);
-        $configurationContainer = $configurationResolver->resolve($this->consumer, $this->input);
+        $configurationContainer = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
 
-        $this->assertEquals('consumer_value_1', $configurationContainer->getConfiguration('config_1'));
-    }
-
-    /**
-     * @dataProvider getConsumerConfigurationEmptyValues
-     * @param mixed $emptyValue
-     */
-    public function testConsumerConfigurationNullValue($emptyValue): void
-    {
-        $this->configurationOne->expects($this->exactly(2))
-            ->method('getName')
-            ->willReturn('config_1');
-
-        $this->rawConfigurations->expects($this->exactly(2))
-            ->method('getConfigurations')
-            ->willReturn([$this->configurationOne]);
-
-        $this->input->expects($this->once())
-            ->method('hasOption')
-            ->willReturn(false);
-
-        $this->input->expects($this->never())
-            ->method('getOption');
-
-        $this->configurationOne->expects($this->once())
-            ->method('getDefaultValue')
-            ->willReturn('default_value_1');
-
-        $consumerClass = get_class($this->consumer);
-        $configurationResolver = new ConfigurationResolver($this->rawConfigurations, [
-            'consumers' => [
-                $consumerClass => [
-                    'config_1' => $emptyValue
-                ]
-            ]
-        ]);
-        $configurationContainer = $configurationResolver->resolve($this->consumer, $this->input);
-
-        $this->assertEquals('default_value_1', $configurationContainer->getConfiguration('config_1'));
+        $this->assertEquals('consumer_value_1', $configurationContainer->getConfigurationValue('config_1'));
     }
 
     public function getConsumerConfigurationEmptyValues(): array
     {
         return [
             [null],
-            [[]],
             ['']
         ];
     }
@@ -173,74 +134,23 @@ class ConfigurationResolverTest extends TestCase
             ->method('getName')
             ->willReturn('config_1');
 
-        $this->rawConfigurations->expects($this->exactly(2))
+        $this->configurationOne->expects($this->never())
+            ->method('isValueValid');
+
+        $this->rawConfiguration->expects($this->once())
             ->method('getConfigurations')
             ->willReturn([$this->configurationOne]);
 
         $this->input->expects($this->once())
-            ->method('hasOption')
+            ->method('getParameterOption')
             ->willReturn(false);
 
-        $this->input->expects($this->never())
-            ->method('getOption');
-
-        $configurationResolver = new ConfigurationResolver($this->rawConfigurations, [
+        $configurationResolver = new ConfigurationResolver($this->rawConfiguration, [
             'config_1' => 'global_consumer_value_1'
         ]);
 
-        $configurationContainer = $configurationResolver->resolve($this->consumer, $this->input);
+        $configurationContainer = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
 
-        $this->assertEquals('global_consumer_value_1', $configurationContainer->getConfiguration('config_1'));
-    }
-
-    public function testDefaultValue(): void
-    {
-        $this->configurationOne->expects($this->exactly(2))
-            ->method('getName')
-            ->willReturn('config_1');
-
-        $this->rawConfigurations->expects($this->exactly(2))
-            ->method('getConfigurations')
-            ->willReturn([$this->configurationOne]);
-
-        $this->input->expects($this->once())
-            ->method('hasOption')
-            ->willReturn(false);
-
-        $this->input->expects($this->never())
-            ->method('getOption');
-
-        $this->configurationOne->expects($this->once())
-            ->method('getDefaultValue')
-            ->willReturn('default_value_1');
-
-        $configurationResolver = new ConfigurationResolver($this->rawConfigurations, []);
-        $configurationContainer = $configurationResolver->resolve($this->consumer, $this->input);
-
-        $this->assertEquals('default_value_1', $configurationContainer->getConfiguration('config_1'));
-    }
-
-    public function testValidatedConfiguration(): void
-    {
-        $this->configurationTwo->expects($this->exactly(2))
-            ->method('getName')
-            ->willReturn('config_1');
-
-        $this->rawConfigurations->expects($this->exactly(2))
-            ->method('getConfigurations')
-            ->willReturn([$this->configurationTwo]);
-
-        $this->configurationTwo->expects($this->once())
-            ->method('getDefaultValue')
-            ->willReturn('default_value_1');
-
-        $this->configurationTwo->expects($this->once())
-            ->method('validate')
-            ->willReturn(false);
-
-        $this->expectException(InvalidConfigurationException::class);
-
-        $configurationResolver = new ConfigurationResolver($this->rawConfigurations, []);
-        $configurationResolver->resolve($this->consumer, $this->input);
+        $this->assertEquals('global_consumer_value_1', $configurationContainer->getConfigurationValue('config_1'));
     }
 }

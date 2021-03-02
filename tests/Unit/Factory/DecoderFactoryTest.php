@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Tests\Unit\Factory;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Decoder;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Factory\DecoderFactory;
@@ -22,7 +22,7 @@ class DecoderFactoryTest extends TestCase
     {
         $this->decoderOne = $this->createMock(DecoderInterface::class);
         $this->decoderTwo = $this->createMock(DecoderInterface::class);
-        $this->configurationContainer = $this->createMock(ConfigurationContainer::class);
+        $this->configurationContainer = $this->createMock(ResolvedConfiguration::class);
         $this->decoderFactory = new DecoderFactory();
     }
 
@@ -33,7 +33,7 @@ class DecoderFactoryTest extends TestCase
             ->addDecoder($this->decoderTwo);
 
         $this->configurationContainer->expects($this->once())
-            ->method('getConfiguration')
+            ->method('getConfigurationValue')
             ->with(Decoder::NAME)
             ->willReturn($decoderOneClass);
 

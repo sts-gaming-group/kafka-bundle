@@ -7,7 +7,7 @@ namespace Sts\KafkaBundle\Tests\Unit\Factory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Factory\DecoderFactory;
 use Sts\KafkaBundle\Factory\MessageFactory;
@@ -23,7 +23,7 @@ class MessageFactoryTest extends TestCase
     {
         $this->decoder = $this->createMock(DecoderInterface::class);
         $this->decoderFactory = $this->createMock(DecoderFactory::class);
-        $this->configurationContainer = $this->createMock(ConfigurationContainer::class);
+        $this->configurationContainer = $this->createMock(ResolvedConfiguration::class);
         $this->messageFactory = new MessageFactory($this->decoderFactory);
     }
 
