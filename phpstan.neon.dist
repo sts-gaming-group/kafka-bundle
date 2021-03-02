@@ -27,3 +27,9 @@ parameters:
         -
             message: '/MockObject given/'
             path: tests
+        -
+            message: '/cast\(\) should return bool/'
+            path: src/Configuration/Traits/BooleanConfigurationTrait.php
+        -
+            message: '/RecordSerializer constructor expects array<string, mixed>/'
+            path: src/Decoder/AvroDecoder.php
