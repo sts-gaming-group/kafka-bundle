@@ -15,7 +15,7 @@ trait BooleanConfigurationTrait
 
     public function isValueValid($value): bool
     {
-        return in_array($value, ['true', 'false']);
+        return in_array($value, ['true', 'false'], true);
     }
 
     /**
