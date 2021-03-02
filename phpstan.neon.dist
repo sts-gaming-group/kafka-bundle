@@ -20,7 +20,7 @@ parameters:
             path: src/RdKafka/Factory/ConsumerFactory.php
         -
             message: '/RdKafka\\Message\|null given/'
-            path: src/Consumer/Client/ConsumerClient.php
+            path: src/Client/Consumer/ConsumerClient.php
         -
             message: '/provide\(\) expects string/'
             path: src/Command/ConsumeCommand.php
