@@ -10,7 +10,7 @@ use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\TopicConfigurationInterface;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
-class ResolveConfigurationTest extends TestCase
+class ResolvedConfigurationTest extends TestCase
 {
     private MockObject $topicConfigurationOne;
     private MockObject $topicConfigurationTwo;
