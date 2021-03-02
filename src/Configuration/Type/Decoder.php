@@ -40,7 +40,6 @@ class Decoder implements ConfigurationInterface
             return false;
         }
 
-        return class_exists($value) &&
-            in_array(DecoderInterface::class, $classImplements, true);
+        return class_exists($value) && in_array(DecoderInterface::class, $classImplements, true);
     }
 }
