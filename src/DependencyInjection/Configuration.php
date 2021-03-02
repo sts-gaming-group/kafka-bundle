@@ -124,7 +124,7 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->integerNode(Offset::NAME)
-                    ->defaultValue(Offset::DEFAULT_VALUE)
+                    ->defaultValue(Offset::getDefaultValue())
                     ->validate()
                         ->ifTrue(function ($value) use ($types) {
                             return !$types[Offset::class]->isValueValid($value);

@@ -21,9 +21,12 @@ use Sts\KafkaBundle\RdKafka\Factory\ConsumerFactory;
 use Sts\KafkaBundle\RdKafka\Factory\ContextFactory;
 use Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory;
 use Sts\KafkaBundle\RdKafka\NullRdKafkaMessage;
+use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
 class ConsumerClient
 {
+    use CheckForRdKafkaExtensionTrait;
+
     private ConsumerFactory $consumerFactory;
     private TopicConfigurationFactory $topicConfigurationFactory;
     private ContextFactory $kafkaContextFactory;
@@ -43,6 +46,8 @@ class ConsumerClient
 
     public function consume(ConsumerInterface $consumer, ResolvedConfiguration $resolvedConfiguration): bool
     {
+        $this->checkForRdKafka();
+
         $rdKafkaConsumer = $this->consumerFactory->create($resolvedConfiguration);
         $queue = $rdKafkaConsumer->newQueue();
 

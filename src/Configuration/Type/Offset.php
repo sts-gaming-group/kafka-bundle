@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
 class Offset implements ConfigurationInterface, CastValueInterface
 {
     public const NAME = 'offset';
-    public const DEFAULT_VALUE = RD_KAFKA_OFFSET_STORED;
 
     public function getName(): string
     {
@@ -27,7 +26,7 @@ class Offset implements ConfigurationInterface, CastValueInterface
     {
         return sprintf(
             'Offset from which begin consumption in given topic. Defaults to RD_KAFKA_OFFSET_STORED (%s)',
-            self::DEFAULT_VALUE
+            self::getDefaultValue()
         );
     }
 
@@ -39,5 +38,10 @@ class Offset implements ConfigurationInterface, CastValueInterface
     public function cast($validatedValue): int
     {
         return (int)$validatedValue;
+    }
+
+    public static function getDefaultValue(): int
+    {
+        return defined('RD_KAFKA_OFFSET_STORED') ? RD_KAFKA_OFFSET_STORED : -1000;
     }
 }
