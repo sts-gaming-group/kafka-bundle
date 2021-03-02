@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Consumer\Client;
+namespace Sts\KafkaBundle\Client\Consumer;
 
 use RdKafka\Message as RdKafkaMessage;
+use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Offset;
 use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
 use Sts\KafkaBundle\Configuration\Type\Topics;
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Consumer\Contract\KafkaExceptionAwareConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\KafkaExceptionAwareConsumerInterface;
 use Sts\KafkaBundle\Exception\KafkaException;
 use Sts\KafkaBundle\Exception\NullMessageException;
 use Sts\KafkaBundle\Exception\NullPayloadException;
@@ -23,7 +24,7 @@ use Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory;
 use Sts\KafkaBundle\RdKafka\NullRdKafkaMessage;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
-class ConsumerClient
+class ConsumerClient implements ClientInterface
 {
     use CheckForRdKafkaExtensionTrait;
 

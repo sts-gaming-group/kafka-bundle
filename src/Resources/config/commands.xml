@@ -8,9 +8,9 @@
         <service class="Sts\KafkaBundle\Command\ConsumeCommand" id="sts_kafka.consume.command">
             <tag name="console.command"/>
             <argument type="service" id="sts_kafka.raw.configuration"/>
-            <argument type="service" id="sts_kafka.consumer.provider"/>
+            <argument type="service" id="sts_kafka.client.consumer.provider"/>
             <argument type="service" id="sts_kafka.configuration.resolver"/>
-            <argument type="service" id="sts_kafka.consumer.client"/>
+            <argument type="service" id="sts_kafka.client.consumer.client"/>
         </service>
     </services>
 </container>

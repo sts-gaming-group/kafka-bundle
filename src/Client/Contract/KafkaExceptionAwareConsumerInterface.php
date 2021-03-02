@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Consumer\Contract;
+namespace Sts\KafkaBundle\Client\Contract;
 
 use Sts\KafkaBundle\Exception\KafkaException;
 

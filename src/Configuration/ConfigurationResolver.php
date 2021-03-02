@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration;
 
+use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
-use Sts\KafkaBundle\Producer\Contract\ProducerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
 class ConfigurationResolver
@@ -22,27 +23,12 @@ class ConfigurationResolver
         $this->yamlConfig = $yamlConfig;
     }
 
-    public function resolveForConsumer(ConsumerInterface $consumer, InputInterface $input): ResolvedConfiguration
-    {
-        return $this->doResolve($consumer, $input);
-    }
-
-    public function resolveForProducer(ProducerInterface $producer): ResolvedConfiguration
-    {
-        return $this->doResolve($producer);
-    }
-
-    /**
-     * @param ConsumerInterface|ProducerInterface $consumerOrProducer
-     * @param InputInterface|null $input
-     * @return ResolvedConfiguration
-     */
-    private function doResolve($consumerOrProducer, ?InputInterface $input = null): ResolvedConfiguration
+    public function resolve(ClientInterface $client, ?InputInterface $input = null): ResolvedConfiguration
     {
         $resolvedConfiguration = new ResolvedConfiguration();
 
         foreach ($this->rawConfiguration->getConfigurations() as $configuration) {
-            $resolvedValue = $this->getResolvedValue($configuration, $consumerOrProducer, $input);
+            $resolvedValue = $this->getResolvedValue($configuration, $client, $input);
             if ($configuration instanceof CastValueInterface) {
                 $resolvedValue = $configuration->cast($resolvedValue);
             }
@@ -54,17 +40,16 @@ class ConfigurationResolver
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param ConsumerInterface|ProducerInterface $consumerOrProducer
+     * @param ClientInterface $client
      * @param InputInterface|null $input
      * @return mixed
      */
     private function getResolvedValue(
         ConfigurationInterface $configuration,
-        $consumerOrProducer,
+        ClientInterface $client,
         ?InputInterface $input
     ) {
         $name = $configuration->getName();
-        $className = get_class($consumerOrProducer);
 
         if ($input && $input->getParameterOption('--' . $name) !== false) {
             $value = $input->getOption($name);
@@ -80,9 +65,10 @@ class ConfigurationResolver
             return $value;
         }
 
-        if ($consumerOrProducer instanceof ConsumerInterface) {
+
+        if ($client instanceof ConsumerInterface) {
             $configName = 'consumers';
-        } elseif ($consumerOrProducer instanceof ProducerInterface) {
+        } elseif ($client instanceof ProducerInterface) {
             $configName = 'producers';
         } else {
             throw new \RuntimeException(sprintf(
@@ -92,6 +78,7 @@ class ConfigurationResolver
             ));
         }
 
+        $className = get_class($client);
         if (isset($this->yamlConfig[$configName][$className][$name])) {
             return $this->yamlConfig[$configName][$className][$name];
         }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Consumer;
+namespace Sts\KafkaBundle\Client\Consumer;
 
 class Message
 {

@@ -9,13 +9,13 @@
     </imports>
 
     <services>
-        <service class="Sts\KafkaBundle\Consumer\ConsumerProvider" id="sts_kafka.consumer.provider" public="true"/>
+        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client.consumer.provider" public="true"/>
         <service class="Sts\KafkaBundle\Tests\Dummy\DummyConsumerOne" id="sts_kafka.test.dummy.consumer.one">
             <tag name="sts_kafka.kafka.consumer"/>
         </service>
         <service class="Sts\KafkaBundle\Tests\Dummy\DummyConsumerTwo" id="sts_kafka.test.dummy.consumer.two">
             <tag name="sts_kafka.kafka.consumer"/>
         </service>
-        <service class="Sts\KafkaBundle\Consumer\ConsumerProvider" id="sts_kafka.configuration.resolver" public="true"/>
+        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.configuration.resolver" public="true"/>
     </services>
 </container>

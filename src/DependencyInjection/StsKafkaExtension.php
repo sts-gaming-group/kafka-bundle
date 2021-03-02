@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\DependencyInjection;
 
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
@@ -59,7 +59,7 @@ class StsKafkaExtension extends Extension implements CompilerPassInterface
 
     private function addConsumersAndProvider(ContainerBuilder $container): void
     {
-        $providerId = 'sts_kafka.consumer.provider';
+        $providerId = 'sts_kafka.client.consumer.provider';
         if (!$container->has($providerId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find any consumer provider. Looking for service id %s', $providerId)

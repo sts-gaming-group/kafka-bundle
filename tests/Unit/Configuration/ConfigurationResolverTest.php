@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Configuration\RawConfiguration;
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Input\InputInterface;
 
@@ -49,7 +49,7 @@ class ConfigurationResolverTest extends TestCase
             ->willReturn('value_1');
 
         $configurationResolver = new ConfigurationResolver($this->rawConfiguration, []);
-        $resolvedConfiguration = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
+        $resolvedConfiguration = $configurationResolver->resolve($this->consumer, $this->input);
 
         $this->assertEquals('value_1', $resolvedConfiguration->getConfigurationValue('config_1'));
     }
@@ -87,7 +87,7 @@ class ConfigurationResolverTest extends TestCase
 
         $this->expectException(InvalidConfigurationException::class);
         $configurationResolver = new ConfigurationResolver($this->rawConfiguration, []);
-        $configurationResolver->resolveForConsumer($this->consumer, $this->input);
+        $configurationResolver->resolve($this->consumer, $this->input);
     }
 
     public function testConfigurationSetForConsumer(): void
@@ -115,7 +115,7 @@ class ConfigurationResolverTest extends TestCase
                 ]
             ]
         ]);
-        $resolvedConfiguration = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
+        $resolvedConfiguration = $configurationResolver->resolve($this->consumer, $this->input);
 
         $this->assertEquals('consumer_value_1', $resolvedConfiguration->getConfigurationValue('config_1'));
     }
@@ -149,7 +149,7 @@ class ConfigurationResolverTest extends TestCase
             'config_1' => 'global_consumer_value_1'
         ]);
 
-        $resolvedConfiguration = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
+        $resolvedConfiguration = $configurationResolver->resolve($this->consumer, $this->input);
 
         $this->assertEquals('global_consumer_value_1', $resolvedConfiguration->getConfigurationValue('config_1'));
     }

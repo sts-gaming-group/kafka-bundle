@@ -47,9 +47,9 @@ declare(strict_types=1);
 
 namespace App\Consumers;
 
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\RdKafka\Context;
-use Sts\KafkaBundle\Consumer\Message;
+use Sts\KafkaBundle\Client\Consumer\Message;
 
 class ExampleConsumer implements ConsumerInterface
 {

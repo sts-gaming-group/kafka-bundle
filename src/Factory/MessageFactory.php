@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Factory;
 
 use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Consumer\Message;
+use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 
 class MessageFactory

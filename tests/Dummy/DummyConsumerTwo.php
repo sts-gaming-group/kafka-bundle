@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Tests\Dummy;
 
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Consumer\Message;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\RdKafka\Context;
 
 class DummyConsumerTwo implements ConsumerInterface

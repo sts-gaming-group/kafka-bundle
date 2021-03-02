@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Consumer\Traits;
+namespace Sts\KafkaBundle\Client\Traits;
 
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
-use Sts\KafkaBundle\Consumer\Message;
+use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\RdKafka\Context;
 

@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Producer\Client;
+namespace Sts\KafkaBundle\Client\Producer;
 
+use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Producer\Contract\ProducerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
-class ProducerClient
+class ProducerClient implements ClientInterface
 {
     use CheckForRdKafkaExtensionTrait;
 
@@ -23,7 +24,7 @@ class ProducerClient
     {
         $this->isKafkaExtensionLoaded();
 
-        $resolvedConfiguration = $this->configurationResolver->resolveForProducer($producer);
+        $resolvedConfiguration = $this->configurationResolver->resolve($producer);
 
         // todo: SA-4490
 
