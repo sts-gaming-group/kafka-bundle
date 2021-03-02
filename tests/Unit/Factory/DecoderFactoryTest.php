@@ -15,14 +15,14 @@ class DecoderFactoryTest extends TestCase
 {
     private MockObject $decoderOne;
     private MockObject $decoderTwo;
-    private MockObject $configurationContainer;
+    private MockObject $resolvedConfiguration;
     private DecoderFactory $decoderFactory;
 
     protected function setUp(): void
     {
         $this->decoderOne = $this->createMock(DecoderInterface::class);
         $this->decoderTwo = $this->createMock(DecoderInterface::class);
-        $this->configurationContainer = $this->createMock(ResolvedConfiguration::class);
+        $this->resolvedConfiguration = $this->createMock(ResolvedConfiguration::class);
         $this->decoderFactory = new DecoderFactory();
     }
 
@@ -32,14 +32,14 @@ class DecoderFactoryTest extends TestCase
         $this->decoderFactory->addDecoder($this->decoderOne)
             ->addDecoder($this->decoderTwo);
 
-        $this->configurationContainer->expects($this->once())
+        $this->resolvedConfiguration->expects($this->once())
             ->method('getConfigurationValue')
             ->with(Decoder::NAME)
             ->willReturn($decoderOneClass);
 
         $this->assertInstanceOf(
             $decoderOneClass,
-            $this->decoderFactory->create($this->configurationContainer)
+            $this->decoderFactory->create($this->resolvedConfiguration)
         );
     }
 }

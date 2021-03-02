@@ -49,9 +49,9 @@ class ConfigurationResolverTest extends TestCase
             ->willReturn('value_1');
 
         $configurationResolver = new ConfigurationResolver($this->rawConfiguration, []);
-        $configurationContainer = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
+        $resolvedConfiguration = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
 
-        $this->assertEquals('value_1', $configurationContainer->getConfigurationValue('config_1'));
+        $this->assertEquals('value_1', $resolvedConfiguration->getConfigurationValue('config_1'));
     }
 
     /**
@@ -115,9 +115,9 @@ class ConfigurationResolverTest extends TestCase
                 ]
             ]
         ]);
-        $configurationContainer = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
+        $resolvedConfiguration = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
 
-        $this->assertEquals('consumer_value_1', $configurationContainer->getConfigurationValue('config_1'));
+        $this->assertEquals('consumer_value_1', $resolvedConfiguration->getConfigurationValue('config_1'));
     }
 
     public function getConsumerConfigurationEmptyValues(): array
@@ -149,8 +149,8 @@ class ConfigurationResolverTest extends TestCase
             'config_1' => 'global_consumer_value_1'
         ]);
 
-        $configurationContainer = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
+        $resolvedConfiguration = $configurationResolver->resolveForConsumer($this->consumer, $this->input);
 
-        $this->assertEquals('global_consumer_value_1', $configurationContainer->getConfigurationValue('config_1'));
+        $this->assertEquals('global_consumer_value_1', $resolvedConfiguration->getConfigurationValue('config_1'));
     }
 }
