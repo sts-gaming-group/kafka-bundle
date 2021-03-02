@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Decoder;
 
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
+use Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
 use Sts\KafkaBundle\Configuration\Type\SchemaRegistry;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use FlixTech\SchemaRegistryApi\Registry\Cache\AvroObjectCacheAdapter;
@@ -18,10 +20,12 @@ class AvroDecoder implements DecoderInterface
     private ?CachedRegistry $cachedRegistry = null;
     private ?RecordSerializer $recordSerializer = null;
 
-    public function decode(ConfigurationContainer $configuration, string $message): array
+    public function decode(ResolvedConfiguration $resolvedConfiguration, string $message): array
     {
         if (!$this->cachedRegistry) {
-            $client = new Client(['base_uri' => $configuration->getConfiguration(SchemaRegistry::NAME)]);
+            $client = new Client(
+                ['base_uri' => $resolvedConfiguration->getConfigurationValue(SchemaRegistry::NAME)]
+            );
             $this->cachedRegistry = new CachedRegistry(
                 new PromisingRegistry($client),
                 new AvroObjectCacheAdapter()
@@ -32,8 +36,8 @@ class AvroDecoder implements DecoderInterface
             $this->recordSerializer = new RecordSerializer(
                 $this->cachedRegistry,
                 [
-                    RecordSerializer::OPTION_REGISTER_MISSING_SCHEMAS => false,
-                    RecordSerializer::OPTION_REGISTER_MISSING_SUBJECTS => false,
+                    $resolvedConfiguration->getConfigurationValue(RegisterMissingSchemas::NAME),
+                    $resolvedConfiguration->getConfigurationValue(RegisterMissingSubjects::NAME),
                 ]
             );
         }

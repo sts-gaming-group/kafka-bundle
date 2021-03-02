@@ -10,6 +10,7 @@
         <service class="Sts\KafkaBundle\Consumer\Client\ConsumerClient" id="sts_kafka.consumer.client">
             <argument type="service" id="sts_kafka.rd.kafka.consumer.factory"/>
             <argument type="service" id="sts_kafka.rd.kafka.topic.configuration.factory"/>
+            <argument type="service" id="sts_kafka.rd.kafka.context.factory"/>
             <argument type="service" id="sts_kafka.message.factory"/>
         </service>
         <service id="Sts\KafkaBundle\Consumer\Client\ConsumerClient" alias="sts_kafka.consumer.client"/>

@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
-use Sts\KafkaBundle\Configuration\Contract\ValidatedConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class OffsetStoreMethod implements ValidatedConfigurationInterface
+class OffsetStoreMethod implements GlobalConfigurationInterface
 {
     public const BROKER = 'broker';
     public const FILE = 'file';
-
     public const NAME = 'offset_store_method';
+    public const DEFAULT_VALUE = self::BROKER;
 
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    public function getKafkaProperty(): string
+    {
+        return 'offset.store.method';
     }
 
     public function getMode(): int
@@ -28,31 +32,16 @@ class OffsetStoreMethod implements ValidatedConfigurationInterface
     public function getDescription(): string
     {
         return sprintf(
-            'Offset commit store method: 
+            'Offset commit store methods available: 
             - %1$s - local file store (offset.store.path, et.al), 
-            - %2$s - broker commit store (requires Apache Kafka 0.8.2 or later on the broker). Defaults to $2%s',
+            - %2$s - broker commit store (requires Apache Kafka 0.8.2 or later on the broker). Defaults to %2$s',
             self::FILE,
             self::BROKER
         );
     }
 
-    public function validate(ConfigurationContainer $configuration): bool
+    public function isValueValid($value): bool
     {
-        return in_array($configuration->getConfiguration(self::NAME), [self::BROKER, self::FILE], true);
-    }
-
-    public function validationError(ConfigurationContainer $configuration): string
-    {
-        return sprintf(
-            'Store method must be either %s or %s. %s given.',
-            self:: BROKER,
-            self::FILE,
-            $configuration->getConfiguration(self::NAME)
-        );
-    }
-
-    public function getDefaultValue(): string
-    {
-        return self::BROKER;
+        return in_array($value, [self::BROKER, self::FILE], true);
     }
 }

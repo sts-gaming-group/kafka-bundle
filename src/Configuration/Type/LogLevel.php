@@ -5,17 +5,22 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class Partition implements ConfigurationInterface, CastValueInterface
+class LogLevel implements GlobalConfigurationInterface, CastValueInterface
 {
-    public const NAME = 'partition';
-    public const DEFAULT_VALUE = 0;
+    public const NAME = 'log_level';
+    public const DEFAULT_VALUE = LOG_ERR;
 
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    public function getKafkaProperty(): string
+    {
+        return 'log_level';
     }
 
     public function getMode(): int
@@ -25,16 +30,12 @@ class Partition implements ConfigurationInterface, CastValueInterface
 
     public function getDescription(): string
     {
-        return sprintf(
-            'Which partition consumer should consume from. Defaults to %s. 
-        Must be an integer equal to or greater than 0.',
-            self::DEFAULT_VALUE
-        );
+        return sprintf('Logging level (syslog(3) levels). Defaults to LOG_ERR (%s)', self::DEFAULT_VALUE);
     }
 
     public function isValueValid($value): bool
     {
-        return is_numeric($value) && $value >= 0;
+        return is_numeric($value);
     }
 
     public function cast($validatedValue): int

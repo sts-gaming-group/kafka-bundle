@@ -5,17 +5,27 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\RdKafka\Factory\ConsumerFactory" id="sts_kafka.rd.kafka.consumer.factory"/>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\ContextFactory" id="sts_kafka.rd.kafka.context.factory"/>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\ConsumerFactory" id="sts_kafka.rd.kafka.consumer.factory">
+            <argument type="service" id="sts_kafka.rd.kafka.global.configuration.factory"/>
+        </service>
         <service id="Sts\KafkaBundle\RdKafka\Factory\ConsumerFactory" alias="sts_kafka.rd.kafka.consumer.factory"/>
         <service class="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
                  id="sts_kafka.rd.kafka.topic.configuration.factory"/>
         <service id="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
                  alias="sts_kafka.rd.kafka.topic.configuration.factory"/>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory"
+                 id="sts_kafka.rd.kafka.global.configuration.factory"/>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory"
+                 alias="sts_kafka.rd.kafka.global.configuration.factory"/>
+
         <service class="Sts\KafkaBundle\Factory\DecoderFactory" id="sts_kafka.decoder.factory"/>
         <service id="Sts\KafkaBundle\Factory\DecoderFactory" alias="sts_kafka.decoder.factory"/>
         <service class="Sts\KafkaBundle\Factory\MessageFactory" id="sts_kafka.message.factory">
             <argument type="service" id="sts_kafka.decoder.factory"/>
         </service>
         <service id="Sts\KafkaBundle\Factory\MessageFactory" alias="sts_kafka.message.factory"/>
+        <service class="Sts\KafkaBundle\Factory\ValidatorFactory" id="sts_kafka.validator.factory"/>
+        <service id="Sts\KafkaBundle\Factory\ValidatorFactory" alias="sts_kafka.validator.factory"/>
     </services>
 </container>

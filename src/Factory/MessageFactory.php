@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Factory;
 
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Consumer\Message;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 
@@ -19,13 +19,13 @@ class MessageFactory
         $this->decoderFactory = $decoderFactory;
     }
 
-    public function create(RdKafkaMessage $rdKafkaMessage, ConfigurationContainer $configuration): Message
+    public function create(RdKafkaMessage $rdKafkaMessage, ResolvedConfiguration $resolvedConfiguration): Message
     {
         if (!$this->decoder) {
-            $this->decoder = $this->decoderFactory->create($configuration);
+            $this->decoder = $this->decoderFactory->create($resolvedConfiguration);
         }
 
-        $decodedPayload = $this->decoder->decode($configuration, $rdKafkaMessage->payload);
+        $decodedPayload = $this->decoder->decode($resolvedConfiguration, $rdKafkaMessage->payload);
 
         return new Message(
             $rdKafkaMessage->err,

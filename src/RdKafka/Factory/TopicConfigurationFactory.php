@@ -3,19 +3,20 @@
 namespace Sts\KafkaBundle\RdKafka\Factory;
 
 use RdKafka\TopicConf;
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
-use Sts\KafkaBundle\Configuration\Type\AutoCommitInterval;
-use Sts\KafkaBundle\Configuration\Type\AutoOffsetReset;
-use Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class TopicConfigurationFactory
 {
-    public function create(ConfigurationContainer $configuration): TopicConf
+    public function create(ResolvedConfiguration $resolvedConfiguration): TopicConf
     {
         $topicConf = new TopicConf();
-        $topicConf->set('auto.commit.interval.ms', $configuration->getConfiguration(AutoCommitInterval::NAME));
-        $topicConf->set('offset.store.method', $configuration->getConfiguration(OffsetStoreMethod::NAME));
-        $topicConf->set('auto.offset.reset', $configuration->getConfiguration(AutoOffsetReset::NAME));
+
+        foreach ($resolvedConfiguration->getTopicConfigurations() as $topicConfiguration) {
+            $topicConf->set(
+                $topicConfiguration['configuration']->getKafkaProperty(),
+                $topicConfiguration['resolvedValue']
+            );
+        }
 
         return $topicConf;
     }

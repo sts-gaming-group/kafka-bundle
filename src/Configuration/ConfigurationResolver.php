@@ -4,104 +4,107 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration;
 
+use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
-use Sts\KafkaBundle\Configuration\Contract\ValidatedConfigurationInterface;
+use Sts\KafkaBundle\Producer\Contract\ProducerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
 class ConfigurationResolver
 {
-    private RawConfigurations $rawConfigurations;
-    private array $config;
+    private RawConfiguration $rawConfiguration;
+    private array $yamlConfig;
 
-    public function __construct(RawConfigurations $rawConfigurations, array $config)
+    public function __construct(RawConfiguration $rawConfiguration, array $yamlConfig)
     {
-        $this->rawConfigurations = $rawConfigurations;
-        $this->config = $config;
+        $this->rawConfiguration = $rawConfiguration;
+        $this->yamlConfig = $yamlConfig;
     }
 
-    public function resolve(ConsumerInterface $consumer, InputInterface $input): ConfigurationContainer
+    public function resolveForConsumer(ConsumerInterface $consumer, InputInterface $input): ResolvedConfiguration
     {
-        $configurationContainer = new ConfigurationContainer();
+        return $this->doResolve($consumer, $input);
+    }
 
-        foreach ($this->rawConfigurations->getConfigurations() as $configuration) {
-            $name = $configuration->getName();
-            $value = $this->getValue($configuration, $consumer, $input, $this->config);
-            $configurationContainer->addConfiguration($name, $value);
-        }
+    public function resolveForProducer(ProducerInterface $producer): ResolvedConfiguration
+    {
+        return $this->doResolve($producer);
+    }
 
-        foreach ($this->rawConfigurations->getConfigurations() as $configuration) {
-            if ($configuration instanceof ValidatedConfigurationInterface &&
-                !$configuration->validate($configurationContainer)) {
-                throw new InvalidConfigurationException(
-                    $configuration->validationError($configurationContainer) ?:
-                        sprintf('Invalid configuration %s', get_class($configuration))
-                );
+    /**
+     * @param ConsumerInterface|ProducerInterface $consumerOrProducer
+     * @param InputInterface|null $input
+     * @return ResolvedConfiguration
+     */
+    private function doResolve($consumerOrProducer, ?InputInterface $input = null): ResolvedConfiguration
+    {
+        $resolvedConfiguration = new ResolvedConfiguration();
+
+        foreach ($this->rawConfiguration->getConfigurations() as $configuration) {
+            $resolvedValue = $this->getResolvedValue($configuration, $consumerOrProducer, $input);
+            if ($configuration instanceof CastValueInterface) {
+                $resolvedValue = $configuration->cast($resolvedValue);
             }
+            $resolvedConfiguration->addConfiguration($configuration, $resolvedValue);
         }
 
-        return $configurationContainer;
+        return $resolvedConfiguration;
     }
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param ConsumerInterface $consumer
-     * @param InputInterface $input
-     * @param array $config
+     * @param ConsumerInterface|ProducerInterface $consumerOrProducer
+     * @param InputInterface|null $input
      * @return mixed
      */
-    private function getValue(
+    private function getResolvedValue(
         ConfigurationInterface $configuration,
-        ConsumerInterface $consumer,
-        InputInterface $input,
-        array $config
+        $consumerOrProducer,
+        ?InputInterface $input
     ) {
         $name = $configuration->getName();
-        $consumerClass = get_class($consumer);
-        if ($input->hasOption($name) && null !== $input->getOption($name) && [] !== $input->getOption($name)) {
-            return $input->getOption($name);
+        $className = get_class($consumerOrProducer);
+
+        if ($input && $input->getParameterOption('--' . $name) !== false) {
+            $value = $input->getOption($name);
+            if (!$configuration->isValueValid($value)) {
+                throw new InvalidConfigurationException(sprintf(
+                    'Invalid option passed for %s. Passed value `%s`. Configuration description: %s',
+                    $name,
+                    is_array($value) ? implode(', ', $value) : $value,
+                    $configuration->getDescription()
+                ));
+            }
+
+            return $value;
         }
 
-        if ($this->isConfigurationSetForConsumer($config, $name, $consumerClass)) {
-            return $config['consumers'][$consumerClass][$name];
+        if ($consumerOrProducer instanceof ConsumerInterface) {
+            $configName = 'consumers';
+        } elseif ($consumerOrProducer instanceof ProducerInterface) {
+            $configName = 'producers';
+        } else {
+            throw new \RuntimeException(sprintf(
+                'Object must implement %s or %s to properly resolve configuration.',
+                ConsumerInterface::class,
+                ProducerInterface::class
+            ));
         }
 
-        if ($this->isGlobalConfigurationSet($config, $name)) {
-            return $config[$name];
+        if (isset($this->yamlConfig[$configName][$className][$name])) {
+            return $this->yamlConfig[$configName][$className][$name];
         }
 
-        $defaultValue = $configuration->getDefaultValue();
-        if ('' === $defaultValue || [] === $defaultValue) {
-            throw new InvalidConfigurationException(
-                sprintf(
-                    'Set `%s` configuration either in global config, consumer definition or pass it as an option in CLI.',
-                    $name
-                )
-            );
+        if (isset($this->yamlConfig[$name])) {
+            return $this->yamlConfig[$name];
         }
 
-        return $defaultValue;
-    }
-
-    private function isConfigurationSetForConsumer(array $config, string $configuration, string $consumer): bool
-    {
-        if (!array_key_exists('consumers', $config)) {
-            return false;
-        }
-
-        return array_key_exists($consumer, $config['consumers']) &&
-            array_key_exists($configuration, $config['consumers'][$consumer]) &&
-            $config['consumers'][$consumer][$configuration] &&
-            null !== $config['consumers'][$consumer][$configuration] &&
-            [] !== $config['consumers'][$consumer][$configuration];
-    }
-
-    private function isGlobalConfigurationSet(array $config, string $configuration): bool
-    {
-        return array_key_exists($configuration, $config) &&
-            $config[$configuration] &&
-            null !== $config[$configuration] &&
-            [] !== $config[$configuration];
+        throw new InvalidConfigurationException(
+            sprintf(
+                'Set `%s` configuration either in global config, consumer definition or pass it as an option in CLI.',
+                $name
+            )
+        );
     }
 }

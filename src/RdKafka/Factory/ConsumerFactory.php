@@ -2,28 +2,24 @@
 
 namespace Sts\KafkaBundle\RdKafka\Factory;
 
-use RdKafka\Conf;
-use RdKafka\Consumer;
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use RdKafka\Consumer as RdKafkaConsumer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Brokers;
-use Sts\KafkaBundle\Configuration\Type\GroupId;
-use Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod;
 
 class ConsumerFactory
 {
-    public function create(ConfigurationContainer $configuration): Consumer
+    private GlobalConfigurationFactory $globalConfigurationFactory;
+
+    public function __construct(GlobalConfigurationFactory $globalConfigurationFactory)
     {
-        if (!extension_loaded('rdkafka')) {
-            throw new \RuntimeException('rdkafka extension missing in PHP');
-        }
+        $this->globalConfigurationFactory = $globalConfigurationFactory;
+    }
 
-        $conf = new Conf();
-        $conf->set('log_level', LOG_ERR);
-        $conf->set('group.id', $configuration->getConfiguration(GroupId::NAME));
-        $conf->set('offset.store.method', $configuration->getConfiguration(OffsetStoreMethod::NAME));
-
-        $consumer = new Consumer($conf);
-        $consumer->addBrokers(implode(',', $configuration->getConfiguration(Brokers::NAME)));
+    public function create(ResolvedConfiguration $resolvedConfiguration): RdKafkaConsumer
+    {
+        $conf = $this->globalConfigurationFactory->create($resolvedConfiguration);
+        $consumer = new RdKafkaConsumer($conf);
+        $consumer->addBrokers(implode(',', $resolvedConfiguration->getConfigurationValue(Brokers::NAME)));
 
         return $consumer;
     }

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class GroupId implements ConfigurationInterface
+class GroupId implements GlobalConfigurationInterface
 {
     public const NAME = 'group_id';
 
@@ -21,14 +21,19 @@ class GroupId implements ConfigurationInterface
         return InputOption::VALUE_REQUIRED;
     }
 
+    public function getKafkaProperty(): string
+    {
+        return 'group.id';
+    }
+
     public function getDescription(): string
     {
         return 'Client group id string. All clients sharing the same group.id belong to the same group. 
-        Defaults to empty string - must be chosen explicitly.';
+        Must be a non empty string';
     }
 
-    public function getDefaultValue(): string
+    public function isValueValid($value): bool
     {
-        return '';
+        return is_string($value) && '' !== $value;
     }
 }
