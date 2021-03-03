@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Factory;
 
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Decoder;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Exception\InvalidDecoderException;
@@ -23,9 +23,9 @@ class DecoderFactory
         return $this;
     }
 
-    public function create(ConfigurationContainer $configuration): DecoderInterface
+    public function create(ResolvedConfiguration $resolvedConfiguration): DecoderInterface
     {
-        $requiredDecoderClass = $configuration->getConfiguration(Decoder::NAME);
+        $requiredDecoderClass = $resolvedConfiguration->getConfigurationValue(Decoder::NAME);
         foreach ($this->decoders as $decoder) {
             if ($requiredDecoderClass === get_class($decoder)) {
                 return $decoder;

@@ -7,7 +7,7 @@ namespace Sts\KafkaBundle\Configuration;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 
-class RawConfigurations
+class RawConfiguration
 {
     /**
      * @var array<ConfigurationInterface>
@@ -36,16 +36,7 @@ class RawConfigurations
 
     public function getConfigurationByName(string $name): ConfigurationInterface
     {
-        if (array_key_exists($name, $this->configurations)) {
-            return $this->configurations[$name];
-        }
-
-        throw new InvalidConfigurationException(sprintf('Configuration with name %s does not exist.', $name));
-    }
-
-    public function configurationExists(string $name): bool
-    {
-        return array_key_exists($name, $this->configurations);
+        return $this->configurations[$name];
     }
 
     private function validateConfiguration(ConfigurationInterface $configuration): void

@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Decoder\AvroDecoder;
-use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
+use Sts\KafkaBundle\Configuration\Contract\DecoderConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class SchemaRegistry implements ConfigurationInterface
+class SchemaRegistry implements DecoderConfigurationInterface
 {
     public const NAME = 'schema_registry';
+    public const DEFAULT_VALUE = 'localhost';
 
     public function getName(): string
     {
@@ -25,11 +24,14 @@ class SchemaRegistry implements ConfigurationInterface
 
     public function getDescription(): string
     {
-        return 'Schema registry url needed for decoding/encoding messages. Defaults to localhost.';
+        return sprintf(
+            'Schema registry url needed for decoding/encoding messages. Defaults to %s.',
+            self::DEFAULT_VALUE
+        );
     }
 
-    public function getDefaultValue(): string
+    public function isValueValid($value): bool
     {
-        return 'localhost';
+        return is_string($value) && '' !== $value;
     }
 }

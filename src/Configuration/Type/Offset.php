@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
+use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class Offset implements ConfigurationInterface
+class Offset implements ConfigurationInterface, CastValueInterface
 {
     public const NAME = 'offset';
 
@@ -23,11 +24,24 @@ class Offset implements ConfigurationInterface
 
     public function getDescription(): string
     {
-        return 'Offset from which begin consumption in given topic. Defaults to RD_KAFKA_OFFSET_STORED (-1000)';
+        return sprintf(
+            'Offset from which begin consumption in given topic. Defaults to RD_KAFKA_OFFSET_STORED (%s)',
+            self::getDefaultValue()
+        );
     }
 
-    public function getDefaultValue(): int
+    public function isValueValid($value): bool
     {
-        return RD_KAFKA_OFFSET_STORED;
+        return is_numeric($value) && $value > 0;
+    }
+
+    public function cast($validatedValue): int
+    {
+        return (int) $validatedValue;
+    }
+
+    public static function getDefaultValue(): int
+    {
+        return defined('RD_KAFKA_OFFSET_STORED') ? RD_KAFKA_OFFSET_STORED : -1000;
     }
 }

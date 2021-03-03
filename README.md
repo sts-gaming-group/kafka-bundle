@@ -37,7 +37,7 @@ Published versions of this package are available at https://gitlab.sts.pl/tech/k
 	  brokers: ['172.25.0.201:9092']
 	  topics: ['testing.dwh_kafka.tab_tickets_live']
 	  group_id: kafka-bundle-test
-	  schema_registry: http://172.26.0.201:8081
+	  schema_registry: http://172.25.0.201:8081
 	  ```
 3. Create consumer
 ```php
@@ -47,17 +47,17 @@ declare(strict_types=1);
 
 namespace App\Consumers;
 
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
-use Sts\KafkaBundle\Consumer\Message;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\RdKafka\Context;
+use Sts\KafkaBundle\Client\Consumer\Message;
 
 class ExampleConsumer implements ConsumerInterface
 {
 	public const CONSUMER_NAME = 'example_consumer';
 
-    public function consume(ConfigurationContainer $configuration, Message $message): bool
+    public function consume(Message $message, Context $context): bool
     {
-	  // $configuration contains variables like brokers, schema_registry, dry_run etc.
+	  // $context contains resolved configuration, rd kafka consumer object and topics
 	  // $message->getDecodedPayload() contains the actual Kafka payload
 
 	  return true;
@@ -110,13 +110,13 @@ declare(strict_types=1);
 
 namespace App\Decoder;
 
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use App\Decoder\MyCustomDecodedMessage;
 
 class JsonDecoder implements DecoderInterface
 {
-    public function decode(ConfigurationContainer $configuration, string $message): MyCustomDecodedMessage
+    public function decode(ResolvedConfiguration $configuration, string $message): MyCustomDecodedMessage
     {
 	    // $message contains original kafka payload
 		// Message->getDecodedPayload() will contain whatever you return here - there is no defined return type hint on this method
@@ -179,9 +179,9 @@ bin/console kafka:consumers:consume example_consumer --modulo 4
 ```
 You will receive it in consume method and you may take actions accordingly.
 ```php
-public function consume(ConfigurationContainer $configuration, Message $message): bool
+public function consume(Message $message, Context $context): bool
 {
-  $modulo = $configuration->getConfiguration(Modulo::NAME); // 4
+  $modulo = $context->getConfigurationValue(Modulo::NAME); // 4
 
   return true;
 }

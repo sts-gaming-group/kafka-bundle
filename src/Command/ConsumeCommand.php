@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Command;
 
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Configuration\RawConfigurations;
-use Sts\KafkaBundle\Consumer\Client\ConsumerClient;
-use Sts\KafkaBundle\Consumer\ConsumerProvider;
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Configuration\RawConfiguration;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use Sts\KafkaBundle\Client\Consumer\ConsumerClient;
+use Sts\KafkaBundle\Client\Consumer\ConsumerProvider;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,13 +21,13 @@ class ConsumeCommand extends Command
 {
     protected static $defaultName = 'kafka:consumers:consume';
 
-    private RawConfigurations $configurations;
+    private RawConfiguration $configurations;
     private ConsumerProvider $consumerProvider;
     private ConfigurationResolver $configurationResolver;
     private ConsumerClient $consumerClient;
 
     public function __construct(
-        RawConfigurations $configurations,
+        RawConfiguration $configurations,
         ConsumerProvider $consumerProvider,
         ConfigurationResolver $configurationResolver,
         ConsumerClient $consumerClient
@@ -64,20 +64,20 @@ class ConsumeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consumer = $this->consumerProvider->provide($input->getArgument('name'));
-        $configuration = $this->configurationResolver->resolve($consumer, $input);
+        $resolvedConfiguration = $this->configurationResolver->resolve($consumer, $input);
 
         if ($input->getOption('describe')) {
-            $this->describeConsumer($configuration, $output, $consumer);
+            $this->describeConsumer($resolvedConfiguration, $output, $consumer);
 
             return Command::SUCCESS;
         }
-        $this->consumerClient->consume($consumer, $configuration);
+        $this->consumerClient->consume($consumer, $resolvedConfiguration);
 
         return Command::SUCCESS;
     }
 
     private function describeConsumer(
-        ConfigurationContainer $configurations,
+        ResolvedConfiguration $resolvedConfiguration,
         OutputInterface $output,
         ConsumerInterface $consumer
     ): void {
@@ -86,15 +86,16 @@ class ConsumeCommand extends Command
         $table->setStyle('box');
         $values['consumer_name'] = $consumer->getName();
 
-        foreach ($configurations->getConfigurations() as $name => $configuration) {
-            if (is_array($configuration)) {
-                $values[$name] = implode(', ', $configuration);
-            } elseif ($configuration === true) {
+        foreach ($resolvedConfiguration->getConfigurations() as $name => $configuration) {
+            $resolvedValue = $configuration['resolvedValue'];
+            if (is_array($resolvedValue)) {
+                $values[$name] = implode(', ', $resolvedValue);
+            } elseif ($resolvedValue === true) {
                 $values[$name] = 'true';
-            } elseif ($configuration === false) {
+            } elseif ($resolvedValue === false) {
                 $values[$name] = 'false';
             } else {
-                $values[$name] = $configuration;
+                $values[$name] = $resolvedValue;
             }
         }
 

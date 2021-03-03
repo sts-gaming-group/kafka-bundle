@@ -11,3 +11,4 @@ phpunit.xml
 /src/DependencyInjection/Kernel.php
 /config/
 /tests/cache/
+/kafka_config_docs/

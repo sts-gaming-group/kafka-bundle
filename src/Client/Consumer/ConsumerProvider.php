@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Consumer;
+namespace Sts\KafkaBundle\Client\Consumer;
 
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\ConsumerProviderException;
 
 class ConsumerProvider

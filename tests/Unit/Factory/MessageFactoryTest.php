@@ -7,7 +7,7 @@ namespace Sts\KafkaBundle\Tests\Unit\Factory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Configuration\ConfigurationContainer;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Factory\DecoderFactory;
 use Sts\KafkaBundle\Factory\MessageFactory;
@@ -16,14 +16,14 @@ class MessageFactoryTest extends TestCase
 {
     private MockObject $decoder;
     private MockObject $decoderFactory;
-    private MockObject $configurationContainer;
+    private MockObject $resolvedConfiguration;
     private MessageFactory $messageFactory;
 
     protected function setUp(): void
     {
         $this->decoder = $this->createMock(DecoderInterface::class);
         $this->decoderFactory = $this->createMock(DecoderFactory::class);
-        $this->configurationContainer = $this->createMock(ConfigurationContainer::class);
+        $this->resolvedConfiguration = $this->createMock(ResolvedConfiguration::class);
         $this->messageFactory = new MessageFactory($this->decoderFactory);
     }
 
@@ -37,8 +37,8 @@ class MessageFactoryTest extends TestCase
             ->method('decode')
             ->willReturn([]);
 
-        $this->messageFactory->create($this->getRdKafkaMessage(), $this->configurationContainer);
-        $this->messageFactory->create($this->getRdKafkaMessage(), $this->configurationContainer);
+        $this->messageFactory->create($this->getRdKafkaMessage(), $this->resolvedConfiguration);
+        $this->messageFactory->create($this->getRdKafkaMessage(), $this->resolvedConfiguration);
     }
 
     public function testMessageCreated(): void
@@ -51,7 +51,7 @@ class MessageFactoryTest extends TestCase
             ->method('decode')
             ->willReturn(['decoded_payload']);
 
-        $message = $this->messageFactory->create($this->getRdKafkaMessage(), $this->configurationContainer);
+        $message = $this->messageFactory->create($this->getRdKafkaMessage(), $this->resolvedConfiguration);
         $this->assertEquals(0, $message->getError());
         $this->assertEquals('topic', $message->getTopicName());
         $this->assertEquals(123, $message->getTimestamp());

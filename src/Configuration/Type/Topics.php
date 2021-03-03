@@ -10,6 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 class Topics implements ConfigurationInterface
 {
     public const NAME = 'topics';
+    public const DEFAULT_VALUE = [];
 
     public function getName(): string
     {
@@ -26,8 +27,17 @@ class Topics implements ConfigurationInterface
         return 'Consumer topics to read messages from. Defaults to empty array - must be chosen explicitly.';
     }
 
-    public function getDefaultValue(): array
+    public function isValueValid($value): bool
     {
-        return [];
+        if (!is_array($value)) {
+            return false;
+        }
+        foreach ($value as $topic) {
+            if (!is_string($topic) || '' === $topic) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

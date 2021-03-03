@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\DependencyInjection;
 
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
@@ -18,20 +18,19 @@ use Symfony\Component\DependencyInjection\Reference;
 class StsKafkaExtension extends Extension implements CompilerPassInterface
 {
     private const XML_CONFIGS = [
+        'factories',
         'consumers',
         'commands',
-        'factories',
         'configurations',
         'configuration_types',
-        'decoders'
+        'decoders',
+        'producers'
     ];
-
-    private array $config = [];
 
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = $this->getConfiguration($configs, $container);
-        $this->config = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         foreach (self::XML_CONFIGS as $xmlFile) {
@@ -48,7 +47,7 @@ class StsKafkaExtension extends Extension implements CompilerPassInterface
             ->addTag('sts_kafka.decoder');
 
         $configurationResolver = $container->getDefinition('sts_kafka.configuration.resolver');
-        $configurationResolver->setArgument(1, $this->config);
+        $configurationResolver->setArgument(1, $config);
     }
 
     public function process(ContainerBuilder $container): void
@@ -60,7 +59,7 @@ class StsKafkaExtension extends Extension implements CompilerPassInterface
 
     private function addConsumersAndProvider(ContainerBuilder $container): void
     {
-        $providerId = 'sts_kafka.consumer.provider';
+        $providerId = 'sts_kafka.client.consumer.provider';
         if (!$container->has($providerId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find any consumer provider. Looking for service id %s', $providerId)
@@ -76,7 +75,7 @@ class StsKafkaExtension extends Extension implements CompilerPassInterface
 
     private function addConfigurations(ContainerBuilder $container): void
     {
-        $configurationsId = 'sts_kafka.raw.configurations';
+        $configurationsId = 'sts_kafka.raw.configuration';
         if (!$container->has($configurationsId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find configurations class. Looking for service id %s', $configurationsId)

@@ -6,8 +6,8 @@ namespace Sts\KafkaBundle\Tests\Unit\Consumer;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sts\KafkaBundle\Consumer\ConsumerProvider;
-use Sts\KafkaBundle\Consumer\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Consumer\ConsumerProvider;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\ConsumerProviderException;
 
 class ConsumerProviderTest extends TestCase

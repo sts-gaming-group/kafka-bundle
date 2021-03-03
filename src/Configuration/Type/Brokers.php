@@ -23,12 +23,20 @@ class Brokers implements ConfigurationInterface
 
     public function getDescription(): string
     {
-        return 'Comma-separated list of brokers in the format: broker1,broker2 i.e. 172.0.0.1:9092,127.0.0.2:9092. 
-        Defaults to empty string - must be chosen explicitly.';
+        return 'Comma-separated list of brokers in the format: broker1,broker2 i.e. 172.0.0.1:9092,127.0.0.2:9092';
     }
 
-    public function getDefaultValue(): string
+    public function isValueValid($value): bool
     {
-        return '';
+        if (!is_array($value)) {
+            return false;
+        }
+        foreach ($value as $topic) {
+            if (!is_string($topic) || '' === $topic) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
