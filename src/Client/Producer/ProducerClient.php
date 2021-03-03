@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Producer;
 
-use Sts\KafkaBundle\Client\Contract\ClientInterface;
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Client\Contract\ProducerInterface;
+use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
-class ProducerClient implements ClientInterface
+class ProducerClient
 {
     use CheckForRdKafkaExtensionTrait;
 
