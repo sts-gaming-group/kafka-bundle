@@ -69,11 +69,11 @@ class ConsumeCommand extends Command
         if ($input->getOption('describe')) {
             $this->describeConsumer($resolvedConfiguration, $output, $consumer);
 
-            return Command::SUCCESS;
+            return 0;
         }
         $this->consumerClient->consume($consumer, $resolvedConfiguration);
 
-        return Command::SUCCESS;
+        return 0;
     }
 
     private function describeConsumer(
