@@ -12,11 +12,11 @@
   "require": {
     "php": ">=7.4",
     "ext-rdkafka": "*",
-    "symfony/config": "^5.0",
-    "symfony/dependency-injection": "^5.2",
-    "symfony/http-kernel": "^5.2.1",
-    "symfony/console": "5.2.*",
-    "symfony/options-resolver": "^5.2",
+    "symfony/config": "^4.3.3|^5.0",
+    "symfony/dependency-injection": "^4.3.3|^5.2",
+    "symfony/http-kernel": "^4.3|^5.2.1",
+    "symfony/console": "^4.0|5.2.*",
+    "symfony/options-resolver": "~4.3|^5.2",
     "flix-tech/avro-serde-php": "^1.6"
   },
   "autoload": {
