@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
+                 id="sts_kafka.rd.kafka.topic.configuration.factory"/>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
+                 alias="sts_kafka.rd.kafka.topic.configuration.factory"/>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory"
+                 id="sts_kafka.rd.kafka.global.configuration.factory"/>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory"
+                 alias="sts_kafka.rd.kafka.global.configuration.factory"/>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory"
+                 id="sts_kafka.rd.kafka.consumer.queue.factory">
+            <argument type="service" id="sts_kafka.rd.kafka.global.configuration.factory"/>
+            <argument type="service" id="sts_kafka.rd.kafka.topic.configuration.factory"/>
+        </service>
+    </services>
+</container>

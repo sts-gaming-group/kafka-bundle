@@ -6,5 +6,5 @@ namespace Sts\KafkaBundle\Client\Contract;
 
 interface ProducerInterface extends ClientInterface
 {
-    public function getMessage(): string;
+    public function getName(): string;
 }

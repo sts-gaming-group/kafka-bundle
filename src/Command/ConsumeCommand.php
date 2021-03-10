@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Command;
 
+use Sts\KafkaBundle\Client\Consumer\Message;
+use Sts\KafkaBundle\Client\Contract\RetryProducerInterface;
+use Sts\KafkaBundle\Client\Producer\ProducerClient;
+use Sts\KafkaBundle\Client\Producer\ProducerProvider;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\RawConfiguration;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
@@ -25,17 +29,23 @@ class ConsumeCommand extends Command
     private ConsumerProvider $consumerProvider;
     private ConfigurationResolver $configurationResolver;
     private ConsumerClient $consumerClient;
+    private ProducerClient $producerClient;
+    private ProducerProvider $producerProvider;
 
     public function __construct(
         RawConfiguration $configurations,
         ConsumerProvider $consumerProvider,
         ConfigurationResolver $configurationResolver,
-        ConsumerClient $consumerClient
+        ConsumerClient $consumerClient,
+        ProducerClient $producerClient,
+        ProducerProvider $producerProvider
     ) {
         $this->configurations = $configurations;
         $this->consumerProvider = $consumerProvider;
         $this->configurationResolver = $configurationResolver;
         $this->consumerClient = $consumerClient;
+        $this->producerClient = $producerClient;
+        $this->producerProvider = $producerProvider;
 
         parent::__construct();
     }
@@ -63,6 +73,8 @@ class ConsumeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+//        $producer = $this->producerProvider->provide('test_producer');
+//        dumP($producer);
         $consumer = $this->consumerProvider->provide($input->getArgument('name'));
         $resolvedConfiguration = $this->configurationResolver->resolve($consumer, $input);
 

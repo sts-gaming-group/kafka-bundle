@@ -8,9 +8,7 @@
         <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client.consumer.provider"/>
         <service id="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" alias="sts_kafka.client.consumer.provider"/>
         <service class="Sts\KafkaBundle\Client\Consumer\ConsumerClient" id="sts_kafka.client.consumer.client">
-            <argument type="service" id="sts_kafka.rd.kafka.consumer.factory"/>
-            <argument type="service" id="sts_kafka.rd.kafka.topic.configuration.factory"/>
-            <argument type="service" id="sts_kafka.rd.kafka.context.factory"/>
+            <argument type="service" id="sts_kafka.rd.kafka.consumer.queue.factory"/>
             <argument type="service" id="sts_kafka.message.factory"/>
         </service>
         <service id="Sts\KafkaBundle\Client\Consumer\ConsumerClient" alias="sts_kafka.client.consumer.client"/>

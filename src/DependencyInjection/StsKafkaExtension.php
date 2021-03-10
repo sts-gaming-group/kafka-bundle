@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\DependencyInjection;
 
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInterface
 {
     private const XML_CONFIGS = [
+        'rd_kafka_factories',
         'factories',
         'consumers',
         'commands',
@@ -37,6 +39,9 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         $container->registerForAutoconfiguration(ConsumerInterface::class)
             ->addTag('sts_kafka.kafka.consumer');
 
+        $container->registerForAutoconfiguration(ProducerInterface::class)
+            ->addTag('sts_kafka.kafka.producer');
+
         $container->registerForAutoconfiguration(ConfigurationInterface::class)
             ->addTag('sts_kafka.configuration.type');
 
@@ -50,6 +55,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
     public function process(ContainerBuilder $container): void
     {
         $this->addConsumersAndProvider($container);
+        $this->addProducersAndProvider($container);
         $this->addConfigurations($container);
         $this->addDecoders($container);
     }
@@ -67,6 +73,22 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         $consumers = $container->findTaggedServiceIds('sts_kafka.kafka.consumer');
         foreach ($consumers as $id => $tags) {
             $consumerProvider->addMethodCall('addConsumer', [new Reference($id)]);
+        }
+    }
+
+    private function addProducersAndProvider(ContainerBuilder $container): void
+    {
+        $providerId = 'sts_kafka.client.producer.provider';
+        if (!$container->has($providerId)) {
+            throw new InvalidDefinitionException(
+                sprintf('Unable to find any producer provider. Looking for service id %s', $providerId)
+            );
+        }
+
+        $producerProvider = $container->findDefinition($providerId);
+        $producers = $container->findTaggedServiceIds('sts_kafka.kafka.producer');
+        foreach ($producers as $id => $tags) {
+            $producerProvider->addMethodCall('addProducer', [new Reference($id)]);
         }
     }
 
