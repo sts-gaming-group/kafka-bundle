@@ -31,7 +31,6 @@
   },
   "require-dev": {
     "symfony/phpunit-bridge": "^5.2",
-    "symfony/framework-bundle": "^5.2",
     "symfony/dotenv": "5.2.*",
     "phpstan/phpstan": "^0.12.75",
     "phpstan/phpstan-symfony": "^0.12.18",

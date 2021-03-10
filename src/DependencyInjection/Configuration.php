@@ -75,176 +75,72 @@ class Configuration implements ConfigurationInterface
      */
     private function addConfigurations(NodeBuilder $builder)
     {
-        $types = $this->getTypes();
-
         return
             $builder
                 ->scalarNode(AutoCommitIntervalMs::NAME)
                     ->defaultValue(AutoCommitIntervalMs::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[AutoCommitIntervalMs::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[AutoCommitIntervalMs::class]->getDescription())
-                    ->end()
+                    ->cannotBeEmpty()
                 ->end()
                 ->scalarNode(AutoOffsetReset::NAME)
                     ->defaultValue(AutoOffsetReset::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[AutoOffsetReset::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[AutoOffsetReset::class]->getDescription())
-                    ->end()
+                    ->cannotBeEmpty()
                 ->end()
                 ->arrayNode(Brokers::NAME)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[Brokers::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[Brokers::class]->getDescription())
+                    ->defaultValue(Brokers::DEFAULT_VALUE)
+                    ->cannotBeEmpty()
+                    ->scalarPrototype()
+                        ->cannotBeEmpty()
                     ->end()
-                    ->scalarPrototype()->end()
                 ->end()
                 ->scalarNode(Decoder::NAME)
                     ->defaultValue(Decoder::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[Decoder::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[Decoder::class]->getDescription())
-                    ->end()
+                    ->cannotBeEmpty()
                 ->end()
                 ->scalarNode(GroupId::NAME)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[GroupId::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[GroupId::class]->getDescription())
-                    ->end()
+                    ->defaultValue(uniqid('sts_kafka_', true))
+                    ->cannotBeEmpty()
                 ->end()
                 ->integerNode(Offset::NAME)
                     ->defaultValue(Offset::getDefaultValue())
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[Offset::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[Offset::class]->getDescription())
-                    ->end()
                 ->end()
                 ->scalarNode(OffsetStoreMethod::NAME)
                     ->defaultValue(OffsetStoreMethod::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[OffsetStoreMethod::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[OffsetStoreMethod::class]->getDescription())
-                    ->end()
+                    ->cannotBeEmpty()
                 ->end()
                 ->integerNode(Partition::NAME)
                     ->defaultValue(Partition::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[Partition::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[Partition::class]->getDescription())
-                    ->end()
                 ->end()
                 ->scalarNode(SchemaRegistry::NAME)
                     ->defaultValue(SchemaRegistry::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[SchemaRegistry::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[SchemaRegistry::class]->getDescription())
-                    ->end()
+                    ->cannotBeEmpty()
                 ->end()
                 ->integerNode(Timeout::NAME)
                     ->defaultValue(Timeout::DEFAULT_VALUE)
-                        ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[Timeout::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[Timeout::class]->getDescription())
-                    ->end()
                 ->end()
                 ->arrayNode(Topics::NAME)
                     ->defaultValue(Topics::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[Topics::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[Topics::class]->getDescription())
+                    ->cannotBeEmpty()
+                    ->scalarPrototype()
+                        ->cannotBeEmpty()
                     ->end()
-                    ->scalarPrototype()->end()
                 ->end()
-                ->booleanNode(EnableAutoOffsetStore::NAME)
+                ->scalarNode(EnableAutoOffsetStore::NAME)
                     ->defaultValue(EnableAutoOffsetStore::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[EnableAutoOffsetStore::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[EnableAutoOffsetStore::class]->getDescription())
-                    ->end()
+                    ->cannotBeEmpty()
                 ->end()
-                ->booleanNode(EnableAutoCommit::NAME)
+                ->scalarNode(EnableAutoCommit::NAME)
                     ->defaultValue(EnableAutoCommit::DEFAULT_VALUE)
-                    ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[EnableAutoCommit::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[EnableAutoCommit::class]->getDescription())
-                    ->end()
+                    ->cannotBeEmpty()
                 ->end()
                 ->integerNode(LogLevel::NAME)
                     ->defaultValue(LogLevel::DEFAULT_VALUE)
-                        ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[LogLevel::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[LogLevel::class]->getDescription())
-                    ->end()
                 ->end()
                 ->booleanNode(RegisterMissingSchemas::NAME)
                     ->defaultValue(RegisterMissingSchemas::DEFAULT_VALUE)
-                        ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[RegisterMissingSchemas::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[RegisterMissingSchemas::class]->getDescription())
-                    ->end()
                 ->end()
                 ->booleanNode(RegisterMissingSubjects::NAME)
                     ->defaultValue(RegisterMissingSubjects::DEFAULT_VALUE)
-                        ->validate()
-                        ->ifTrue(function ($value) use ($types) {
-                            return !$types[RegisterMissingSubjects::class]->isValueValid($value);
-                        })
-                        ->thenInvalid($types[RegisterMissingSubjects::class]->getDescription())
-                    ->end()
                 ->end()
             ->end();
-    }
-
-    private function getTypes(): array
-    {
-        return [
-            AutoCommitIntervalMs::class => new AutoCommitIntervalMs(),
-            AutoOffsetReset::class => new AutoOffsetReset(),
-            Brokers::class => new Brokers(),
-            Decoder::class => new Decoder(),
-            GroupId::class => new GroupId(),
-            Offset::class => new Offset(),
-            OffsetStoreMethod::class => new OffsetStoreMethod(),
-            Partition::class => new Partition(),
-            SchemaRegistry::class => new SchemaRegistry(),
-            Timeout::class => new Timeout(),
-            Topics::class => new Topics(),
-            EnableAutoOffsetStore::class => new EnableAutoOffsetStore(),
-            EnableAutoCommit::class => new EnableAutoCommit(),
-            LogLevel::class => new LogLevel(),
-            RegisterMissingSchemas::class => new RegisterMissingSchemas(),
-            RegisterMissingSubjects::class => new RegisterMissingSubjects()
-        ];
     }
 }

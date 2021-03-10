@@ -11,11 +11,11 @@ use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-class StsKafkaExtension extends Extension implements CompilerPassInterface
+class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInterface
 {
     private const XML_CONFIGS = [
         'factories',
@@ -27,11 +27,8 @@ class StsKafkaExtension extends Extension implements CompilerPassInterface
         'producers'
     ];
 
-    public function load(array $configs, ContainerBuilder $container): void
+    public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $configuration = $this->getConfiguration($configs, $container);
-        $config = $this->processConfiguration($configuration, $configs);
-
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         foreach (self::XML_CONFIGS as $xmlFile) {
             $loader->load(sprintf($xmlFile . '.xml'));
@@ -47,7 +44,7 @@ class StsKafkaExtension extends Extension implements CompilerPassInterface
             ->addTag('sts_kafka.decoder');
 
         $configurationResolver = $container->getDefinition('sts_kafka.configuration.resolver');
-        $configurationResolver->setArgument(1, $config);
+        $configurationResolver->setArgument(1, $mergedConfig);
     }
 
     public function process(ContainerBuilder $container): void
