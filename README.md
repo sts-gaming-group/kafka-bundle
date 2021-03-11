@@ -167,7 +167,12 @@ class Modulo implements ConfigurationInterface
 	  return 'My awesome modulo configuration';
 	}
 
-    public function getDefaultValue(): int
+    public function isValueValid($value): bool
+    {
+        return is_int($value);
+    }
+
+    public static function getDefaultValue(): int
     {
 	  return 0;
     }
