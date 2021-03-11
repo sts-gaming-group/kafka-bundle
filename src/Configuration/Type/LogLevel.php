@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
 class LogLevel implements GlobalConfigurationInterface, CastValueInterface
 {
     public const NAME = 'log_level';
-    public const DEFAULT_VALUE = LOG_ERR;
 
     public function getName(): string
     {
@@ -30,7 +29,10 @@ class LogLevel implements GlobalConfigurationInterface, CastValueInterface
 
     public function getDescription(): string
     {
-        return sprintf('Logging level (syslog(3) levels). Defaults to LOG_ERR (%s)', self::DEFAULT_VALUE);
+        return sprintf(
+            'Logging level (syslog(3) levels). Defaults to LOG_ERR (%s)',
+            self::getDefaultValue()
+        );
     }
 
     public function isValueValid($value): bool
@@ -41,5 +43,10 @@ class LogLevel implements GlobalConfigurationInterface, CastValueInterface
     public function cast($validatedValue): int
     {
         return (int) $validatedValue;
+    }
+
+    public static function getDefaultValue(): int
+    {
+        return LOG_ERR;
     }
 }

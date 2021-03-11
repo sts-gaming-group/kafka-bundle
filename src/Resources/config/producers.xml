@@ -5,6 +5,8 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service class="Sts\KafkaBundle\Client\Producer\ProducerProvider" id="sts_kafka.client.producer.provider"/>
+        <service id="Sts\KafkaBundle\Client\Producer\ProducerProvider" alias="sts_kafka.client.producer.provider"/>
         <service class="Sts\KafkaBundle\Client\Producer\ProducerClient" id="sts_kafka.client.producer.client">
             <argument type="service" id="sts_kafka.configuration.resolver"/>
         </service>

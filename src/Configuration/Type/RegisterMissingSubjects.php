@@ -13,7 +13,6 @@ class RegisterMissingSubjects implements DecoderConfigurationInterface
     use BooleanConfigurationTrait;
 
     public const NAME = RecordSerializer::OPTION_REGISTER_MISSING_SUBJECTS;
-    public const DEFAULT_VALUE = false;
 
     public function getName(): string
     {
@@ -27,7 +26,12 @@ class RegisterMissingSubjects implements DecoderConfigurationInterface
         If you want to auto-register missing subjects set this to true. Defaults to %s.
         Refer to flix-tech/avro-serde-php composer package for more information.
         EOT,
-            self::DEFAULT_VALUE
+            self::getDefaultValue()
         );
+    }
+
+    public static function getDefaultValue(): bool
+    {
+        return false;
     }
 }

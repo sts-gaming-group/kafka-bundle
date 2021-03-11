@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 class Topics implements ConfigurationInterface
 {
     public const NAME = 'topics';
-    public const DEFAULT_VALUE = [];
 
     public function getName(): string
     {
@@ -39,5 +38,10 @@ class Topics implements ConfigurationInterface
         }
 
         return true;
+    }
+
+    public static function getDefaultValue(): array
+    {
+        return ['topic_1', 'topic_2'];
     }
 }

@@ -53,7 +53,7 @@ use Sts\KafkaBundle\Client\Consumer\Message;
 
 class ExampleConsumer implements ConsumerInterface
 {
-	public const CONSUMER_NAME = 'example_consumer';
+    public const CONSUMER_NAME = 'example_consumer';
 
     public function consume(Message $message, Context $context): bool
     {
@@ -83,16 +83,16 @@ bin/console kafka:consumers:consume example_consumer --group_id some_other_group
 This allows you to scale one Consumer object with different configurations.
 If you have many consumers in one application you can also define configuration per consumer basis in sts_kafka.yaml - for example:
 ```yaml
-	sts_kafka:
-	  brokers: ['172.25.0.201:9092']
-	  schema_registry: http://172.26.0.201:8081
-	  consumers:
-		  App\ExampleConsumer:
-			  topics: ['testing.dwh_kafka.tab_tickets_live']
-			  group_id: group_1
-		  App\ExampleConsumerTwo:
-			  topics: ['testing.dwh_kafka.tab_tickets_prematch']
-			  group_id: group_2
+sts_kafka:
+  brokers: ['172.25.0.201:9092']
+  schema_registry: http://172.26.0.201:8081
+   consumers:
+     App\ExampleConsumer:
+	   topics: ['testing.dwh_kafka.tab_tickets_live']
+	   group_id: group_1
+	 App\ExampleConsumerTwo:
+	   topics: ['testing.dwh_kafka.tab_tickets_prematch']
+	   group_id: group_2
 ```
 
 The configurations are resolved in runtime. The priority is as follows:
@@ -118,8 +118,8 @@ class JsonDecoder implements DecoderInterface
 {
     public function decode(ResolvedConfiguration $configuration, string $message): MyCustomDecodedMessage
     {
-	    // $message contains original kafka payload
-		// Message->getDecodedPayload() will contain whatever you return here - there is no defined return type hint on this method
+	  // $message contains original kafka payload
+	  // Message->getDecodedPayload() will contain whatever you return here - there is no defined return type hint on this method
     }
 }
 ```
@@ -127,8 +127,8 @@ class JsonDecoder implements DecoderInterface
 And register it in your configuration
 ```yaml
 sts_kafka:
-	decoder: App\Decoder\JsonDecoder
-	...
+  decoder: App\Decoder\JsonDecoder
+  ...
 ```
 or in CLI
 ```
@@ -167,7 +167,12 @@ class Modulo implements ConfigurationInterface
 	  return 'My awesome modulo configuration';
 	}
 
-    public function getDefaultValue(): int
+    public function isValueValid($value): bool
+    {
+        return is_int($value);
+    }
+
+    public static function getDefaultValue(): int
     {
 	  return 0;
     }

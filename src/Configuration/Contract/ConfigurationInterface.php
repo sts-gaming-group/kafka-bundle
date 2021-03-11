@@ -14,4 +14,9 @@ interface ConfigurationInterface
      * @return bool
      */
     public function isValueValid($value): bool;
+
+    /**
+     * @return mixed
+     */
+    public static function getDefaultValue();
 }

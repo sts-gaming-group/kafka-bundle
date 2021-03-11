@@ -25,8 +25,6 @@ class ProducerClient
 
         $resolvedConfiguration = $this->configurationResolver->resolve($producer);
 
-        // todo: SA-4490
-
         return true;
     }
 }

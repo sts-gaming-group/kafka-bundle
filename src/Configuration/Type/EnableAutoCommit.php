@@ -12,7 +12,6 @@ class EnableAutoCommit implements GlobalConfigurationInterface
     use BooleanConfigurationTrait;
 
     public const NAME = 'enable_auto_commit';
-    public const DEFAULT_VALUE = 'true';
 
     public function getName(): string
     {
@@ -32,5 +31,10 @@ class EnableAutoCommit implements GlobalConfigurationInterface
         If false, the application will have to call rd_kafka_offset_store() to store an offset (optional).
         Defaults to true. Must be passed as a string `true` or `false`
         EOT;
+    }
+
+    public static function getDefaultValue(): string
+    {
+        return 'true';
     }
 }

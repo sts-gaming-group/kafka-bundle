@@ -12,7 +12,6 @@ class OffsetStoreMethod implements GlobalConfigurationInterface
     public const BROKER = 'broker';
     public const FILE = 'file';
     public const NAME = 'offset_store_method';
-    public const DEFAULT_VALUE = self::BROKER;
 
     public function getName(): string
     {
@@ -43,5 +42,10 @@ class OffsetStoreMethod implements GlobalConfigurationInterface
     public function isValueValid($value): bool
     {
         return in_array($value, [self::BROKER, self::FILE], true);
+    }
+
+    public static function getDefaultValue(): string
+    {
+        return self::BROKER;
     }
 }

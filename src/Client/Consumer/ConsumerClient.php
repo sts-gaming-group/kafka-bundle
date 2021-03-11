@@ -8,18 +8,13 @@ use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Client\Contract\KafkaExceptionAwareConsumerInterface;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Configuration\Type\Offset;
-use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
-use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\Exception\KafkaException;
 use Sts\KafkaBundle\Exception\NullMessageException;
 use Sts\KafkaBundle\Exception\NullPayloadException;
 use Sts\KafkaBundle\Factory\MessageFactory;
 use Sts\KafkaBundle\RdKafka\Context;
-use Sts\KafkaBundle\RdKafka\Factory\ConsumerFactory;
-use Sts\KafkaBundle\RdKafka\Factory\ContextFactory;
-use Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory;
+use Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory;
 use Sts\KafkaBundle\RdKafka\NullRdKafkaMessage;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
@@ -27,20 +22,12 @@ class ConsumerClient
 {
     use CheckForRdKafkaExtensionTrait;
 
-    private ConsumerFactory $consumerFactory;
-    private TopicConfigurationFactory $topicConfigurationFactory;
-    private ContextFactory $kafkaContextFactory;
+    private ConsumerQueueFactory $consumerQueueFactory;
     private MessageFactory $messageFactory;
 
-    public function __construct(
-        ConsumerFactory $consumerFactory,
-        TopicConfigurationFactory $topicConfigurationFactory,
-        ContextFactory $kafkaContextFactory,
-        MessageFactory $messageFactory
-    ) {
-        $this->consumerFactory = $consumerFactory;
-        $this->topicConfigurationFactory = $topicConfigurationFactory;
-        $this->kafkaContextFactory = $kafkaContextFactory;
+    public function __construct(ConsumerQueueFactory $consumerQueueFactory, MessageFactory $messageFactory)
+    {
+        $this->consumerQueueFactory = $consumerQueueFactory;
         $this->messageFactory = $messageFactory;
     }
 
@@ -48,21 +35,9 @@ class ConsumerClient
     {
         $this->isKafkaExtensionLoaded();
 
-        $rdKafkaConsumer = $this->consumerFactory->create($resolvedConfiguration);
-        $queue = $rdKafkaConsumer->newQueue();
+        $context = new Context($resolvedConfiguration);
+        $queue = $this->consumerQueueFactory->create($resolvedConfiguration, $context);
 
-        foreach ($resolvedConfiguration->getConfigurationValue(Topics::NAME) as $topicName) {
-            $rdKafkaTopicConf = $this->topicConfigurationFactory->create($resolvedConfiguration);
-            $rdKafkaConsumerTopic = $rdKafkaConsumer->newTopic($topicName, $rdKafkaTopicConf);
-            $rdKafkaConsumerTopic->consumeQueueStart(
-                $resolvedConfiguration->getConfigurationValue(Partition::NAME),
-                $resolvedConfiguration->getConfigurationValue(Offset::NAME),
-                $queue
-            );
-            $this->kafkaContextFactory->addTopic($rdKafkaConsumerTopic);
-        }
-
-        $context = $this->kafkaContextFactory->create($rdKafkaConsumer, $resolvedConfiguration);
         while (true) {
             try {
                 $rdKafkaMessage = $queue->consume($resolvedConfiguration->getConfigurationValue(Timeout::NAME));

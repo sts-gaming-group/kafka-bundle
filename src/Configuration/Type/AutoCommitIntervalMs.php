@@ -34,12 +34,17 @@ class AutoCommitIntervalMs implements TopicConfigurationInterface
             The frequency in milliseconds that the consumer offsets are auto-committed to Kafka.
             Enable auto commit must be set to true. Defaults to %s. Must be a numeric string.
             EOT,
-            self::DEFAULT_VALUE
+            self::getDefaultValue()
         );
     }
 
     public function isValueValid($value): bool
     {
         return is_numeric($value) && is_string($value);
+    }
+
+    public static function getDefaultValue(): string
+    {
+        return '1000';
     }
 }

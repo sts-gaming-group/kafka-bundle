@@ -39,4 +39,9 @@ class Brokers implements ConfigurationInterface
 
         return true;
     }
+
+    public static function getDefaultValue(): array
+    {
+        return ['127.0.0.1', '127.0.0.2'];
+    }
 }

@@ -38,4 +38,9 @@ class GroupId implements GlobalConfigurationInterface
     {
         return is_string($value) && '' !== $value;
     }
+
+    public static function getDefaultValue(): string
+    {
+        return 'sts_kafka';
+    }
 }
