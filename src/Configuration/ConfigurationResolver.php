@@ -65,7 +65,6 @@ class ConfigurationResolver
             return $value;
         }
 
-
         if ($client instanceof ConsumerInterface) {
             $configName = 'consumers';
         } elseif ($client instanceof ProducerInterface) {
@@ -79,7 +78,8 @@ class ConfigurationResolver
         }
 
         $className = get_class($client);
-        if (isset($this->yamlConfig[$configName][$className][$name])) {
+        if (isset($this->yamlConfig[$configName][$className][$name]) &&
+            $this->yamlConfig[$configName][$className][$name] !== $configuration::getDefaultValue()) {
             return $this->yamlConfig[$configName][$className][$name];
         }
 

@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 class SchemaRegistry implements DecoderConfigurationInterface
 {
     public const NAME = 'schema_registry';
-    public const DEFAULT_VALUE = 'localhost';
 
     public function getName(): string
     {
@@ -26,12 +25,17 @@ class SchemaRegistry implements DecoderConfigurationInterface
     {
         return sprintf(
             'Schema registry url needed for decoding/encoding messages. Defaults to %s.',
-            self::DEFAULT_VALUE
+            self::getDefaultValue()
         );
     }
 
     public function isValueValid($value): bool
     {
         return is_string($value) && '' !== $value;
+    }
+
+    public static function getDefaultValue(): string
+    {
+        return '127.0.0.1';
     }
 }

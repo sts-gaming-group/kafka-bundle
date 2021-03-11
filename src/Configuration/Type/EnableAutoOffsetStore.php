@@ -12,7 +12,6 @@ class EnableAutoOffsetStore implements GlobalConfigurationInterface
     use BooleanConfigurationTrait;
 
     public const NAME = 'enable_auto_offset_store';
-    public const DEFAULT_VALUE = true;
 
     public function getName(): string
     {
@@ -31,5 +30,10 @@ class EnableAutoOffsetStore implements GlobalConfigurationInterface
         The offset store is an in-memory store of the next offset to (auto-)commit for each partition. 
         Defaults to true. Must be passed as a string `true` or `false`
         EOT;
+    }
+
+    public static function getDefaultValue(): string
+    {
+        return 'true';
     }
 }

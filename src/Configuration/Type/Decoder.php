@@ -12,7 +12,6 @@ use Symfony\Component\Console\Input\InputOption;
 class Decoder implements ConfigurationInterface
 {
     public const NAME = 'decoder';
-    public const DEFAULT_VALUE = AvroDecoder::class;
 
     public function getName(): string
     {
@@ -28,7 +27,7 @@ class Decoder implements ConfigurationInterface
     {
         return sprintf(
             'Which decoder to use. Currently only %s available. You can also create custom Decoder by implementing %s',
-            self::DEFAULT_VALUE,
+            self::getDefaultValue(),
             DecoderInterface::class
         );
     }
@@ -41,5 +40,10 @@ class Decoder implements ConfigurationInterface
         }
 
         return class_exists($value) && in_array(DecoderInterface::class, $classImplements, true);
+    }
+
+    public static function getDefaultValue(): string
+    {
+        return AvroDecoder::class;
     }
 }

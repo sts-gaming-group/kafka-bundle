@@ -12,7 +12,6 @@ class AutoOffsetReset implements TopicConfigurationInterface
     public const NAME = 'auto_offset_reset';
     public const SMALLEST = 'smallest';
     public const LARGEST = 'largest';
-    public const DEFAULT_VALUE = self::SMALLEST;
 
     public function getName(): string
     {
@@ -46,5 +45,10 @@ class AutoOffsetReset implements TopicConfigurationInterface
     public function isValueValid($value): bool
     {
         return in_array($value, [self::SMALLEST, self::LARGEST], true);
+    }
+
+    public static function getDefaultValue(): string
+    {
+        return self::SMALLEST;
     }
 }

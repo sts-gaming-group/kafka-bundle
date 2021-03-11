@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
 class Timeout implements ConfigurationInterface, CastValueInterface
 {
     public const NAME = 'timeout';
-    public const DEFAULT_VALUE = 1000;
 
     public function getName(): string
     {
@@ -27,7 +26,7 @@ class Timeout implements ConfigurationInterface, CastValueInterface
     {
         return sprintf(
             'Maximum amount of time to wait for a message to be received. Defaults to %s ms.',
-            self::DEFAULT_VALUE
+            self::getDefaultValue()
         );
     }
 
@@ -39,5 +38,10 @@ class Timeout implements ConfigurationInterface, CastValueInterface
     public function cast($validatedValue): int
     {
         return (int) $validatedValue;
+    }
+
+    public static function getDefaultValue(): int
+    {
+        return 1000;
     }
 }

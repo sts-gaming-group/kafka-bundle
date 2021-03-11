@@ -11,7 +11,6 @@ use Symfony\Component\Console\Input\InputOption;
 class Partition implements ConfigurationInterface, CastValueInterface
 {
     public const NAME = 'partition';
-    public const DEFAULT_VALUE = 0;
 
     public function getName(): string
     {
@@ -30,7 +29,7 @@ class Partition implements ConfigurationInterface, CastValueInterface
         Which partition consumer should consume from. Defaults to %s. 
         Must be an integer equal to or greater than 0.
         EOT,
-            self::DEFAULT_VALUE
+            self::getDefaultValue()
         );
     }
 
@@ -42,5 +41,10 @@ class Partition implements ConfigurationInterface, CastValueInterface
     public function cast($validatedValue): int
     {
         return (int) $validatedValue;
+    }
+
+    public static function getDefaultValue(): int
+    {
+        return 0;
     }
 }

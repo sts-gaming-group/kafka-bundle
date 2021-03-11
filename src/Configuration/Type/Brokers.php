@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 class Brokers implements ConfigurationInterface
 {
     public const NAME = 'brokers';
-    public const DEFAULT_VALUE = ['127.0.0.1', '127.0.0.2'];
 
     public function getName(): string
     {
@@ -39,5 +38,10 @@ class Brokers implements ConfigurationInterface
         }
 
         return true;
+    }
+
+    public static function getDefaultValue(): array
+    {
+        return ['127.0.0.1', '127.0.0.2'];
     }
 }
