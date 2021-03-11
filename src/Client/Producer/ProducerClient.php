@@ -25,8 +25,6 @@ class ProducerClient
 
         $resolvedConfiguration = $this->configurationResolver->resolve($producer);
 
-        dump(get_class($producer));
-
         return true;
     }
 }

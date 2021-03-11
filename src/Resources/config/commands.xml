@@ -11,8 +11,6 @@
             <argument type="service" id="sts_kafka.client.consumer.provider"/>
             <argument type="service" id="sts_kafka.configuration.resolver"/>
             <argument type="service" id="sts_kafka.client.consumer.client"/>
-            <argument type="service" id="sts_kafka.client.producer.client"/>
-            <argument type="service" id="sts_kafka.client.producer.provider"/>
         </service>
     </services>
 </container>
