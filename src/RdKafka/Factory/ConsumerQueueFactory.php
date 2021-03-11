@@ -28,9 +28,6 @@ class ConsumerQueueFactory
     {
         $conf = $this->globalConfigurationFactory->create($resolvedConfiguration);
         $rdKafkaConsumer = new RdKafkaConsumer($conf);
-        $rdKafkaConsumer->addBrokers(
-            implode(',', $resolvedConfiguration->getConfigurationValue(Brokers::NAME))
-        );
 
         $queue = $rdKafkaConsumer->newQueue();
 

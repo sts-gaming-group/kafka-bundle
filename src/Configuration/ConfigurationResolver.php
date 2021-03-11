@@ -78,20 +78,13 @@ class ConfigurationResolver
         }
 
         $className = get_class($client);
-        if (isset($this->yamlConfig[$configName][$className][$name]) &&
-            $this->yamlConfig[$configName][$className][$name] !== $configuration::getDefaultValue()) {
-            return $this->yamlConfig[$configName][$className][$name];
+        if (isset($this->yamlConfig[$configName]['instances'][$className][$name]) &&
+            $this->yamlConfig[$configName]['instances'][$className][$name] !== $configuration::getDefaultValue()) {
+            return $this->yamlConfig[$configName]['instances'][$className][$name];
         }
 
-        if (isset($this->yamlConfig[$name])) {
-            return $this->yamlConfig[$name];
-        }
-
-        throw new InvalidConfigurationException(
-            sprintf(
-                'Set `%s` configuration either in global config, consumer definition or pass it as an option in CLI.',
-                $name
-            )
-        );
+        return $this->yamlConfig[$configName][$name] ??
+            $this->yamlConfig[$name] ??
+            $configuration::getDefaultValue();
     }
 }

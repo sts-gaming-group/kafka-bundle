@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Traits;
 
+use Sts\KafkaBundle\Client\Contract\MessageInterface;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
-use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\RdKafka\Context;
 
 trait CommitOffsetTrait
 {
-    public function commitOffset(Message $message, Context $context): bool
+    public function commitOffset(MessageInterface $message, Context $context): bool
     {
         if (!$this->canCommitOffset($context->getResolvedConfiguration())) {
             throw new InvalidConfigurationException(sprintf(

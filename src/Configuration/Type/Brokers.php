@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class Brokers implements ConfigurationInterface
+class Brokers implements GlobalConfigurationInterface
 {
     public const NAME = 'brokers';
 
@@ -38,6 +39,11 @@ class Brokers implements ConfigurationInterface
         }
 
         return true;
+    }
+
+    public function getKafkaProperty(): string
+    {
+        return 'metadata.broker.list';
     }
 
     public static function getDefaultValue(): array

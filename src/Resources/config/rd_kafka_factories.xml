@@ -18,5 +18,7 @@
             <argument type="service" id="sts_kafka.rd.kafka.global.configuration.factory"/>
             <argument type="service" id="sts_kafka.rd.kafka.topic.configuration.factory"/>
         </service>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory"
+                 alias="sts_kafka.rd.kafka.consumer.queue.factory"/>
     </services>
 </container>

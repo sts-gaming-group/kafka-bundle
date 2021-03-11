@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Command;
 
-use Sts\KafkaBundle\Client\Consumer\Message;
+use Sts\KafkaBundle\Client\Message;
 use Sts\KafkaBundle\Client\Contract\RetryProducerInterface;
 use Sts\KafkaBundle\Client\Producer\ProducerClient;
 use Sts\KafkaBundle\Client\Producer\ProducerProvider;

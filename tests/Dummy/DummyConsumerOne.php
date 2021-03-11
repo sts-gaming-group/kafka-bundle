@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Tests\Dummy;
 
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Consumer\Message;
+use Sts\KafkaBundle\Client\Contract\MessageInterface;
 use Sts\KafkaBundle\RdKafka\Context;
 
 class DummyConsumerOne implements ConsumerInterface
 {
     public const NAME = 'dummy_consumer_one';
 
-    public function consume(Message $message, Context $context): bool
+    public function consume(MessageInterface $message, Context $context): bool
     {
         return true;
     }

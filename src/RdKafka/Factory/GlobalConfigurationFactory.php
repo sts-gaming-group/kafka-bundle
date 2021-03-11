@@ -12,9 +12,11 @@ class GlobalConfigurationFactory
         $conf = new Conf();
 
         foreach ($resolvedConfiguration->getGlobalConfigurations() as $globalConfiguration) {
+            $resolvedValue = $globalConfiguration['resolvedValue'];
+            $value = is_array($resolvedValue) ? implode(',', $resolvedValue) : $resolvedValue;
             $conf->set(
                 $globalConfiguration['configuration']->getKafkaProperty(),
-                $globalConfiguration['resolvedValue']
+                $value
             );
         }
 
