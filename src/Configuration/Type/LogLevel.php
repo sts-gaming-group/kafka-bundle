@@ -29,7 +29,10 @@ class LogLevel implements GlobalConfigurationInterface, CastValueInterface
 
     public function getDescription(): string
     {
-        return sprintf('Logging level (syslog(3) levels). Defaults to LOG_ERR (%s)', self::getDefaultValue());
+        return sprintf(
+            'Logging level (syslog(3) levels). Defaults to LOG_ERR (%s)',
+            self::getDefaultValue()
+        );
     }
 
     public function isValueValid($value): bool
