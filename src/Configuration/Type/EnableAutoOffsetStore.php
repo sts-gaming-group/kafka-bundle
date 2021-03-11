@@ -32,8 +32,8 @@ class EnableAutoOffsetStore implements GlobalConfigurationInterface
         EOT;
     }
 
-    public static function getDefaultValue(): string
+    public static function getDefaultValue(): bool
     {
-        return 'true';
+        return true;
     }
 }
