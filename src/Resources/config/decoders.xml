@@ -9,5 +9,13 @@
             <tag name="sts_kafka.decoder"/>
         </service>
         <service id="Sts\KafkaBundle\Decoder\AvroDecoder" alias="sts_kafka.avro.decoder"/>
+        <service class="Sts\KafkaBundle\Decoder\NullDecoder" id="sts_kafka.null.decoder">
+            <tag name="sts_kafka.decoder"/>
+        </service>
+        <service id="Sts\KafkaBundle\Decoder\NullDecoder" alias="sts_kafka.null.decoder"/>
+        <service class="Sts\KafkaBundle\Decoder\JsonDecoder" id="sts_kafka.json.decoder">
+            <tag name="sts_kafka.decoder"/>
+        </service>
+        <service id="Sts\KafkaBundle\Decoder\JsonDecoder" alias="sts_kafka.json.decoder"/>
     </services>
 </container>

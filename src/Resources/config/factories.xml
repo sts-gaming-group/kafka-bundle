@@ -11,7 +11,5 @@
             <argument type="service" id="sts_kafka.decoder.factory"/>
         </service>
         <service id="Sts\KafkaBundle\Factory\MessageFactory" alias="sts_kafka.message.factory"/>
-        <service class="Sts\KafkaBundle\Factory\ValidatorFactory" id="sts_kafka.validator.factory"/>
-        <service id="Sts\KafkaBundle\Factory\ValidatorFactory" alias="sts_kafka.validator.factory"/>
     </services>
 </container>

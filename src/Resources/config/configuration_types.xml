@@ -64,5 +64,9 @@
                  id="sts_kafka.configuration.producer.partition">
             <tag name="sts_kafka.configuration.type"/>
         </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\ProducerFlushRetries"
+                 id="sts_kafka.configuration.producer.flush.retries">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
     </services>
 </container>

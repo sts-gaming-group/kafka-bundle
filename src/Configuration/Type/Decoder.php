@@ -7,6 +7,8 @@ namespace Sts\KafkaBundle\Configuration\Type;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Decoder\AvroDecoder;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
+use Sts\KafkaBundle\Decoder\JsonDecoder;
+use Sts\KafkaBundle\Decoder\NullDecoder;
 use Symfony\Component\Console\Input\InputOption;
 
 class Decoder implements ConfigurationInterface
@@ -26,9 +28,12 @@ class Decoder implements ConfigurationInterface
     public function getDescription(): string
     {
         return sprintf(
-            'Which decoder to use. Currently only %s available. You can also create custom Decoder by implementing %s',
-            self::getDefaultValue(),
-            DecoderInterface::class
+            'Which decoder to use. Currently available %s. 
+            You can also create custom Decoder by implementing %s.
+            Default decoder %s',
+            implode(', ', [AvroDecoder::class, JsonDecoder::class, NullDecoder::class]),
+            DecoderInterface::class,
+            self::getDefaultValue()
         );
     }
 
