@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Contract;
 
-interface MessageInterface
+interface ConsumerMessageInterface
 {
     public function getPayload(): string;
 
