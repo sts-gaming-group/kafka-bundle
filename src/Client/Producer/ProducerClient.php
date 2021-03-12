@@ -5,68 +5,83 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Client\Producer;
 
 use RdKafka\Producer as RdKafkaProducer;
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Client\Traits\CheckProducerTopic;
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
+use Sts\KafkaBundle\Client\Contract\ProducerMessageInterface;
 use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
-use Sts\KafkaBundle\Configuration\Type\Topics;
-use Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
+use Symfony\Component\Console\Input\InputInterface;
 
 class ProducerClient
 {
     use CheckForRdKafkaExtensionTrait;
-    use CheckProducerTopic;
-private $howmany = 0;
-    private ConfigurationResolver $configurationResolver;
-    private GlobalConfigurationFactory $globalConfigurationFactory;
 
-    public function __construct(
-        ConfigurationResolver $configurationResolver,
-        GlobalConfigurationFactory $globalConfigurationFactory
-    ) {
-        $this->configurationResolver = $configurationResolver;
-        $this->globalConfigurationFactory = $globalConfigurationFactory;
+    private ProducerProvider $producerProvider;
+    private InMemoryProducerClientCache $producerClientCache;
+    private ?\Closure $pollingCallback = null;
+
+    public function __construct(ProducerProvider $producerProvider, InMemoryProducerClientCache $producerClientCache)
+    {
+        $this->producerProvider = $producerProvider;
+        $this->producerClientCache = $producerClientCache;
     }
 
-    public function produce(ProducerInterface $producer): bool
+    public function produce(ProducerMessageInterface $message, ?InputInterface $input = null): self
     {
         $this->isKafkaExtensionLoaded();
 
-        $resolvedConfiguration = $this->configurationResolver->resolve($producer);
-        $conf = $this->globalConfigurationFactory->create($resolvedConfiguration);
-        $rdKafkaProducer = new RdKafkaProducer($conf);
+        foreach ($this->producerProvider->getProducers() as $producer) {
+            $producerClass = get_class($producer);
+            if ($message->supportedBy($producerClass)) {
+                $resolvedConfiguration = $this->producerClientCache->getResolvedConfiguration($producerClass, $input);
+                $producer->setMessage($message);
 
-        $topics = [];
-        foreach ($resolvedConfiguration->getConfigurationValue(Topics::NAME) as $topic) {
-            $this->isTopicBlacklisted($topic);
-            $topics[] = $rdKafkaProducer->newTopic($topic);
-        }
+                $conf = $this->producerClientCache->getRdKafkaConfiguration($producerClass, $resolvedConfiguration);
+                $rdKafkaProducer = $this->producerClientCache->getRdKafkaProducer($producerClass, $conf);
 
-        $message = $producer->getMessage();
-        foreach ($topics as $topic) {
-            $topic->produce(
-                $resolvedConfiguration->getConfigurationValue(ProducerPartition::NAME),
-                0,
-                $message->getPayload(),
-                $message->getKey()
-            );
-        }
+                $topics = $this->producerClientCache->getProducerTopics(
+                    $producerClass,
+                    $resolvedConfiguration,
+                    $rdKafkaProducer
+                );
 
-        for ($flushRetries = 0; $flushRetries < 10; $flushRetries++) {
-            $result = $rdKafkaProducer->flush(50);
-            if (RD_KAFKA_RESP_ERR_NO_ERROR === $result) {
-                $this->howmany++;
-                break;
+                $message = $producer->getMessage();
+                foreach ($topics as $topic) {
+                    $topic->produce(
+                        $resolvedConfiguration->getConfigurationValue(ProducerPartition::NAME),
+                        0,
+                        $message->getPayload(),
+                        $message->getKey()
+                    );
+                }
+
+                $pollingCallback = $this->getPollingCallback();
+                $pollingCallback($rdKafkaProducer->getOutQLen(), $rdKafkaProducer);
+
+                return $this;
             }
         }
-        dump($this->howmany);
-        if (RD_KAFKA_RESP_ERR_NO_ERROR !== $result) {
 
-            throw new \RuntimeException('Was unable to flush, messages might be lost!');
+        throw new \RuntimeException('Message is not supported by any producer');
+    }
+
+    public function setPollingCallback(callable $callable): self
+    {
+        $this->pollingCallback = $callable;
+
+        return $this;
+    }
+
+    private function getPollingCallback(): \Closure
+    {
+        if (!$this->pollingCallback) {
+            return static function (int $queueLength, RdKafkaProducer $producer) {
+                if ($queueLength % 50 === 0) {
+                    while ($producer->getOutQLen() > 0) {
+                        $producer->poll(0);
+                    }
+                }
+            };
         }
-//        die('end');
 
-        return true;
+        return $this->pollingCallback;
     }
 }

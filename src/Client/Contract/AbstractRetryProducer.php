@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Contract;
 
+use Sts\KafkaBundle\Client\ProducerMessage;
 use Sts\KafkaBundle\RdKafka\Context;
 
 abstract class AbstractRetryProducer implements ProducerInterface
 {
-    protected ?MessageInterface $failedMessage;
+    protected ?ConsumerMessageInterface $failedMessage;
     protected ?Context $context;
 
-    public function __construct(MessageInterface $failedMessage = null, Context $context = null)
+    public function __construct(ConsumerMessageInterface $failedMessage = null, Context $context = null)
     {
         $this->failedMessage = $failedMessage;
         $this->context = $context;
@@ -19,8 +20,8 @@ abstract class AbstractRetryProducer implements ProducerInterface
 
     abstract public function getName(): string;
 
-    public function getMessage(): MessageInterface
+    public function getMessage(): ProducerMessageInterface
     {
-        return $this->failedMessage;
+        return new ProducerMessage('todo', 'todo');
     }
 }

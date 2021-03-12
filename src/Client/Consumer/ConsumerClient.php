@@ -6,7 +6,6 @@ namespace Sts\KafkaBundle\Client\Consumer;
 
 use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\KafkaExceptionAwareConsumerInterface;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
 use Sts\KafkaBundle\Exception\KafkaException;
@@ -41,57 +40,41 @@ class ConsumerClient
         while (true) {
             try {
                 $rdKafkaMessage = $queue->consume($resolvedConfiguration->getConfigurationValue(Timeout::NAME));
-            } catch (\Exception $exception) {
-                if ($consumer instanceof KafkaExceptionAwareConsumerInterface) {
-                    $consumer->handleException(
-                        new KafkaException($exception, new NullRdKafkaMessage(), $context)
-                    );
-                }
+            } catch (\Throwable $throwable) {
+                $consumer->handleException(new KafkaException($throwable), new NullRdKafkaMessage(), $context);
 
                 continue;
             }
 
             try {
-                $this->validateMessage($rdKafkaMessage, $context);
-            } catch (KafkaException $exception) {
-                if ($consumer instanceof KafkaExceptionAwareConsumerInterface) {
-                    $consumer->handleException($exception);
-                }
+                $this->validateMessage($rdKafkaMessage);
+            } catch (\Throwable $exception) {
+                $message = $rdKafkaMessage ?? new NullRdKafkaMessage();
+                $consumer->handleException(new KafkaException($exception), $message, $context);
 
                 continue;
             }
 
-            $consumer->consume(
-                $this->messageFactory->create($rdKafkaMessage, $resolvedConfiguration),
-                $context
-            );
+            try {
+                $message = $this->messageFactory->create($rdKafkaMessage, $resolvedConfiguration);
+            } catch (\Throwable $exception) {
+                $consumer->handleException(new KafkaException($exception), $rdKafkaMessage, $context);
+
+                continue;
+            }
+
+            $consumer->consume($message, $context);
         }
     }
 
-    private function validateMessage(?RdKafkaMessage $message, Context $context): void
+    private function validateMessage(?RdKafkaMessage $message): void
     {
         if (null === $message) {
-            throw new NullMessageException(
-                new \Exception('Null message received from kafka.'),
-                new NullRdKafkaMessage(),
-                $context
-            );
+            throw new NullMessageException('Null message received from kafka.');
         }
 
         if (null === $message->payload) {
-            throw new NullPayloadException(
-                new \Exception('Null payload received from kafka.'),
-                $message,
-                $context
-            );
-        }
-
-        if ($message->err) {
-            throw new KafkaException(
-                new \Exception(sprintf('Received error with code %s from Kafka', $message->err)),
-                new NullRdKafkaMessage(),
-                $context
-            );
+            throw new NullPayloadException('Null payload received from kafka.');
         }
     }
 }
