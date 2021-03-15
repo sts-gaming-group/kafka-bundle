@@ -30,8 +30,8 @@ class RegisterMissingSubjects implements DecoderConfigurationInterface
         );
     }
 
-    public static function getDefaultValue(): bool
+    public static function getDefaultValue(): string
     {
-        return false;
+        return 'false';
     }
 }

@@ -5,11 +5,9 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class ProducerPartition implements ProducerConfigurationInterface, CastValueInterface
+class ProducerPartition implements CastValueInterface
 {
     public const NAME = 'producer_partition';
 
@@ -34,7 +32,7 @@ class ProducerPartition implements ProducerConfigurationInterface, CastValueInte
 
     public function isValueValid($value): bool
     {
-        return is_numeric($value) && $value >= 0;
+        return (is_numeric($value) && $value >= 0) || $value === self::getDefaultValue();
     }
 
     public function cast($validatedValue): int

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class ProducerFlushRetries implements ProducerConfigurationInterface, CastValueInterface
+class ProducerFlushRetries implements CastValueInterface
 {
     public const NAME = 'producer_flush_retries';
 

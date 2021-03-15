@@ -5,17 +5,17 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Client\Producer\ProducerProvider" id="sts_kafka.client.producer.provider"/>
-        <service id="Sts\KafkaBundle\Client\Producer\ProducerProvider" alias="sts_kafka.client.producer.provider"/>
-        <service class="Sts\KafkaBundle\Client\Producer\ProducerClient" id="sts_kafka.client.producer.client">
-            <argument type="service" id="sts_kafka.client.producer.provider"/>
-            <argument type="service" id="sts_kafka.client.producer.in.memory.cache"/>
+        <service class="Sts\KafkaBundle\Client\Producer\ProducerHandlerProvider" id="sts_kafka.client.producer.producer_handler_provider"/>
+        <service id="Sts\KafkaBundle\Client\Producer\ProducerHandlerProvider" alias="sts_kafka.client.producer.producer_handler_provider"/>
+        <service class="Sts\KafkaBundle\Client\Producer\ProducerBus" id="sts_kafka.client.producer_bus">
+            <argument type="service" id="sts_kafka.client.producer.producer_handler_provider"/>
+            <argument type="service" id="sts_kafka.client.producer.producer_bus_cache"/>
         </service>
-        <service id="Sts\KafkaBundle\Client\Producer\ProducerClient" alias="sts_kafka.client.producer.client"/>
-        <service class="Sts\KafkaBundle\Client\Producer\InMemoryProducerClientCache" id="sts_kafka.client.producer.in.memory.cache">
-            <argument type="service" id="sts_kafka.rd.kafka.global.configuration.factory"/>
-            <argument type="service" id="sts_kafka.configuration.resolver"/>
+        <service id="Sts\KafkaBundle\Client\Producer\ProducerBus" alias="sts_kafka.client.producer_bus"/>
+        <service class="Sts\KafkaBundle\Client\Producer\ProducerBusCache" id="sts_kafka.client.producer.producer_bus_cache">
+            <argument type="service" id="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
+            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
         </service>
-        <service id="Sts\KafkaBundle\Client\Producer\InMemoryProducerClientCache" alias="sts_kafka.client.producer.in.memory.cache"/>
+        <service id="Sts\KafkaBundle\Client\Producer\ProducerBusCache" alias="sts_kafka.client.producer.producer_bus_cache"/>
     </services>
 </container>

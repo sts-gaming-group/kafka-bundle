@@ -16,7 +16,7 @@ class ConsumerProviderTest extends KernelTestCase
         self::bootKernel();
         $container = self::$kernel->getContainer();
         /** @var ConsumerProvider $consumerProvider */
-        $consumerProvider = $container->get('sts_kafka.client.consumer.provider');
+        $consumerProvider = $container->get('sts_kafka.client.consumer.consumer_provider');
 
         $this->assertEquals(DummyConsumerOne::NAME, $consumerProvider->provide(DummyConsumerOne::NAME)->getName());
         $this->assertEquals(DummyConsumerTwo::NAME, $consumerProvider->provide(DummyConsumerTwo::NAME)->getName());

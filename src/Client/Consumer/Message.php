@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client;
+namespace Sts\KafkaBundle\Client\Consumer;
 
-use Sts\KafkaBundle\Client\Contract\ConsumerMessageInterface;
-
-class ConsumerMessage implements ConsumerMessageInterface
+class Message
 {
     private string $topicName;
     private int $partition;

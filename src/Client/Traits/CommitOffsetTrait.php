@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Client\Traits;
 
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Client\Contract\ConsumerMessageInterface;
+use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\RdKafka\Context;
 
 trait CommitOffsetTrait
 {
-    public function commitOffset(ConsumerMessageInterface $message, Context $context): bool
+    public function commitOffset(Message $message, Context $context): bool
     {
         if ($this->canCommitOffset($context)) {
             $rdKafkaConsumerTopic = $context->getRdKafkaConsumerTopicByName($message->getTopicName());

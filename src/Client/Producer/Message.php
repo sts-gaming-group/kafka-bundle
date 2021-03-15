@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client;
+namespace Sts\KafkaBundle\Client\Producer;
 
-use Sts\KafkaBundle\Client\Contract\ProducerMessageInterface;
-
-class ProducerMessage implements ProducerMessageInterface
+class Message
 {
     private string $payload;
     private string $key;

@@ -6,19 +6,19 @@
 
     <services>
         <service class="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
-                 id="sts_kafka.rd.kafka.topic.configuration.factory" shared="false"/>
+                 id="sts_kafka.rd_kafka.factory.topic_configuration_factory" shared="false"/>
         <service id="Sts\KafkaBundle\RdKafka\Factory\TopicConfigurationFactory"
-                 alias="sts_kafka.rd.kafka.topic.configuration.factory"/>
+                 alias="sts_kafka.rd_kafka.factory.topic_configuration_factory"/>
         <service class="Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory"
-                 id="sts_kafka.rd.kafka.global.configuration.factory" shared="false"/>
+                 id="sts_kafka.rd_kafka.factory.global_configuration_factory" shared="false"/>
         <service id="Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory"
-                 alias="sts_kafka.rd.kafka.global.configuration.factory"/>
+                 alias="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
         <service class="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory"
-                 id="sts_kafka.rd.kafka.consumer.queue.factory" shared="false">
-            <argument type="service" id="sts_kafka.rd.kafka.global.configuration.factory"/>
-            <argument type="service" id="sts_kafka.rd.kafka.topic.configuration.factory"/>
+                 id="sts_kafka.rd_kafka.factory.consumer_queue_factory" shared="false">
+            <argument type="service" id="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
+            <argument type="service" id="sts_kafka.rd_kafka.factory.topic_configuration_factory"/>
         </service>
         <service id="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory"
-                 alias="sts_kafka.rd.kafka.consumer.queue.factory"/>
+                 alias="sts_kafka.rd_kafka.factory.consumer_queue_factory"/>
     </services>
 </container>

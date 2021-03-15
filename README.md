@@ -49,13 +49,13 @@ namespace App\Consumers;
 
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\RdKafka\Context;
-use Sts\KafkaBundle\Client\Contract\ConsumerMessageInterface;
+use Sts\KafkaBundle\Client\Consumer\Message;
 
 class ExampleConsumer implements ConsumerInterface
 {
     public const CONSUMER_NAME = 'example_consumer';
 
-    public function consume(ConsumerMessageInterface $message, Context $context): bool
+    public function consume(Message $message, Context $context): bool
     {
 	  // $context contains resolved configuration, rd kafka consumer object and topics
 	  // $message->getDecodedPayload() contains the actual Kafka payload
@@ -184,7 +184,7 @@ bin/console kafka:consumers:consume example_consumer --modulo 4
 ```
 You will receive it in consume method and you may take actions accordingly.
 ```php
-public function consume(ConsumerMessageInterface $message, Context $context): bool
+public function consume(MessageInterface $message, Context $context): bool
 {
   $modulo = $context->getConfigurationValue(Modulo::NAME); // 4
 

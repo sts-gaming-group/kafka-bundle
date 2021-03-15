@@ -32,7 +32,7 @@ class Offset implements ConfigurationInterface, CastValueInterface
 
     public function isValueValid($value): bool
     {
-        return is_numeric($value) && $value > 0;
+        return (is_numeric($value) && $value > 0 )|| $value === self::getDefaultValue();
     }
 
     public function cast($validatedValue): int

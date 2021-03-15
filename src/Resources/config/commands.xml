@@ -5,12 +5,12 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Command\ConsumeCommand" id="sts_kafka.consume.command">
+        <service class="Sts\KafkaBundle\Command\ConsumeCommand" id="sts_kafka.consume_command">
             <tag name="console.command"/>
-            <argument type="service" id="sts_kafka.raw.configuration"/>
-            <argument type="service" id="sts_kafka.client.consumer.provider"/>
-            <argument type="service" id="sts_kafka.configuration.resolver"/>
-            <argument type="service" id="sts_kafka.client.consumer.client"/>
+            <argument type="service" id="sts_kafka.configuration.raw_configuration"/>
+            <argument type="service" id="sts_kafka.client.consumer.consumer_provider"/>
+            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
+            <argument type="service" id="sts_kafka.client.consumer.consumer_client"/>
         </service>
     </services>
 </container>

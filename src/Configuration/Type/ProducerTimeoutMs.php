@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class ProducerTimeoutMs implements ProducerConfigurationInterface
+class ProducerTimeoutMs implements ConfigurationInterface
 {
     public const NAME = 'producer_timeout_ms';
 
@@ -24,10 +23,7 @@ class ProducerTimeoutMs implements ProducerConfigurationInterface
 
     public function getDescription(): string
     {
-        return
-            <<<EOT
-        Timeout for Rdkafka flush. 
-        EOT;
+        return 'Timeout for Rdkafka flush.';
     }
 
     public function isValueValid($value): bool

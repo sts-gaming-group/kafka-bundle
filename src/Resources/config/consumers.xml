@@ -5,12 +5,12 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client.consumer.provider"/>
-        <service id="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" alias="sts_kafka.client.consumer.provider"/>
-        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerClient" id="sts_kafka.client.consumer.client">
-            <argument type="service" id="sts_kafka.rd.kafka.consumer.queue.factory"/>
-            <argument type="service" id="sts_kafka.message.factory"/>
+        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client.consumer.consumer_provider"/>
+        <service id="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" alias="sts_kafka.client.consumer.consumer_provider"/>
+        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerClient" id="sts_kafka.client.consumer.consumer_client">
+            <argument type="service" id="sts_kafka.rd_kafka.factory.consumer_queue_factory"/>
+            <argument type="service" id="sts_kafka.factory.message_factory"/>
         </service>
-        <service id="Sts\KafkaBundle\Client\Consumer\ConsumerClient" alias="sts_kafka.client.consumer.client"/>
+        <service id="Sts\KafkaBundle\Client\Consumer\ConsumerClient" alias="sts_kafka.client.consumer.consumer_client"/>
     </services>
 </container>

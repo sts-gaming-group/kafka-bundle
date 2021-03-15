@@ -7,7 +7,7 @@ namespace Sts\KafkaBundle\Decoder;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 
-class NullDecoder implements DecoderInterface
+class PlainDecoder implements DecoderInterface
 {
     public function decode(ResolvedConfiguration $resolvedConfiguration, string $message): string
     {

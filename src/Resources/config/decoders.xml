@@ -5,17 +5,17 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Decoder\AvroDecoder" id="sts_kafka.avro.decoder">
+        <service class="Sts\KafkaBundle\Decoder\AvroDecoder" id="sts_kafka.decoder.avro_decoder">
             <tag name="sts_kafka.decoder"/>
         </service>
-        <service id="Sts\KafkaBundle\Decoder\AvroDecoder" alias="sts_kafka.avro.decoder"/>
-        <service class="Sts\KafkaBundle\Decoder\NullDecoder" id="sts_kafka.null.decoder">
+        <service id="Sts\KafkaBundle\Decoder\AvroDecoder" alias="sts_kafka.decoder.avro_decoder"/>
+        <service class="Sts\KafkaBundle\Decoder\PlainDecoder" id="sts_kafka.decoder.plain_decoder">
             <tag name="sts_kafka.decoder"/>
         </service>
-        <service id="Sts\KafkaBundle\Decoder\NullDecoder" alias="sts_kafka.null.decoder"/>
-        <service class="Sts\KafkaBundle\Decoder\JsonDecoder" id="sts_kafka.json.decoder">
+        <service id="Sts\KafkaBundle\Decoder\PlainDecoder" alias="sts_kafka.decoder.plain_decoder"/>
+        <service class="Sts\KafkaBundle\Decoder\JsonDecoder" id="sts_kafka.decoder.json_decoder">
             <tag name="sts_kafka.decoder"/>
         </service>
-        <service id="Sts\KafkaBundle\Decoder\JsonDecoder" alias="sts_kafka.json.decoder"/>
+        <service id="Sts\KafkaBundle\Decoder\JsonDecoder" alias="sts_kafka.decoder.json_decoder"/>
     </services>
 </container>

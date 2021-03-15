@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Configuration;
 
 use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerHandlerInterface;
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
@@ -57,17 +57,10 @@ class ConfigurationResolver
         $name = $configuration->getName();
 
         if ($input && $input->getParameterOption('--' . $name) !== false) {
-            $value = $input->getOption($name);
-            if (!$configuration->isValueValid($value)) {
-                throw new InvalidConfigurationException(sprintf(
-                    'Invalid option passed for %s. Passed value `%s`. Configuration description: %s',
-                    $name,
-                    is_array($value) ? implode(', ', $value) : $value,
-                    $configuration->getDescription()
-                ));
-            }
+            $resolvedValue = $input->getOption($name);
+            $this->validateResolvedValue($configuration, $resolvedValue);
 
-            return $value;
+            return $resolvedValue;
         }
 
         $configName = '';
@@ -75,7 +68,7 @@ class ConfigurationResolver
             $configName = 'consumers';
         }
 
-        if (is_a($clientClass, ProducerInterface::class, true)) {
+        if (is_a($clientClass, ProducerHandlerInterface::class, true)) {
             $configName = 'producers';
         }
 
@@ -83,18 +76,38 @@ class ConfigurationResolver
             throw new \RuntimeException(sprintf(
                 'Object must implement %s or %s to properly resolve configuration.',
                 ConsumerInterface::class,
-                ProducerInterface::class
+                ProducerHandlerInterface::class
             ));
         }
 
         $className = is_string($clientClass) ? $clientClass : get_class($clientClass);
+
         if (isset($this->yamlConfig[$configName]['instances'][$className][$name]) &&
             $this->yamlConfig[$configName]['instances'][$className][$name] !== $configuration::getDefaultValue()) {
-            return $this->yamlConfig[$configName]['instances'][$className][$name];
+            $resolvedValue = $this->yamlConfig[$configName]['instances'][$className][$name];
+            $this->validateResolvedValue($configuration, $resolvedValue);
+
+            return $resolvedValue;
         }
 
-        return $this->yamlConfig[$configName][$name] ??
+        $resolvedValue = $this->yamlConfig[$configName][$name] ??
             $this->yamlConfig[$name] ??
             $configuration::getDefaultValue();
+
+        $this->validateResolvedValue($configuration, $resolvedValue);
+
+        return $resolvedValue;
+    }
+
+    private function validateResolvedValue(ConfigurationInterface $configuration, $resolvedValue): void
+    {
+        if (!$configuration->isValueValid($resolvedValue)) {
+            throw new InvalidConfigurationException(sprintf(
+                'Invalid option passed for %s. Passed value `%s`. Configuration description: %s',
+                $configuration->getName(),
+                is_array($resolvedValue) ? implode(', ', $resolvedValue) : $resolvedValue,
+                $configuration->getDescription()
+            ));
+        }
     }
 }

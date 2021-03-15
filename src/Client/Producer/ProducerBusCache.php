@@ -15,7 +15,7 @@ use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory;
 use Symfony\Component\Console\Input\InputInterface;
 
-class InMemoryProducerClientCache
+class ProducerBusCache
 {
     use CheckProducerTopic;
 
@@ -50,10 +50,10 @@ class InMemoryProducerClientCache
         $this->configurationResolver = $configurationResolver;
     }
 
-    public function getResolvedConfiguration(string $producer, ?InputInterface $input = null): ResolvedConfiguration
+    public function getResolvedConfiguration(string $producer): ResolvedConfiguration
     {
         if (!array_key_exists($producer, $this->resolvedConfigurations)) {
-            $this->resolvedConfigurations[$producer] = $this->configurationResolver->resolve($producer, $input);
+            $this->resolvedConfigurations[$producer] = $this->configurationResolver->resolve($producer);
         }
 
         return $this->resolvedConfigurations[$producer];
@@ -75,6 +75,11 @@ class InMemoryProducerClientCache
         }
 
         return $this->rdKafkaProducers[$producer];
+    }
+
+    public function getRdKafkaProducers(): array
+    {
+        return $this->rdKafkaProducers;
     }
 
     /**

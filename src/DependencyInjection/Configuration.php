@@ -9,6 +9,7 @@ use Sts\KafkaBundle\Configuration\Type\AutoCommitIntervalMs;
 use Sts\KafkaBundle\Configuration\Type\AutoOffsetReset;
 use Sts\KafkaBundle\Configuration\Type\Brokers;
 use Sts\KafkaBundle\Configuration\Type\Decoder;
+use Sts\KafkaBundle\Configuration\Type\Denormalizer;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
 use Sts\KafkaBundle\Configuration\Type\GroupId;
@@ -93,10 +94,6 @@ class Configuration implements ConfigurationInterface
     public function addCommonConfigurations(NodeBuilder $builder): void
     {
         $builder
-            ->scalarNode(Decoder::NAME)
-                ->defaultValue(Decoder::getDefaultValue())
-                ->cannotBeEmpty()
-            ->end()
             ->arrayNode(Topics::NAME)
                 ->defaultValue(Topics::getDefaultValue())
                 ->cannotBeEmpty()
@@ -112,7 +109,7 @@ class Configuration implements ConfigurationInterface
             ->addSchemaRegistry($builder);
     }
 
-    private function addProducerConfigurations(NodeBuilder $builder)
+    private function addProducerConfigurations(NodeBuilder $builder): void
     {
          $builder
             ->integerNode(ProducerPartition::NAME)
@@ -123,6 +120,14 @@ class Configuration implements ConfigurationInterface
     private function addConsumerConfigurations(NodeBuilder $builder): void
     {
         $builder
+            ->scalarNode(Decoder::NAME)
+                ->defaultValue(Decoder::getDefaultValue())
+                ->cannotBeEmpty()
+            ->end()
+            ->scalarNode(Denormalizer::NAME)
+                ->defaultValue(Denormalizer::getDefaultValue())
+                ->cannotBeEmpty()
+            ->end()
             ->scalarNode(AutoCommitIntervalMs::NAME)
                 ->defaultValue(AutoCommitIntervalMs::getDefaultValue())
                 ->cannotBeEmpty()
