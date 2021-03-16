@@ -35,7 +35,7 @@ parameters:
             path: src/Decoder/AvroDecoder.php
         -
             message: '/should return array<RdKafka\\ProducerTopic> but returns RdKafka\\ProducerTopic/'
-            path: src/Client/Producer/ProducerConfigCache.php
+            path: src/RdKafka/Factory/ProducerBuilder.php
         -
             message: '/Cannot access an offset on RdKafka\\ProducerTopic/'
-            path: src/Client/Producer/ProducerConfigCache.php
+            path: src/RdKafka/Factory/ProducerBuilder.php

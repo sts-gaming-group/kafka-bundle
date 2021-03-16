@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Client\Producer;
 
 use RdKafka\Producer;
+use Sts\KafkaBundle\RdKafka\Factory\ProducerBuilder;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
 class ProducerClient
@@ -16,14 +17,17 @@ class ProducerClient
     public static int $pollingBatch = 10000;
 
     private ProducerProvider $producerProvider;
-    private ProducerConfigCache $producerConfigCache;
-    private Producer $rdKafkaProducer;
-    private ?\Closure $deliveryCallback = null;
+    private ProducerBuilder $producerBuilder;
+    private ?Producer $rdKafkaProducer = null;
+    /**
+     * @var callable
+     */
+    private $deliveryCallback = null;
 
-    public function __construct(ProducerProvider $producerProvider, ProducerConfigCache $producerConfigCache)
+    public function __construct(ProducerProvider $producerProvider, ProducerBuilder $producerBuilder)
     {
         $this->producerProvider = $producerProvider;
-        $this->producerConfigCache = $producerConfigCache;
+        $this->producerBuilder = $producerBuilder;
     }
 
     /**
@@ -36,14 +40,14 @@ class ProducerClient
 
         $producer = $this->producerProvider->provide($data);
 
-        $this->producerConfigCache->build($producer, $this->deliveryCallback);
-        $this->rdKafkaProducer = $this->producerConfigCache->getRdKafkaProducer($producer);
-        $topics = $this->producerConfigCache->getTopics($producer);
+        $this->producerBuilder->build($producer, $this->deliveryCallback);
+        $this->rdKafkaProducer = $this->producerBuilder->getRdKafkaProducer($producer);
+        $topics = $this->producerBuilder->getTopics($producer);
 
         $message = $producer->produce($data);
         foreach ($topics as $topic) {
             $topic->produce(
-                $this->producerConfigCache->getPartition($producer),
+                $this->producerBuilder->getPartition($producer),
                 0,
                 $message->getPayload(),
                 $message->getKey()
@@ -72,6 +76,7 @@ class ProducerClient
             throw new \RuntimeException('You have to call produce method first to flush anything.');
         }
 
+        $result = RD_KAFKA_RESP_ERR_NO_ERROR;
         for ($flushRetries = 0; $flushRetries < self::MAX_FLUSH_RETRIES; $flushRetries++) {
             $result = $this->rdKafkaProducer->flush(self::FLUSH_TIMEOUT_MS);
             if (RD_KAFKA_RESP_ERR_NO_ERROR === $result) {

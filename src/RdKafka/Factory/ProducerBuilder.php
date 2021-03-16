@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Producer;
+namespace Sts\KafkaBundle\RdKafka\Factory;
 
 use RdKafka\Conf;
 use RdKafka\Producer;
@@ -16,7 +16,7 @@ use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory;
 
-class ProducerConfigCache
+class ProducerBuilder
 {
     use CheckProducerTopic;
 

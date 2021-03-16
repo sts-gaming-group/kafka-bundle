@@ -20,5 +20,12 @@
         </service>
         <service id="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueBuilder"
                  alias="sts_kafka.rd_kafka.factory.consumer_queue_builder"/>
+        <service class="Sts\KafkaBundle\RdKafka\Factory\ProducerBuilder"
+                 id="sts_kafka.rd_kafka.factory.producer.builder">
+            <argument type="service" id="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
+            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
+        </service>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\ProducerBuilder"
+                 alias="sts_kafka.rd_kafka.factory.producer.builder"/>
     </services>
 </container>
