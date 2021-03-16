@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Configuration;
 
 use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\ProducerHandlerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
@@ -68,7 +68,7 @@ class ConfigurationResolver
             $configName = 'consumers';
         }
 
-        if (is_a($clientClass, ProducerHandlerInterface::class, true)) {
+        if (is_a($clientClass, ProducerInterface::class, true)) {
             $configName = 'producers';
         }
 
@@ -76,7 +76,7 @@ class ConfigurationResolver
             throw new \RuntimeException(sprintf(
                 'Object must implement %s or %s to properly resolve configuration.',
                 ConsumerInterface::class,
-                ProducerHandlerInterface::class
+                ProducerInterface::class
             ));
         }
 

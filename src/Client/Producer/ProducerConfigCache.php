@@ -7,15 +7,13 @@ namespace Sts\KafkaBundle\Client\Producer;
 use RdKafka\Conf;
 use RdKafka\Producer as RdKafkaProducer;
 use RdKafka\ProducerTopic;
-use Sts\KafkaBundle\Client\Contract\ProducerMessageInterface;
 use Sts\KafkaBundle\Client\Traits\CheckProducerTopic;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory;
-use Symfony\Component\Console\Input\InputInterface;
 
-class ProducerBusCache
+class ProducerConfigCache
 {
     use CheckProducerTopic;
 

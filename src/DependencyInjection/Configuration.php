@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\DependencyInjection;
 
-use Hoa\Protocol\Node\Node;
 use Sts\KafkaBundle\Configuration\Type\AutoCommitIntervalMs;
 use Sts\KafkaBundle\Configuration\Type\AutoOffsetReset;
 use Sts\KafkaBundle\Configuration\Type\Brokers;
@@ -14,12 +13,16 @@ use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
 use Sts\KafkaBundle\Configuration\Type\GroupId;
 use Sts\KafkaBundle\Configuration\Type\LogLevel;
+use Sts\KafkaBundle\Configuration\Type\MaxRetries;
+use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
 use Sts\KafkaBundle\Configuration\Type\Offset;
 use Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod;
 use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
 use Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
 use Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
+use Sts\KafkaBundle\Configuration\Type\RetryDelay;
+use Sts\KafkaBundle\Configuration\Type\RetryMultiplier;
 use Sts\KafkaBundle\Configuration\Type\SchemaRegistry;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
 use Sts\KafkaBundle\Configuration\Type\Topics;
@@ -166,6 +169,18 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->booleanNode(RegisterMissingSubjects::NAME)
                 ->defaultValue(RegisterMissingSubjects::getDefaultValue())
+            ->end()
+            ->integerNode(MaxRetries::NAME)
+                ->defaultValue(MaxRetries::getDefaultValue())
+            ->end()
+            ->integerNode(RetryDelay::NAME)
+                ->defaultValue(RetryDelay::getDefaultValue())
+            ->end()
+            ->integerNode(RetryMultiplier::NAME)
+                ->defaultValue(RetryMultiplier::getDefaultValue())
+            ->end()
+            ->integerNode(MaxRetryDelay::NAME)
+                ->defaultValue(MaxRetryDelay::getDefaultValue())
             ->end();
 
         $this->addBroker($builder);

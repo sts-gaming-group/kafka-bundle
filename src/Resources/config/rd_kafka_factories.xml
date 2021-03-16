@@ -13,12 +13,12 @@
                  id="sts_kafka.rd_kafka.factory.global_configuration_factory" shared="false"/>
         <service id="Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory"
                  alias="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
-        <service class="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory"
-                 id="sts_kafka.rd_kafka.factory.consumer_queue_factory" shared="false">
+        <service class="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueBuilder"
+                 id="sts_kafka.rd_kafka.factory.consumer_queue_builder" shared="false">
             <argument type="service" id="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
             <argument type="service" id="sts_kafka.rd_kafka.factory.topic_configuration_factory"/>
         </service>
-        <service id="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory"
-                 alias="sts_kafka.rd_kafka.factory.consumer_queue_factory"/>
+        <service id="Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueBuilder"
+                 alias="sts_kafka.rd_kafka.factory.consumer_queue_builder"/>
     </services>
 </container>

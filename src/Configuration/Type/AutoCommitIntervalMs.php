@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\InputOption;
 class AutoCommitIntervalMs implements TopicConfigurationInterface
 {
     public const NAME = 'auto_commit_interval_ms';
-    public const DEFAULT_VALUE = '1000';
 
     public function getName(): string
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Producer;
 
-use Sts\KafkaBundle\Client\Contract\ProducerHandlerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 

@@ -38,7 +38,8 @@
         <service class="Sts\KafkaBundle\Configuration\Type\Decoder" id="sts_kafka.configuration.type.decoder">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\SchemaRegistry" id="sts_kafka.configuration.type.schema_registry">
+        <service class="Sts\KafkaBundle\Configuration\Type\SchemaRegistry"
+                 id="sts_kafka.configuration.type.schema_registry">
             <tag name="sts_kafka.configuration.type"/>
         </service>
         <service class="Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore"
@@ -70,6 +71,22 @@
         </service>
         <service class="Sts\KafkaBundle\Configuration\Type\Denormalizer"
                  id="sts_kafka.configuration.type.denormalizer">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\MaxRetries"
+                 id="sts_kafka.configuration.type.max_retries">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\RetryDelay"
+                 id="sts_kafka.configuration.type.retry_delay">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\RetryMultiplier"
+                 id="sts_kafka.configuration.type.retry_multiplier">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\MaxRetryDelay"
+                 id="sts_kafka.configuration.type.max_retry_delay">
             <tag name="sts_kafka.configuration.type"/>
         </service>
     </services>

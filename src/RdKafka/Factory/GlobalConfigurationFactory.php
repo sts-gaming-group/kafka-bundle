@@ -25,7 +25,7 @@ class GlobalConfigurationFactory
                 $value
             );
         }
-$conf->set('queue.buffering.max.ms', 1);
+
         $this->conf = $conf;
 
         return $conf;

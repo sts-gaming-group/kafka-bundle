@@ -12,21 +12,37 @@ use Sts\KafkaBundle\RdKafka\Context;
 
 trait CommitOffsetTrait
 {
-    public function commitOffset(Message $message, Context $context): bool
+    /**
+     * @param RdKafkaMessage|Message $message
+     * @param Context $context
+     * @return bool
+     */
+    public function commitOffset($message, Context $context): bool
     {
-        if ($this->canCommitOffset($context)) {
-            $rdKafkaConsumerTopic = $context->getRdKafkaConsumerTopicByName($message->getTopicName());
-            $rdKafkaConsumerTopic->offsetStore($message->getPartition(), $message->getOffset());
+        if (!$message instanceof RdKafkaMessage && !$message instanceof Message) {
+            throw new \RuntimeException(
+                sprintf(
+                    'You have to pass %s or %s object.',
+                    RdKafkaMessage::class,
+                    Message::class
+                )
+            );
         }
 
-        return true;
-    }
-
-    public function commitFailedMessage(RdKafkaMessage $message, Context $context): bool
-    {
         if ($this->canCommitOffset($context)) {
-            $rdKafkaConsumerTopic = $context->getRdKafkaConsumerTopicByName($message->topic_name);
-            $rdKafkaConsumerTopic->offsetStore($message->partition, $message->offset);
+            if ($message instanceof RdKafkaMessage) {
+                $topicName = $message->topic_name;
+                $partition = $message->partition;
+                $offset = $message->offset;
+            }
+
+            if ($message instanceof Message) {
+                $topicName = $message->getTopicName();
+                $partition = $message->getPartition();
+                $offset = $message->getOffset();
+            }
+            $rdKafkaConsumerTopic = $context->getRdKafkaConsumerTopicByName($topicName);
+            $rdKafkaConsumerTopic->offsetStore($partition, $offset);
         }
 
         return true;
@@ -34,7 +50,7 @@ trait CommitOffsetTrait
 
     private function canCommitOffset(Context $context): bool
     {
-        if ($context->getResolvedConfigurationValue(EnableAutoOffsetStore::NAME) === 'true') {
+        if ($context->getConfigurationValue(EnableAutoOffsetStore::NAME) === 'true') {
             throw new InvalidConfigurationException(sprintf(
                 'Unable to manually commit offset when %s configuration is set to `true`.',
                 EnableAutoOffsetStore::NAME

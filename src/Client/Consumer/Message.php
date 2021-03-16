@@ -8,25 +8,25 @@ class Message
 {
     private string $topicName;
     private int $partition;
-    private string $originalPayload;
+    private string $payload;
     private string $key;
     private int $offset;
-    private $decodedPayload;
+    private $data;
 
     public function __construct(
         string $topicName,
         int $partition,
-        string $originalPayload,
+        string $payload,
         string $key,
         int $offset,
-        $decodedPayload
+        $data
     ) {
         $this->topicName = $topicName;
         $this->partition = $partition;
-        $this->originalPayload = $originalPayload;
+        $this->payload = $payload;
         $this->key = $key;
         $this->offset = $offset;
-        $this->decodedPayload = $decodedPayload;
+        $this->data = $data;
     }
 
     public function getTopicName(): string
@@ -41,7 +41,7 @@ class Message
 
     public function getPayload(): string
     {
-        return $this->originalPayload;
+        return $this->payload;
     }
 
     public function getKey(): string
@@ -57,8 +57,8 @@ class Message
     /**
      * @return mixed
      */
-    public function getDecodedPayload()
+    public function getData()
     {
-        return $this->decodedPayload;
+        return $this->data;
     }
 }

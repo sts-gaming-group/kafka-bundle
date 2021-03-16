@@ -3,6 +3,7 @@
 namespace Sts\KafkaBundle\RdKafka\Factory;
 
 use RdKafka\Consumer as RdKafkaConsumer;
+use RdKafka\ConsumerTopic;
 use RdKafka\Queue;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Brokers;
@@ -11,10 +12,15 @@ use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\RdKafka\Context;
 
-class ConsumerQueueFactory
+class ConsumerQueueBuilder
 {
     private GlobalConfigurationFactory $globalConfigurationFactory;
     private TopicConfigurationFactory $topicConfigurationFactory;
+    /**
+     * @var array<ConsumerTopic>
+     */
+    private array $topics;
+    private Queue $queue;
 
     public function __construct(
         GlobalConfigurationFactory $globalConfigurationFactory,
@@ -24,24 +30,33 @@ class ConsumerQueueFactory
         $this->topicConfigurationFactory = $topicConfigurationFactory;
     }
 
-    public function create(ResolvedConfiguration $resolvedConfiguration, Context $context): Queue
+    public function build(ResolvedConfiguration $resolvedConfiguration): self
     {
         $conf = $this->globalConfigurationFactory->create($resolvedConfiguration);
         $rdKafkaConsumer = new RdKafkaConsumer($conf);
 
-        $queue = $rdKafkaConsumer->newQueue();
-
+        $this->queue = $rdKafkaConsumer->newQueue();
         foreach ($resolvedConfiguration->getConfigurationValue(Topics::NAME) as $topicName) {
             $rdKafkaTopicConf = $this->topicConfigurationFactory->create($resolvedConfiguration);
             $rdKafkaConsumerTopic = $rdKafkaConsumer->newTopic($topicName, $rdKafkaTopicConf);
             $rdKafkaConsumerTopic->consumeQueueStart(
                 $resolvedConfiguration->getConfigurationValue(Partition::NAME),
                 $resolvedConfiguration->getConfigurationValue(Offset::NAME),
-                $queue
+                $this->queue
             );
-            $context->addKafkaConsumerTopic($rdKafkaConsumerTopic);
+            $this->topics[] = $rdKafkaConsumerTopic;
         }
 
-        return $queue;
+        return $this;
+    }
+
+    public function getTopics(): array
+    {
+        return $this->topics;
+    }
+
+    public function getQueue(): Queue
+    {
+        return $this->queue;
     }
 }

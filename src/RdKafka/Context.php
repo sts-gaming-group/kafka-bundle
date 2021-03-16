@@ -15,28 +15,25 @@ class Context
      */
     private array $rdKafkaConsumerTopics;
 
-    public function __construct(ResolvedConfiguration $resolvedConfiguration)
-    {
+    private int $retryNo;
+
+    public function __construct(
+        ResolvedConfiguration $resolvedConfiguration,
+        array $rdKafkaConsumerTopics,
+        int $retryNo
+    ) {
         $this->resolvedConfiguration = $resolvedConfiguration;
-    }
-
-    public function addKafkaConsumerTopic(RdKafkaConsumerTopic $rdKafkaConsumerTopic): self
-    {
-        $this->rdKafkaConsumerTopics[$rdKafkaConsumerTopic->getName()] = $rdKafkaConsumerTopic;
-
-        return $this;
-    }
-
-    public function getResolvedConfiguration(): ResolvedConfiguration
-    {
-        return $this->resolvedConfiguration;
+        foreach ($rdKafkaConsumerTopics as $rdKafkaConsumerTopic) {
+            $this->rdKafkaConsumerTopics[$rdKafkaConsumerTopic->getName()] = $rdKafkaConsumerTopic;
+        }
+        $this->retryNo = $retryNo;
     }
 
     /**
      * @param string $name
      * @return mixed
      */
-    public function getResolvedConfigurationValue(string $name)
+    public function getConfigurationValue(string $name)
     {
         return $this->resolvedConfiguration->getConfigurationValue($name);
     }
@@ -44,5 +41,10 @@ class Context
     public function getRdKafkaConsumerTopicByName(string $name): RdKafkaConsumerTopic
     {
         return $this->rdKafkaConsumerTopics[$name];
+    }
+
+    public function getRetryNo(): int
+    {
+        return $this->retryNo;
     }
 }
