@@ -4,17 +4,21 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Producer;
 
-use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
+use RdKafka\Producer;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
 class ProducerClient
 {
     use CheckForRdKafkaExtensionTrait;
 
+    public const MAX_FLUSH_RETRIES = 10;
+    public const FLUSH_TIMEOUT_MS = 10000;
     public static int $pollingBatch = 10000;
 
     private ProducerProvider $producerProvider;
     private ProducerConfigCache $producerConfigCache;
+    private Producer $rdKafkaProducer;
+    private ?\Closure $deliveryCallback = null;
 
     public function __construct(ProducerProvider $producerProvider, ProducerConfigCache $producerConfigCache)
     {
@@ -31,47 +35,57 @@ class ProducerClient
         $this->isKafkaExtensionLoaded();
 
         $producer = $this->producerProvider->provide($data);
-        $producerClass = get_class($producer);
 
-        $resolvedConfiguration = $this->producerConfigCache->getResolvedConfiguration($producerClass);
-        $conf = $this->producerConfigCache->getRdKafkaConfiguration($producerClass, $resolvedConfiguration);
-        $rdKafkaProducer = $this->producerConfigCache->getRdKafkaProducer($producerClass, $conf);
-        $topics = $this->producerConfigCache->getProducerTopics(
-            $producerClass,
-            $resolvedConfiguration,
-            $rdKafkaProducer
-        );
+        $this->producerConfigCache->build($producer, $this->deliveryCallback);
+        $this->rdKafkaProducer = $this->producerConfigCache->getRdKafkaProducer($producer);
+        $topics = $this->producerConfigCache->getTopics($producer);
 
         $message = $producer->produce($data);
         foreach ($topics as $topic) {
             $topic->produce(
-                $resolvedConfiguration->getConfigurationValue(ProducerPartition::NAME),
+                $this->producerConfigCache->getPartition($producer),
                 0,
                 $message->getPayload(),
                 $message->getKey()
             );
         }
 
-        if ($rdKafkaProducer->getOutQLen() % static::$pollingBatch === 0) {
-            while ($rdKafkaProducer->getOutQLen() > 0) {
-                $rdKafkaProducer->poll(0);
+        if ($this->rdKafkaProducer->getOutQLen() % static::$pollingBatch === 0) {
+            while ($this->rdKafkaProducer->getOutQLen() > 0) {
+                $this->rdKafkaProducer->poll(0);
             }
         }
 
         return $this;
     }
 
-    public function poll(): void
+    public function setDeliveryCallback(callable $deliveryCallback): self
     {
-        foreach ($this->producerConfigCache->getRdKafkaProducers() as $rdKafkaProducer) {
-            while ($rdKafkaProducer->getOutQLen() > 0) {
-                $rdKafkaProducer->poll(0);
+        $this->deliveryCallback = $deliveryCallback;
+
+        return $this;
+    }
+
+    public function flush(): void
+    {
+        if (!$this->rdKafkaProducer) {
+            throw new \RuntimeException('You have to call produce method first to flush anything.');
+        }
+
+        for ($flushRetries = 0; $flushRetries < self::MAX_FLUSH_RETRIES; $flushRetries++) {
+            $result = $this->rdKafkaProducer->flush(self::FLUSH_TIMEOUT_MS);
+            if (RD_KAFKA_RESP_ERR_NO_ERROR === $result) {
+                break;
             }
+        }
+
+        if (RD_KAFKA_RESP_ERR_NO_ERROR !== $result) {
+            throw new \RuntimeException('Unable to flush, messages might be lost.');
         }
     }
 
     public function __destruct()
     {
-        $this->poll();
+        $this->flush();
     }
 }

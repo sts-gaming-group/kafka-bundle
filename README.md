@@ -311,11 +311,21 @@ class ExampleCommand extends Command
          $this->producerClient->produce($message);
      }
 
-     $this->producerClient->poll(); // call poll after produce() method has finished
+     $this->producerClient->flush(); // call flush after produce() method has finished
 
      return Command::SUCCESS;
  }
 ```
+You can also set delivery callback to ProducerClient to check if messages were sent successfully.
+```php
+$this->producerClient->setDeliveryCallback(static function (RdKafka\Kafka $kafka, RdKafka\Message $message) {
+   if ($message->err) {
+      throw new \Exception('Message lost permanently. Let's produce again');
+   }
+});
+ 
+```
+
 ## Custom configurations
 
 Some times you may wish to pass some additional options to your Consumer object. You may add your own configuration:

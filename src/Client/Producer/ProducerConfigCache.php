@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Client\Producer;
 
 use RdKafka\Conf;
+use RdKafka\Producer;
 use RdKafka\Producer as RdKafkaProducer;
 use RdKafka\ProducerTopic;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Client\Traits\CheckProducerTopic;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory;
 
@@ -48,56 +51,82 @@ class ProducerConfigCache
         $this->configurationResolver = $configurationResolver;
     }
 
-    public function getResolvedConfiguration(string $producer): ResolvedConfiguration
+    public function build(ProducerInterface $producer, callable $resultCallback = null): self
     {
-        if (!array_key_exists($producer, $this->resolvedConfigurations)) {
-            $this->resolvedConfigurations[$producer] = $this->configurationResolver->resolve($producer);
-        }
+        $class = get_class($producer);
+        $this->buildResolvedConfiguration($class)
+            ->buildRdKafkaConfiguration($class, $resultCallback)
+            ->buildRdKafkaProducer($class)
+            ->buildProducerTopics($class);
 
-        return $this->resolvedConfigurations[$producer];
-    }
-
-    public function getRdKafkaConfiguration(string $producer, ResolvedConfiguration $resolvedConfiguration): Conf
-    {
-        if (!array_key_exists($producer, $this->rdKafkaConfigurations)) {
-            $this->rdKafkaConfigurations[$producer] = $this->globalConfigurationFactory->create($resolvedConfiguration);
-        }
-
-        return $this->rdKafkaConfigurations[$producer];
-    }
-
-    public function getRdKafkaProducer(string $producer, Conf $rdKafkaConfiguration): RdKafkaProducer
-    {
-        if (!array_key_exists($producer, $this->rdKafkaProducers)) {
-            $this->rdKafkaProducers[$producer] = new RdKafkaProducer($rdKafkaConfiguration);
-        }
-
-        return $this->rdKafkaProducers[$producer];
-    }
-
-    public function getRdKafkaProducers(): array
-    {
-        return $this->rdKafkaProducers;
+        return $this;
     }
 
     /**
-     * @param string $producer
-     * @param ResolvedConfiguration $resolvedConfiguration
-     * @param RdKafkaProducer $rdKafkaProducer
+     * @param ProducerInterface $producer
      * @return array<ProducerTopic>
      */
-    public function getProducerTopics(
-        string $producer,
-        ResolvedConfiguration $resolvedConfiguration,
-        RdKafkaProducer $rdKafkaProducer
-    ): array {
-        if (!array_key_exists($producer, $this->producerTopics)) {
-            foreach ($resolvedConfiguration->getConfigurationValue(Topics::NAME) as $topic) {
+    public function getTopics(ProducerInterface $producer): array
+    {
+        return $this->producerTopics[get_class($producer)];
+    }
+
+    public function getRdKafkaProducer(ProducerInterface $producer): Producer
+    {
+        return $this->rdKafkaProducers[get_class($producer)];
+    }
+
+    public function getPartition(ProducerInterface $producer): int
+    {
+        return $this->resolvedConfigurations[get_class($producer)]->getConfigurationValue(Partition::NAME);
+    }
+
+    private function buildProducerTopics(string $class): self
+    {
+        $configuration = $this->resolvedConfigurations[$class];
+        $rdKafkaProducer = $this->rdKafkaProducers[$class];
+
+        if (!array_key_exists($class, $this->producerTopics)) {
+            foreach ($configuration->getConfigurationValue(Topics::NAME) as $topic) {
                 $this->isTopicBlacklisted($topic);
-                $this->producerTopics[$producer][] = $rdKafkaProducer->newTopic($topic);
+                $this->producerTopics[$class][] = $rdKafkaProducer->newTopic($topic);
             }
         }
 
-        return $this->producerTopics[$producer];
+        return $this;
+    }
+
+    private function buildResolvedConfiguration(string $class): self
+    {
+        if (!array_key_exists($class, $this->resolvedConfigurations)) {
+            $this->resolvedConfigurations[$class] = $this->configurationResolver->resolve($class);
+        }
+
+        return $this;
+    }
+
+    private function buildRdKafkaConfiguration(string $class, callable $resultCallback = null): self
+    {
+        if (!array_key_exists($class, $this->rdKafkaConfigurations)) {
+            $this->rdKafkaConfigurations[$class] = $this->globalConfigurationFactory->create(
+                $this->resolvedConfigurations[$class]
+            );
+            if ($resultCallback) {
+                $this->rdKafkaConfigurations[$class]->setDrMsgCb($resultCallback);
+            }
+        }
+
+        return $this;
+    }
+
+    private function buildRdKafkaProducer(string $class): self
+    {
+        if (!array_key_exists($class, $this->rdKafkaProducers)) {
+            $this->rdKafkaProducers[$class] = new RdKafkaProducer(
+                $this->rdKafkaConfigurations[$class]
+            );
+        }
+
+        return $this;
     }
 }
