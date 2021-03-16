@@ -24,7 +24,7 @@ class ConfigurationResolver
     }
 
     /**
-     * @param string|ConsumerInterface $clientClass
+     * @param string|ClientInterface $clientClass
      * @param InputInterface|null $input
      * @return ResolvedConfiguration
      */

@@ -78,9 +78,11 @@ class ConsumerClient
 
             for ($retry = 0; $retry <= $maxRetries; ++$retry) {
                 $context = $this->createContext($resolvedConfiguration, $retry);
+                $failed = false;
                 try {
                     $consumer->consume($message, $context);
                 } catch (\Throwable $throwable) {
+                    $failed = true;
                     $consumer->handleException(new KafkaException($throwable), $rdKafkaMessage, $context);
 
                     if ($throwable instanceof UnrecoverableMessageException) {
@@ -98,11 +100,11 @@ class ConsumerClient
                             $retryDelay = $maxRetryDelay;
                         }
                     }
-
-                    continue;
                 }
 
-                break;
+                if (!$failed) {
+                    break;
+                }
             }
 
             $retryDelay = $resolvedConfiguration->getConfigurationValue(RetryDelay::NAME);

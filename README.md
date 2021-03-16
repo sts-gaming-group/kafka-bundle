@@ -22,24 +22,44 @@ Published versions of this package are available at https://gitlab.sts.pl/tech/k
 
     - composer config gitlab-token.gitlab.sts.pl <personal_access_token>
 
-4. Add repository to your project
+4. Add a repository to your project
     - composer config repositories.gitlab.sts.pl/26 '{"type": "composer", "url":"https://gitlab.sts.pl/api/v4/group/26/-/packages/composer/packages.json"}'
 
 5. Install package with desired version
     - composer req sts/kafka-bundle:\<version>
 
-## Usage
+## Basic Configuration
 
 1. Add sts_kafka.yaml to config folder at \<root_folder>/config/packages/sts_kafka.yaml or in a specific env folder i.e. \<root_folder>/config/packages/prod/sts_kafka.yaml
 2. Add configuration to sts_kafka.yaml for example:
-	```yaml
-	sts_kafka:
-	  brokers: ['172.25.0.201:9092']
-	  topics: ['testing.dwh_kafka.tab_tickets_live']
-	  group_id: kafka-bundle-test
-	  schema_registry: http://172.25.0.201:8081
-	  ```
-3. Create consumer
+ ```yaml
+sts_kafka:
+  consumers: #applies only to consumers
+    brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
+    schema_registry: 'http://172.25.0.201:8081'
+    instances: #applies to specific consumer classes
+      App\Consumers\ExampleConsumer:
+        group_id: 'sts_kafka_test'
+        topics: [ 'testing.dwh_kafka.tab_tickets_prematch%' ]
+  producers: #applies only to producers
+    brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
+      instances:
+        App\Producers\ExampleProducer: #applies to specific producer classes
+        topics: [ 'my_app_failed_message_topic' ]
+   ```
+3. Most of the time you would like to keep your kafka configuration in sts_kafka.yaml, but you can also pass configuration directly in CLI for example:
+```
+bin/console kafka:consumers:consume example_consumer --group_id some_other_group_id
+```
+
+The configurations are resolved in runtime. The priority is as follows:
+
+- Configurations passed in CLI will always take precedence
+- Configurations passed per consumer/producer basis (```instances:``` section in `consumers:` or `producers:` in sts_kafka.yaml) take precedence over global configuration in sts_kafka.yaml
+- Global consumer/producer configuration (`consumers:` and `producers:` section in sts_kafka.yaml) 
+
+## Consuming messages
+1. Create consumer
 ```php
 <?php
 
@@ -47,9 +67,11 @@ declare(strict_types=1);
 
 namespace App\Consumers;
 
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\RdKafka\Context;
+use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Consumer\Message;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Exception\KafkaException;
+use Sts\KafkaBundle\RdKafka\Context;
 
 class ExampleConsumer implements ConsumerInterface
 {
@@ -57,85 +79,142 @@ class ExampleConsumer implements ConsumerInterface
 
     public function consume(Message $message, Context $context): bool
     {
-	  // $context contains resolved configuration, rd kafka consumer object and topics
-	  // $message->getDecodedPayload() contains the actual Kafka payload
+        $data = $message->getData(); // contains denormalized data from Kafka
+        $retryNo = $context->getRetryNo();  // contains retry count in case of a failure
+        
+        return true;
+    }
 
-	  return true;
+    public function handleException(KafkaException $kafkaException, RdKafkaMessage $message, Context $context): bool
+    {
+        $message = $kafkaException->getMessage(); // contains exception message
+        $throwable = $kafkaException->getThrowable(); // contains last thrown object
+
+        return true;
     }
 
     public function getName(): string
     {
-	  return self::CONSUMER_NAME;
+        return self::CONSUMER_NAME; // consumer unique name in your project
     }
  }
  ```
- 4. Run consumer
+ 2. If configuration was done properly (proper broker, topic and most likely schema registry), you should be able to run your consumer and receive messages
  ```
  bin/console kafka:consumers:consume example_consumer
  ```
-The Message object should contain Kafka payload if configuration was done properly.
+## Retrying failed messages
 
-### Configuration
-Most of the time you will like to keep your kafka configuration in sts_kafka.yaml but you can also pass configuration directly in CLI for example:
-```
-bin/console kafka:consumers:consume example_consumer --group_id some_other_group_id
-```
-This allows you to scale one Consumer object with different configurations.
-If you have many consumers in one application you can also define configuration per consumer basis in sts_kafka.yaml - for example:
+Any uncaught exception thrown inside `consume` method may trigger a retry if you'd like. If you wish to receive the same message again, configure the retry options in sts_kafka.yaml
 ```yaml
 sts_kafka:
-  brokers: ['172.25.0.201:9092']
-  schema_registry: http://172.26.0.201:8081
-   consumers:
-     App\ExampleConsumer:
-	   topics: ['testing.dwh_kafka.tab_tickets_live']
-	   group_id: group_1
-	 App\ExampleConsumerTwo:
-	   topics: ['testing.dwh_kafka.tab_tickets_prematch']
-	   group_id: group_2
+  consumers:
+     ... # global consumers configurations
+    instances:
+      App\Consumers\ExampleConsumer:
+        ... # other configurations
+        max_retries: 3 # defaults to 0 which means it is disabled
+        max_retry_delay: 2500 # defaults to 2000 ms
+        retry_delay: 300 # defaults to 200 ms
+        retry_multiplier: 3 # defaults to 2
 ```
 
-The configurations are resolved in runtime. The priority is as follows:
+With such configuration you will receive the same message 4 times maximum (first consumption + 3 retries). Before the first retry, there will be 300 ms delay.
+Before the second retry, there will be 900 ms delay (retry_delay * retry_multiplier). Before the third retry, there will be 2500 ms delay (max_retry_delay).
+`It is important to remember about committing offsets in Kafka in case of a permanently failed message.` More about it later.
 
-- Configurations passed in CLI will always take precedence
-- Configurations passed per consumer basis (```consumers:``` section in sts_kafka.yaml) take precedence over global configuration in sts_kafka.yaml
+## Decoders
 
-### Decoders
+Decoders are meant to turn raw Kafka data (json, avro, plain text or anything else) into PHP array. There are three decoders available:
+- AvroDecoder
+- JsonDecoder (which actually contains json_decode method)
+- PlainDecoder (which actually does not decode the message but passes you a raw version of it)
 
-By default this package uses AvroDecoder which decodes messages from AVRO format into PHP array. It uses schema_registry option to find proper URL containing schema versions. You can change this implementation by defining your own decoder
+
+By default, this package uses AvroDecoder and requires a schema_registry configuration. Schema registry should be a URL containing schema versions of consumed messages.
+
+
+You can also implement your own decoder by implementing `DecoderInterface`
 ```php
 <?php
-
-declare(strict_types=1);
 
 namespace App\Decoder;
 
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
-use App\Decoder\MyCustomDecodedMessage;
 
-class JsonDecoder implements DecoderInterface
+class CustomDecoder implements DecoderInterface
 {
-    public function decode(ResolvedConfiguration $configuration, string $message): MyCustomDecodedMessage
+    public function decode(ResolvedConfiguration $configuration, string $message): array
     {
-	  // $message contains original kafka payload
-	  // Message->getDecodedPayload() will contain whatever you return here - there is no defined return type hint on this method
+        // $configuration contains values from sts_kafka.yaml or CLI
+        // $message contains raw value from Kafka
     }
 }
 ```
 
-And register it in your configuration
+Register it in your configuration
 ```yaml
 sts_kafka:
-  decoder: App\Decoder\JsonDecoder
-  ...
-```
-or in CLI
-```
-bin/console kafka:consumers:consume example_consumer --decoder App\\Decoder\\JsonDecoder
+  consumers:
+    instances:
+      App\Consumers\ExampleConsumer:
+        decoder: App\Decoder\CustomDecoder
 ```
 
-### Custom configurations
+## Denormalizers
+
+You may also want to denormalize the message into some kind of DTO or any other object you wish.
+By default, this bundle does not denormalize the message into any object and passes you an array (which comes from the AvroDecoder).
+
+Your denormalizers must implement DenormalizerInterface and requires you to implement `denormalize` method. Return value may be of any kind.
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Normalizer;
+
+use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+
+class CustomDenormalizer implements DenormalizerInterface
+{
+    public function denormalize($data): MessageDTO
+    {
+        // $data is an array which comes from AvroDecoder or some other registered Decoder
+        $messageDTO = new MessageDTO();
+        $messageDTO->setTicketNumber($data['ticket_number']);
+
+        return $messageDTO;
+    }
+}
+```
+Register it in your configuration:
+```yaml
+sts_kafka:
+  consumers:
+    instances:
+      App\Consumers\ExampleConsumer:
+        denormalizer: App\Normalizer\CustomDenormalizer
+```
+
+Receive it in your consumer:
+```php
+<?php
+
+...
+
+class ExampleConsumer implements ConsumerInterface
+{
+    public function consume(Message $message, Context $context): bool
+    {
+        $data = $message->getData(); // contains MessageDTO from CustomDenormalizer
+        
+        return true;
+    }
+```
+
+## Custom configurations
 
 Some times you may wish to pass some additional options to your Consumer object. You may add your own configuration:
 ```php
@@ -150,53 +229,57 @@ use Symfony\Component\Console\Input\InputOption;
 
 class Modulo implements ConfigurationInterface
 {
-	public const NAME = 'modulo';
-
-	public function getName(): string
+    public function getName(): string
     {
-	   return self::NAME;
+        return 'modulo';
     }
 
-	public function getMode(): int
+    public function getMode(): int
     {
-	   return InputOption::VALUE_REQUIRED;
+        return InputOption::VALUE_REQUIRED;
     }
 
     public function getDescription(): string
     {
-	  return 'My awesome modulo configuration';
-	}
+        return 'Option description';
+    }
 
     public function isValueValid($value): bool
     {
-        return is_int($value);
+        return is_numeric($value) && $value > 0;
     }
 
     public static function getDefaultValue(): int
     {
-	  return 0;
+        return 1;
     }
- }
+}
 ```
-It will then be available either in sts_kafka.yaml or in CLI
+Custom option be only passed in CLI
 ```
 bin/console kafka:consumers:consume example_consumer --modulo 4
 ```
 You will receive it in consume method and you may take actions accordingly.
 ```php
-public function consume(Message $message, Context $context): bool
+class ExampleConsumer implements ConsumerInterface
 {
-  $modulo = $context->getConfigurationValue(Modulo::NAME); // 4
+    public const CONSUMER_NAME = 'example_consumer';
 
-  return true;
-}
+    public function consume(Message $message, Context $context): bool
+    {
+        $modulo = $context->getConfigurationValue(Modulo::NAME);
+    }
 ```
 
-### Debug
+### Showing current consumer/producer configuration
 
-You can show current configuration that will be passed to Consumer by adding --describe to command
+You can show current configuration that will be passed to consumer by adding --describe to command
 ```
 bin/console kafka:consumers:consume example_consumer --describe
+```
+You can show producers configuration by running
+```
+bin/console kafka:producers:describe
 ```
 
 # To be continued...
