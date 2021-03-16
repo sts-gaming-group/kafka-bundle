@@ -99,6 +99,10 @@ class ConfigurationResolver
         return $resolvedValue;
     }
 
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param mixed $resolvedValue
+     */
     private function validateResolvedValue(ConfigurationInterface $configuration, $resolvedValue): void
     {
         if (!$configuration->isValueValid($resolvedValue)) {

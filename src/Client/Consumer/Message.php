@@ -11,8 +11,19 @@ class Message
     private string $payload;
     private string $key;
     private int $offset;
+    /**
+     * @var mixed
+     */
     private $data;
 
+    /**
+     * @param string $topicName
+     * @param int $partition
+     * @param string $payload
+     * @param string $key
+     * @param int $offset
+     * @param mixed $data
+     */
     public function __construct(
         string $topicName,
         int $partition,

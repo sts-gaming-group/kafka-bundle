@@ -14,7 +14,7 @@ class ProducerProvider
      */
     protected array $producers = [];
 
-    public function addHandler(ProducerInterface $producer): self
+    public function addProducer(ProducerInterface $producer): self
     {
         $this->producers[] = $producer;
 

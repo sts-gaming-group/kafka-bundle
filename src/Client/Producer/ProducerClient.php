@@ -22,6 +22,10 @@ class ProducerClient
         $this->producerConfigCache = $producerConfigCache;
     }
 
+    /**
+     * @param mixed $data
+     * @return $this
+     */
     public function produce($data): self
     {
         $this->isKafkaExtensionLoaded();

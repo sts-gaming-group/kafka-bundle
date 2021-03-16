@@ -25,9 +25,9 @@ class ProducerPartition implements CastValueInterface
     {
         return
             <<<EOT
-        Which partition producer should produce to. 
-        Defaults to RD_KAFKA_PARTITION_UA (-1) and lets librdkafka choose the partition according to message key value.
-        EOT;
+            Which partition producer should produce to. 
+            Defaults to RD_KAFKA_PARTITION_UA (-1) and lets librdkafka choose the partition according to message key value.
+            EOT;
     }
 
     public function isValueValid($value): bool

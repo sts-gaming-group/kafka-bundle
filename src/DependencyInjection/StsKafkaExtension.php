@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\DependencyInjection;
 
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\FailedMessageProducerHandlerInterface;
 use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
@@ -44,9 +43,6 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
 
         $container->registerForAutoconfiguration(ProducerInterface::class)
             ->addTag('sts_kafka.kafka.producer_handler');
-
-        $container->registerForAutoconfiguration(FailedMessageProducerHandlerInterface::class)
-            ->addTag('sts_kafka.kafka.failed_message_producer_handler');
 
         $container->registerForAutoconfiguration(ConfigurationInterface::class)
             ->addTag('sts_kafka.configuration.type');
@@ -96,7 +92,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         $producerProvider = $container->findDefinition($providerId);
         $producers = $container->findTaggedServiceIds('sts_kafka.kafka.producer_handler');
         foreach ($producers as $id => $tags) {
-            $producerProvider->addMethodCall('addHandler', [new Reference($id)]);
+            $producerProvider->addMethodCall('addProducer', [new Reference($id)]);
         }
     }
 

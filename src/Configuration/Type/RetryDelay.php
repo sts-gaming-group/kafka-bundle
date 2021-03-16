@@ -24,7 +24,7 @@ class RetryDelay implements ConfigurationInterface
     public function getDescription(): string
     {
         return sprintf(
-            'Delay (in ms) before message is consumed again after fail. Defaults to %s',
+            'Delay (in ms) before message is consumed again after thrown exception. Defaults to %s',
             self::getDefaultValue()
         );
     }

@@ -65,10 +65,6 @@
                  id="sts_kafka.configuration.type.producer_partition">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\ProducerFlushRetries"
-                 id="sts_kafka.configuration.type.producer_flush_retries">
-            <tag name="sts_kafka.configuration.type"/>
-        </service>
         <service class="Sts\KafkaBundle\Configuration\Type\Denormalizer"
                  id="sts_kafka.configuration.type.denormalizer">
             <tag name="sts_kafka.configuration.type"/>

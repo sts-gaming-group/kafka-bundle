@@ -184,7 +184,7 @@ bin/console kafka:consumers:consume example_consumer --modulo 4
 ```
 You will receive it in consume method and you may take actions accordingly.
 ```php
-public function consume(MessageInterface $message, Context $context): bool
+public function consume(Message $message, Context $context): bool
 {
   $modulo = $context->getConfigurationValue(Modulo::NAME); // 4
 

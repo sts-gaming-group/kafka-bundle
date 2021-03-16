@@ -77,11 +77,9 @@ class ConsumerClient
             }
 
             for ($retry = 0; $retry <= $maxRetries; ++$retry) {
+                $context = $this->createContext($resolvedConfiguration, $retry);
                 try {
-                    $consumer->consume(
-                        $message,
-                        $this->createContext($resolvedConfiguration, $retry)
-                    );
+                    $consumer->consume($message, $context);
                 } catch (\Throwable $throwable) {
                     $consumer->handleException(new KafkaException($throwable), $rdKafkaMessage, $context);
 
