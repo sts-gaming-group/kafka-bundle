@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Command;
 
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Configuration\RawConfiguration;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Client\Consumer\ConsumerClient;
 use Sts\KafkaBundle\Client\Consumer\ConsumerProvider;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Command\Traits\DescribeTrait;
+use Sts\KafkaBundle\Configuration\ConfigurationResolver;
+use Sts\KafkaBundle\Configuration\RawConfiguration;
 use Sts\KafkaBundle\Traits\AddConfigurationsToCommandTrait;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,6 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ConsumeCommand extends Command
 {
     use AddConfigurationsToCommandTrait;
+    use DescribeTrait;
 
     protected static $defaultName = 'kafka:consumers:consume';
 
@@ -63,42 +63,12 @@ class ConsumeCommand extends Command
         $resolvedConfiguration = $this->configurationResolver->resolve($consumer, $input);
 
         if ($input->getOption('describe')) {
-            $this->describeConsumer($resolvedConfiguration, $output, $consumer);
+            $this->describe($resolvedConfiguration, $output, $consumer);
 
             return 0;
         }
         $this->consumerClient->consume($consumer, $resolvedConfiguration);
 
         return 0;
-    }
-
-    private function describeConsumer(
-        ResolvedConfiguration $resolvedConfiguration,
-        OutputInterface $output,
-        ConsumerInterface $consumer
-    ): void {
-        $table = new Table($output);
-        $table->setHeaders(['configuration', 'value']);
-        $table->setStyle('box');
-        $values['consumer_name'] = $consumer->getName();
-
-        foreach ($resolvedConfiguration->getConfigurations() as $name => $configuration) {
-            $resolvedValue = $configuration['resolvedValue'];
-            if (is_array($resolvedValue)) {
-                $values[$name] = implode(', ', $resolvedValue);
-            } elseif ($resolvedValue === true) {
-                $values[$name] = 'true';
-            } elseif ($resolvedValue === false) {
-                $values[$name] = 'false';
-            } else {
-                $values[$name] = $resolvedValue;
-            }
-        }
-
-        foreach ($values as $name => $value) {
-            $table->addRow([$name, $value]);
-        }
-
-        $table->render();
     }
 }

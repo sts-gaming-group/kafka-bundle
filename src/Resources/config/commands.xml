@@ -12,5 +12,11 @@
             <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
             <argument type="service" id="sts_kafka.client.consumer.consumer_client"/>
         </service>
+        <service class="Sts\KafkaBundle\Command\ProducersDescribeCommand"
+                 id="sts_kafka.command.describe_producers_command">
+            <tag name="console.command"/>
+            <argument type="service" id="sts_kafka.client.producer.producer_provider"/>
+            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
+        </service>
     </services>
 </container>

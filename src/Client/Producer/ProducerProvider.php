@@ -45,4 +45,12 @@ class ProducerProvider
 
         return $producers[0];
     }
+
+    /**
+     * @return array<ProducerInterface>
+     */
+    public function getProducers(): array
+    {
+        return $this->producers;
+    }
 }
