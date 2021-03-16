@@ -125,9 +125,9 @@ Before the second retry, there will be 900 ms delay (retry_delay * retry_multipl
 
 ## Decoders
 
-Decoders are meant to turn raw Kafka data (json, avro, plain text or anything else) into PHP array. There are three decoders available:
+Decoders are meant to turn raw Kafka data (json, avro, plain text or anything else) into PHP array (or actually any format you'd like). There are three decoders available:
 - AvroDecoder
-- JsonDecoder (which actually contains json_decode method)
+- JsonDecoder (which actually only does json_decode on kafka raw data)
 - PlainDecoder (which actually does not decode the message but passes you a raw version of it)
 
 
@@ -208,12 +208,114 @@ class ExampleConsumer implements ConsumerInterface
 {
     public function consume(Message $message, Context $context): bool
     {
-        $data = $message->getData(); // contains MessageDTO from CustomDenormalizer
+        $messageDTO = $message->getData(); // $messageDTO comes from CustomDenormalizer
         
         return true;
     }
 ```
 
+## Producing Messages
+
+1. To produce messages you must configure few options in sts_kafka.yaml:
+```yaml 
+producers:
+ instances:
+   App\Producers\ExampleProducer:
+     brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
+     topics: [ 'topic_i_want_to_produce_to' ]
+```
+
+2. Create data object which you want to work on (i.e. some entity or DTO)
+```php 
+<?php
+
+declare(strict_types=1);
+
+namespace App\Producers;
+
+class Ticket
+{
+    private int $clientId;
+    private string $ticketNumber;
+    private int $totalBet;
+
+    public function __construct(int $clientId, string $ticketNumber, int $totalBet)
+    {
+        $this->clientId = $clientId;
+        $this->ticketNumber = $ticketNumber;
+        $this->totalBet = $totalBet;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'clientId' => $this->clientId,
+            'ticketNumber' => $this->ticketNumber,
+            'totalBet' => $this->totalBet
+        ];
+    }
+}
+```
+3. Create a producer which will work on your data object and create Message for Kafka
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Producers;
+
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
+use Sts\KafkaBundle\Client\Producer\Message;
+
+class ExampleProducer implements ProducerInterface
+{
+    public function produce($data): Message
+    {
+        /** @var Ticket $data */
+        return new Message(json_encode($data->toArray()), $data->getClientId());
+        // first argument of Message is the payload as a string
+        // second argument is a message key which is used to help kafka partition messages
+    }
+
+    public function supports($data): bool
+    {
+        // in case of many producers you should check what $data is passed here
+        return get_class($data )=== Ticket::class;
+    }
+}
+```
+4. Push message by calling ProducerClient::produce() i.e. somewhere in your Command class
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Command;
+
+use Sts\KafkaBundle\Client\Producer\ProducerClient;
+
+class ExampleCommand extends Command
+{
+   ...
+
+ public function __construct(ProducerClient $producerClient, TicketRepository $ticketRepository)
+ {
+     $this->producerClient = $producerClient;
+     $this->ticketRepository = $ticketRepository;
+ }
+ 
+ protected function execute(InputInterface $input, OutputInterface $output): int
+ {
+     $tickets = $this->ticketRepository->findAll();
+     foreach ($tickets as $ticket) {
+         $this->producerClient->produce($message);
+     }
+
+     $this->producerClient->poll(); // call poll after produce() method has finished
+
+     return Command::SUCCESS;
+ }
+```
 ## Custom configurations
 
 Some times you may wish to pass some additional options to your Consumer object. You may add your own configuration:
@@ -255,11 +357,11 @@ class Modulo implements ConfigurationInterface
     }
 }
 ```
-Custom option be only passed in CLI
+Custom option may only be passed in CLI
 ```
 bin/console kafka:consumers:consume example_consumer --modulo 4
 ```
-You will receive it in consume method and you may take actions accordingly.
+You will receive it in consume method, and you may take actions accordingly.
 ```php
 class ExampleConsumer implements ConsumerInterface
 {
