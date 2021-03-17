@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class Topics implements ConfigurationInterface
+class Topics implements ConsumerConfigurationInterface
 {
     public const NAME = 'topics';
 

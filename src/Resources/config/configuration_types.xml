@@ -18,12 +18,6 @@
                  id="sts_kafka.configuration.type.offset_store_method">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\Partition" id="sts_kafka.configuration.type.partition">
-            <tag name="sts_kafka.configuration.type"/>
-        </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\Offset" id="sts_kafka.configuration.type.offset">
-            <tag name="sts_kafka.configuration.type"/>
-        </service>
         <service class="Sts\KafkaBundle\Configuration\Type\Timeout" id="sts_kafka.configuration.type.timeout">
             <tag name="sts_kafka.configuration.type"/>
         </service>
@@ -83,6 +77,9 @@
         </service>
         <service class="Sts\KafkaBundle\Configuration\Type\MaxRetryDelay"
                  id="sts_kafka.configuration.type.max_retry_delay">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\ProducerTopic" id="sts_kafka.configuration.type.producer_topic">
             <tag name="sts_kafka.configuration.type"/>
         </service>
     </services>

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Command\Traits;
 
 use Sts\KafkaBundle\Client\Contract\ClientInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,17 +23,30 @@ trait DescribeTrait
         $table->setStyle('box');
         $values['class'] = get_class($client);
 
-        foreach ($resolvedConfiguration->getConfigurations() as $name => $configuration) {
+        $configurationType = ResolvedConfiguration::ALL_TYPES;
+        if ($client instanceof ConsumerInterface) {
+            $configurationType = ResolvedConfiguration::CONSUMER_TYPES;
+        }
+
+        if ($client instanceof ProducerInterface) {
+            $configurationType = ResolvedConfiguration::PRODUCER_TYPES;
+        }
+
+        foreach ($resolvedConfiguration->getConfigurations($configurationType) as $configuration) {
             $resolvedValue = $configuration['resolvedValue'];
+            $name = $configuration['configuration']->getName();
             if (is_array($resolvedValue)) {
                 $values[$name] = implode(', ', $resolvedValue);
-            } elseif ($resolvedValue === true) {
-                $values[$name] = 'true';
-            } elseif ($resolvedValue === false) {
-                $values[$name] = 'false';
-            } else {
-                $values[$name] = $resolvedValue;
+
+                continue;
             }
+
+            if ($resolvedValue === true || $resolvedValue === false) {
+                $values[$name] = var_export($resolvedValue, true);
+
+                continue;
+            }
+            $values[$name] = $resolvedValue;
         }
 
         foreach ($values as $name => $value) {

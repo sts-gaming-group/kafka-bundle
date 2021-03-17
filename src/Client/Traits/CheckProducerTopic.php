@@ -11,7 +11,7 @@ trait CheckProducerTopic
 {
     private array $topicsCache = [];
 
-    public function isTopicBlacklisted(string $topic): void
+    public function isTopicBlacklisted(string $topic): bool
     {
         if (!$this->topicsCache) {
             $this->topicsCache = (new BlacklistTopics())->getTopics();
@@ -22,5 +22,7 @@ trait CheckProducerTopic
                 sprintf('Unable to produce to topic %s. It is blacklisted.', $topic)
             );
         }
+
+        return true;
     }
 }

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Decoder\AvroDecoder;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Decoder\JsonDecoder;
 use Sts\KafkaBundle\Decoder\PlainDecoder;
 use Symfony\Component\Console\Input\InputOption;
 
-class Decoder implements ConfigurationInterface
+class Decoder implements ConsumerConfigurationInterface
 {
     public const NAME = 'decoder';
 

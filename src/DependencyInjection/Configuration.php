@@ -19,6 +19,7 @@ use Sts\KafkaBundle\Configuration\Type\Offset;
 use Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod;
 use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
+use Sts\KafkaBundle\Configuration\Type\ProducerTopic;
 use Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
 use Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
 use Sts\KafkaBundle\Configuration\Type\RetryDelay;
@@ -97,13 +98,6 @@ class Configuration implements ConfigurationInterface
     public function addCommonConfigurations(NodeBuilder $builder): void
     {
         $builder
-            ->arrayNode(Topics::NAME)
-                ->defaultValue(Topics::getDefaultValue())
-                ->cannotBeEmpty()
-                ->scalarPrototype()
-                    ->cannotBeEmpty()
-                ->end()
-            ->end()
             ->integerNode(LogLevel::NAME)
                 ->defaultValue(LogLevel::getDefaultValue())
             ->end();
@@ -117,12 +111,23 @@ class Configuration implements ConfigurationInterface
          $builder
             ->integerNode(ProducerPartition::NAME)
                 ->defaultValue(ProducerPartition::getDefaultValue())
+            ->end()
+            ->scalarNode(ProducerTopic::NAME)
+                ->defaultValue(ProducerTopic::getDefaultValue())
+                ->cannotBeEmpty()
             ->end();
     }
 
     private function addConsumerConfigurations(NodeBuilder $builder): void
     {
         $builder
+            ->arrayNode(Topics::NAME)
+                ->defaultValue(Topics::getDefaultValue())
+                ->cannotBeEmpty()
+                    ->scalarPrototype()
+                    ->cannotBeEmpty()
+                ->end()
+            ->end()
             ->scalarNode(Decoder::NAME)
                 ->defaultValue(Decoder::getDefaultValue())
                 ->cannotBeEmpty()
@@ -143,15 +148,9 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue(GroupId::getDefaultValue())
                 ->cannotBeEmpty()
             ->end()
-            ->integerNode(Offset::NAME)
-                ->defaultValue(Offset::getDefaultValue())
-            ->end()
             ->scalarNode(OffsetStoreMethod::NAME)
                 ->defaultValue(OffsetStoreMethod::getDefaultValue())
                 ->cannotBeEmpty()
-            ->end()
-            ->integerNode(Partition::NAME)
-                ->defaultValue(Partition::getDefaultValue())
             ->end()
             ->integerNode(Timeout::NAME)
                 ->defaultValue(Timeout::getDefaultValue())

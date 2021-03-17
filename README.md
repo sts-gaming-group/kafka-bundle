@@ -391,7 +391,7 @@ bin/console kafka:consumers:consume example_consumer --describe
 ┌───────────────────────────┬─────────────────────────────────────────────────────────┐
 │ configuration             │ value                                                   │
 ├───────────────────────────┼─────────────────────────────────────────────────────────┤
-│ class                     │ App\Consumers\ExampleConsumer                         │
+│ class                     │ App\Consumers\ExampleConsumer                           │
 │ topics                    │ testing.dwh_kafka.tab_tickets_prematch                  │
 │ group_id                  │ sts_kafka_test                                          │
 │ brokers                   │ 172.25.0.201:9092, 172.25.0.202:9092, 172.25.0.203:9092 │
@@ -399,14 +399,14 @@ bin/console kafka:consumers:consume example_consumer --describe
 │ timeout                   │ 1000                                                    │
 │ auto_offset_reset         │ smallest                                                │
 │ auto_commit_interval_ms   │ 5                                                       │
-│ decoder                   │ Sts\KafkaBundle\Decoder\AvroDecoder                  │
+│ decoder                   │ Sts\KafkaBundle\Decoder\AvroDecoder                     │
 │ schema_registry           │ http://172.25.0.201:8081                                │
 │ enable_auto_offset_store  │ true                                                    │
 │ enable_auto_commit        │ true                                                    │
 │ log_level                 │ 3                                                       │
 │ register_missing_schemas  │ false                                                   │
 │ register_missing_subjects │ false                                                   │
-│ denormalizer              │ App\Normalizer\CustomDenormalizer                     │
+│ denormalizer              │ App\Normalizer\CustomDenormalizer                       │
 │ max_retries               │ 3                                                       │
 │ retry_delay               │ 250                                                     │
 │ retry_multiplier          │ 3                                                       │
@@ -421,7 +421,7 @@ bin/console kafka:producers:describe
 ┌────────────────────┬─────────────────────────────────────────────────────────┐
 │ configuration      │ value                                                   │
 ├────────────────────┼─────────────────────────────────────────────────────────┤
-│ class              │ App\Producers\ExampleProducer                         │
+│ class              │ App\Producers\ExampleProducer                           │
 │ brokers            │ 172.25.0.201:9092, 172.25.0.202:9092, 172.25.0.203:9092 │
 │ log_level          │ 3                                                       │
 │ producer_partition │ -1                                                      │

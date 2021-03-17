@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class OffsetStoreMethod implements GlobalConfigurationInterface
+class OffsetStoreMethod implements KafkaConfigurationInterface, ConsumerConfigurationInterface
 {
     public const BROKER = 'broker';
     public const FILE = 'file';

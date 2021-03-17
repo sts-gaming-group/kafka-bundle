@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class RetryMultiplier implements ConfigurationInterface
+class RetryMultiplier implements ConsumerConfigurationInterface
 {
     public const NAME = 'retry_multiplier';
 

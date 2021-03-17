@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Traits\BooleanConfigurationTrait;
 
-class EnableAutoCommit implements GlobalConfigurationInterface
+class EnableAutoCommit implements KafkaConfigurationInterface, ConsumerConfigurationInterface
 {
     use BooleanConfigurationTrait;
 

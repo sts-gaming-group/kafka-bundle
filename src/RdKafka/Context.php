@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\RdKafka;
 
+use RdKafka\KafkaConsumer as RdKafkaConsumer;
 use RdKafka\ConsumerTopic as RdKafkaConsumerTopic;
+use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class Context
 {
     private ResolvedConfiguration $resolvedConfiguration;
-    /**
-     * @var array<RdKafkaConsumerTopic>
-     */
-    private array $rdKafkaConsumerTopics;
-
     private int $retryNo;
+    private RdKafkaConsumer $rdKafkaConsumer;
+    private ?RdKafkaMessage $rdKafkaMessage;
 
     public function __construct(
         ResolvedConfiguration $resolvedConfiguration,
-        array $rdKafkaConsumerTopics,
-        int $retryNo
+        int $retryNo,
+        RdKafkaConsumer $rdKafkaConsumer,
+        ?RdKafkaMessage $rdKafkaMessage = null
     ) {
         $this->resolvedConfiguration = $resolvedConfiguration;
-        foreach ($rdKafkaConsumerTopics as $rdKafkaConsumerTopic) {
-            $this->rdKafkaConsumerTopics[$rdKafkaConsumerTopic->getName()] = $rdKafkaConsumerTopic;
-        }
         $this->retryNo = $retryNo;
+        $this->rdKafkaConsumer = $rdKafkaConsumer;
+        $this->rdKafkaMessage = $rdKafkaMessage;
     }
 
     /**
@@ -38,13 +37,18 @@ class Context
         return $this->resolvedConfiguration->getConfigurationValue($name);
     }
 
-    public function getRdKafkaConsumerTopicByName(string $name): RdKafkaConsumerTopic
-    {
-        return $this->rdKafkaConsumerTopics[$name];
-    }
-
     public function getRetryNo(): int
     {
         return $this->retryNo;
+    }
+
+    public function getRdKafkaConsumer(): RdKafkaConsumer
+    {
+        return $this->rdKafkaConsumer;
+    }
+
+    public function getRdKafkaMessage(): ?RdKafkaMessage
+    {
+        return $this->rdKafkaMessage;
     }
 }

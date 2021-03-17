@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class MaxRetries implements ConfigurationInterface
+class MaxRetries implements ConsumerConfigurationInterface
 {
     public const NAME = 'max_retries';
 

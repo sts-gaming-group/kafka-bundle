@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\DecoderConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class SchemaRegistry implements DecoderConfigurationInterface
+class SchemaRegistry implements ConsumerConfigurationInterface
 {
     public const NAME = 'schema_registry';
 

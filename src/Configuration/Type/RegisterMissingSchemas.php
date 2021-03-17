@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
-use Sts\KafkaBundle\Configuration\Contract\DecoderConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Traits\BooleanConfigurationTrait;
 
-class RegisterMissingSchemas implements DecoderConfigurationInterface
+class RegisterMissingSchemas implements ConsumerConfigurationInterface
 {
     use BooleanConfigurationTrait;
 

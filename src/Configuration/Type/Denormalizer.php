@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
 use Sts\KafkaBundle\Denormalizer\PlainDenormalizer;
 use Symfony\Component\Console\Input\InputOption;
 
-class Denormalizer implements ConfigurationInterface
+class Denormalizer implements ConsumerConfigurationInterface
 {
     public const NAME = 'denormalizer';
 

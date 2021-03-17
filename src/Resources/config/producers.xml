@@ -11,7 +11,8 @@
                  alias="sts_kafka.client.producer.producer_provider"/>
         <service class="Sts\KafkaBundle\Client\Producer\ProducerClient" id="sts_kafka.client.producer_client">
             <argument type="service" id="sts_kafka.client.producer.producer_provider"/>
-            <argument type="service" id="sts_kafka.rd_kafka.factory.producer.builder"/>
+            <argument type="service" id="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
+            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
         </service>
         <service id="Sts\KafkaBundle\Client\Producer\ProducerClient" alias="sts_kafka.client.producer_client"/>
     </services>
