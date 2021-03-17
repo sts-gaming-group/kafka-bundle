@@ -9,7 +9,7 @@ use Sts\KafkaBundle\Client\Traits\CheckProducerTopic;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
 use Sts\KafkaBundle\Configuration\Type\ProducerTopic;
-use Sts\KafkaBundle\RdKafka\Factory\GlobalConfigurationFactory;
+use Sts\KafkaBundle\RdKafka\KafkaConfigurationFactory;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
 class ProducerClient
@@ -29,17 +29,17 @@ class ProducerClient
     private ?Producer $lastCalledProducer = null;
 
     private ProducerProvider $producerProvider;
-    private GlobalConfigurationFactory $globalConfigurationFactory;
+    private KafkaConfigurationFactory $kafkaConfigurationFactory;
     private ConfigurationResolver $configurationResolver;
 
 
     public function __construct(
         ProducerProvider $producerProvider,
-        GlobalConfigurationFactory $globalConfigurationFactory,
+        KafkaConfigurationFactory $kafkaConfigurationFactory,
         ConfigurationResolver $configurationResolver
     ) {
         $this->producerProvider = $producerProvider;
-        $this->globalConfigurationFactory = $globalConfigurationFactory;
+        $this->kafkaConfigurationFactory = $kafkaConfigurationFactory;
         $this->configurationResolver = $configurationResolver;
     }
 
@@ -53,7 +53,7 @@ class ProducerClient
 
         $producer = $this->producerProvider->provide($data);
 
-        $rdKafkaConfig = $this->globalConfigurationFactory->create($producer);
+        $rdKafkaConfig = $this->kafkaConfigurationFactory->create($producer);
         $rdKafkaConfig->setDrMsgCb($this->deliveryCallback);
 
         $producerClass = get_class($producer);
@@ -63,11 +63,11 @@ class ProducerClient
 
         $this->lastCalledProducer = $this->rdKafkaProducers[$producerClass];
         $configuration = $this->configurationResolver->resolve($producer);
-        $topic = $this->lastCalledProducer->newTopic($configuration->getConfigurationValue(ProducerTopic::NAME));
+        $topic = $this->lastCalledProducer->newTopic($configuration->getValue(ProducerTopic::NAME));
 
         $message = $producer->produce($data);
         $topic->produce(
-            $configuration->getConfigurationValue(ProducerPartition::NAME),
+            $configuration->getValue(ProducerPartition::NAME),
             0,
             $message->getPayload(),
             $message->getKey()

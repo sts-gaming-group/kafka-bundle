@@ -30,17 +30,17 @@ class ConfigurationResolver
      */
     public function resolve($clientClass, ?InputInterface $input = null): ResolvedConfiguration
     {
-        $resolvedConfiguration = new ResolvedConfiguration();
+        $configuration = new ResolvedConfiguration();
 
-        foreach ($this->rawConfiguration->getConfigurations() as $configuration) {
-            $resolvedValue = $this->getResolvedValue($configuration, $clientClass, $input);
-            if ($configuration instanceof CastValueInterface) {
-                $resolvedValue = $configuration->cast($resolvedValue);
+        foreach ($this->rawConfiguration->getConfigurations() as $rawConfiguration) {
+            $resolvedValue = $this->getResolvedValue($rawConfiguration, $clientClass, $input);
+            if ($rawConfiguration instanceof CastValueInterface) {
+                $resolvedValue = $rawConfiguration->cast($resolvedValue);
             }
-            $resolvedConfiguration->addConfiguration($configuration, $resolvedValue);
+            $configuration->addConfiguration($rawConfiguration, $resolvedValue);
         }
 
-        return $resolvedConfiguration;
+        return $configuration;
     }
 
     /**

@@ -70,7 +70,7 @@ class ResolvedConfiguration
      * @param string $name
      * @return mixed
      */
-    public function getConfigurationValue(string $name)
+    public function getValue(string $name)
     {
         return $this->configurations[$name]['resolvedValue'];
     }

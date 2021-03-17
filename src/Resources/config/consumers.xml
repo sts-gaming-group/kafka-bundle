@@ -8,7 +8,7 @@
         <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client.consumer.consumer_provider"/>
         <service id="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" alias="sts_kafka.client.consumer.consumer_provider"/>
         <service class="Sts\KafkaBundle\Client\Consumer\ConsumerClient" id="sts_kafka.client.consumer.consumer_client">
-            <argument type="service" id="sts_kafka.rd_kafka.factory.global_configuration_factory"/>
+            <argument type="service" id="sts_kafka.rd_kafka.kafka_configuration_factory"/>
             <argument type="service" id="sts_kafka.factory.message_factory"/>
             <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
         </service>

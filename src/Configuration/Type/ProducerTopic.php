@@ -32,7 +32,7 @@ class ProducerTopic implements ProducerConfigurationInterface
 
     public function isValueValid($value): bool
     {
-        if (!is_string($value) && '' === $value) {
+        if (!is_string($value) || '' === $value) {
             return false;
         }
 

@@ -9,6 +9,7 @@ use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -28,7 +29,8 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         'configuration_types',
         'decoders',
         'producers',
-        'denormalizers'
+        'denormalizers',
+        'validators'
     ];
 
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
@@ -52,6 +54,9 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
 
         $container->registerForAutoconfiguration(DenormalizerInterface::class)
             ->addTag('sts_kafka.denormalizer');
+
+        $container->registerForAutoconfiguration(ValidatorInterface::class)
+            ->addTag('sts_kafka.validator');
 
         $configurationResolver = $container->getDefinition('sts_kafka.configuration.configuration_resolver');
         $configurationResolver->setArgument(1, $mergedConfig);

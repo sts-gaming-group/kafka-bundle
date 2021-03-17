@@ -9,7 +9,7 @@ use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 
 class PlainDecoder implements DecoderInterface
 {
-    public function decode(ResolvedConfiguration $resolvedConfiguration, string $message): string
+    public function decode(ResolvedConfiguration $configuration, string $message): string
     {
         return $message;
     }

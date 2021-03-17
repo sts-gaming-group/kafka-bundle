@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Tests\Dummy;
 
-use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\KafkaException;
@@ -24,7 +23,7 @@ class DummyConsumerOne implements ConsumerInterface
         return self::NAME;
     }
 
-    public function handleException(KafkaException $kafkaException, RdKafkaMessage $message, Context $context): bool
+    public function handleException(KafkaException $exception, Context $context): bool
     {
         return false;
     }

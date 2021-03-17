@@ -82,5 +82,8 @@
         <service class="Sts\KafkaBundle\Configuration\Type\ProducerTopic" id="sts_kafka.configuration.type.producer_topic">
             <tag name="sts_kafka.configuration.type"/>
         </service>
+        <service class="Sts\KafkaBundle\Configuration\Type\Validators" id="sts_kafka.configuration.type.validators">
+            <tag name="sts_kafka.configuration.type"/>
+        </service>
     </services>
 </container>

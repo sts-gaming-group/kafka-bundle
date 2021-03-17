@@ -1,13 +1,13 @@
 <?php
 
-namespace Sts\KafkaBundle\RdKafka\Factory;
+namespace Sts\KafkaBundle\RdKafka;
 
 use RdKafka\Conf;
 use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
-class GlobalConfigurationFactory
+class KafkaConfigurationFactory
 {
     private ?Conf $conf = null;
     private ConfigurationResolver $configurationResolver;

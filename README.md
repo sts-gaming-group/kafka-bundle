@@ -67,7 +67,6 @@ declare(strict_types=1);
 
 namespace App\Consumers;
 
-use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\KafkaException;
@@ -85,10 +84,10 @@ class ExampleConsumer implements ConsumerInterface
         return true;
     }
 
-    public function handleException(KafkaException $kafkaException, RdKafkaMessage $message, Context $context): bool
+    public function handleException(KafkaException $exception, Context $context): bool
     {
-        $message = $kafkaException->getMessage(); // contains exception message
-        $throwable = $kafkaException->getThrowable(); // contains last thrown object
+        $message = $exception->getMessage(); // contains exception message
+        $throwable = $exception->getThrowable(); // contains last thrown object
 
         return true;
     }
@@ -145,7 +144,7 @@ use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 
 class CustomDecoder implements DecoderInterface
 {
-    public function decode(ResolvedConfiguration $configuration, string $message): array
+    public function decode(ResolvedConfiguration $configuration, string $message)
     {
         // $configuration contains values from sts_kafka.yaml or CLI
         // $message contains raw value from Kafka
@@ -379,7 +378,7 @@ class ExampleConsumer implements ConsumerInterface
 
     public function consume(Message $message, Context $context): bool
     {
-        $modulo = $context->getConfigurationValue(Modulo::NAME);
+        $modulo = $context->getValue(Modulo::NAME);
     }
 ```
 

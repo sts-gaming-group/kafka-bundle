@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 trait DescribeTrait
 {
     public function describe(
-        ResolvedConfiguration $resolvedConfiguration,
+        ResolvedConfiguration $configuration,
         OutputInterface $output,
         ClientInterface $client
     ): void {
@@ -32,7 +32,7 @@ trait DescribeTrait
             $configurationType = ResolvedConfiguration::PRODUCER_TYPES;
         }
 
-        foreach ($resolvedConfiguration->getConfigurations($configurationType) as $configuration) {
+        foreach ($configuration->getConfigurations($configurationType) as $configuration) {
             $resolvedValue = $configuration['resolvedValue'];
             $name = $configuration['configuration']->getName();
             if (is_array($resolvedValue)) {

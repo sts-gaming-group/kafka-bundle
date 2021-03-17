@@ -27,6 +27,7 @@ use Sts\KafkaBundle\Configuration\Type\RetryMultiplier;
 use Sts\KafkaBundle\Configuration\Type\SchemaRegistry;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
 use Sts\KafkaBundle\Configuration\Type\Topics;
+use Sts\KafkaBundle\Configuration\Type\Validators;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -121,6 +122,13 @@ class Configuration implements ConfigurationInterface
     private function addConsumerConfigurations(NodeBuilder $builder): void
     {
         $builder
+            ->arrayNode(Validators::NAME)
+                ->defaultValue(Validators::getDefaultValue())
+                ->cannotBeEmpty()
+                    ->scalarPrototype()
+                    ->cannotBeEmpty()
+                ->end()
+            ->end()
             ->arrayNode(Topics::NAME)
                 ->defaultValue(Topics::getDefaultValue())
                 ->cannotBeEmpty()

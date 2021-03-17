@@ -60,14 +60,14 @@ class ConsumeCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consumer = $this->consumerProvider->provide($input->getArgument('name'));
-        $resolvedConfiguration = $this->configurationResolver->resolve($consumer, $input);
+        $configuration = $this->configurationResolver->resolve($consumer, $input);
 
         if ($input->getOption('describe')) {
-            $this->describe($resolvedConfiguration, $output, $consumer);
+            $this->describe($configuration, $output, $consumer);
 
             return 0;
         }
-        $this->consumerClient->consume($consumer, $resolvedConfiguration);
+        $this->consumerClient->consume($consumer);
 
         return 0;
     }

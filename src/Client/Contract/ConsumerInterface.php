@@ -12,6 +12,6 @@ use Sts\KafkaBundle\RdKafka\Context;
 interface ConsumerInterface extends ClientInterface
 {
     public function consume(Message $message, Context $context): bool;
-    public function handleException(KafkaException $kafkaException, RdKafkaMessage $message, Context $context): bool;
+    public function handleException(KafkaException $exception, Context $context): bool;
     public function getName(): string;
 }

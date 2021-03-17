@@ -11,18 +11,18 @@ use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class Context
 {
-    private ResolvedConfiguration $resolvedConfiguration;
+    private ResolvedConfiguration $configuration;
     private int $retryNo;
     private RdKafkaConsumer $rdKafkaConsumer;
     private ?RdKafkaMessage $rdKafkaMessage;
 
     public function __construct(
-        ResolvedConfiguration $resolvedConfiguration,
+        ResolvedConfiguration $configuration,
         int $retryNo,
         RdKafkaConsumer $rdKafkaConsumer,
         ?RdKafkaMessage $rdKafkaMessage = null
     ) {
-        $this->resolvedConfiguration = $resolvedConfiguration;
+        $this->configuration = $configuration;
         $this->retryNo = $retryNo;
         $this->rdKafkaConsumer = $rdKafkaConsumer;
         $this->rdKafkaMessage = $rdKafkaMessage;
@@ -32,9 +32,9 @@ class Context
      * @param string $name
      * @return mixed
      */
-    public function getConfigurationValue(string $name)
+    public function getValue(string $name)
     {
-        return $this->resolvedConfiguration->getConfigurationValue($name);
+        return $this->configuration->getValue($name);
     }
 
     public function getRetryNo(): int

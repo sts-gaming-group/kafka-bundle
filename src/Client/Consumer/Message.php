@@ -15,7 +15,6 @@ class Message
      * @var mixed
      */
     private $data;
-    private $rdKafkaMessage;
 
     /**
      * @param string $topicName

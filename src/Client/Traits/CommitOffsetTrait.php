@@ -19,7 +19,7 @@ trait CommitOffsetTrait
      */
     public function commitOffset(Context $context, bool $async = false): bool
     {
-        if ($context->getConfigurationValue(EnableAutoOffsetStore::NAME) === 'true') {
+        if ($context->getValue(EnableAutoOffsetStore::NAME) === 'true') {
             throw new InvalidConfigurationException(sprintf(
                 'Unable to manually commit offset when %s configuration is set to `true`.',
                 EnableAutoOffsetStore::NAME
