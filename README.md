@@ -1,5 +1,8 @@
 
 High level Kafka consumer/producer
+
+[[_TOC_]]
+
 ## Installation
 
 Published versions of this package are available at https://gitlab.sts.pl/tech/kafka-bundle/-/packages
@@ -27,7 +30,7 @@ Published versions of this package are available at https://gitlab.sts.pl/tech/k
 
 5. Install package with desired version
     - composer req sts/kafka-bundle:\<version>
-
+   
 ## Basic Configuration
 
 1. Add sts_kafka.yaml to config folder at \<root_folder>/config/packages/sts_kafka.yaml or in a specific env folder i.e. \<root_folder>/config/packages/prod/sts_kafka.yaml
@@ -43,8 +46,8 @@ sts_kafka:
         topics: [ 'testing.dwh_kafka.tab_tickets_prematch' ]
   producers: #applies only to producers
     brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
-      instances:
-        App\Producers\ExampleProducer: #applies to specific producer classes
+      instances: #applies to specific producer classes
+        App\Producers\ExampleProducer: 
         topics: [ 'my_app_failed_message_topic' ]
    ```
 3. Most of the time you would like to keep your kafka configuration in sts_kafka.yaml, but you can also pass configuration directly in CLI for example:
@@ -213,6 +216,114 @@ class ExampleConsumer implements ConsumerInterface
     }
 ```
 
+## Validators
+
+After denormalization, you may want to validate if given object should be passed to your consumer - you may want to verify if for example ticket states are satisfying for you.
+
+1. Create validator
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Validator;
+
+use App\Normalizer\MessageDTO;
+use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
+
+class TicketStateValidator implements ValidatorInterface
+{
+    public function validate($denormalized): bool
+    {
+        /** @var MessageDTO $denormalized */
+
+        return $denormalized->getTicketState() === 'NON-WINNING';
+    }
+
+    public function failureReason($denormalized): string
+    {
+        /** @var MessageDTO $denormalized */
+
+        return sprintf('Non-winning ticket expected. Got %s', $denormalized->getTicketState());
+    }
+}
+```
+Register it in your configuration:
+```yaml
+sts_kafka:
+  consumers:
+    instances:
+      App\Consumers\ExampleConsumer:
+        validators: 
+         - App\Validator\TicketStateValidator
+         - App\Validator\ClientAlreadyBonusedValidator      
+```
+You may have multiple validators attached to one consumer. The priority of called validators is exactly how you defined them in sts_kafka.yaml - 
+so in this case TicketStateValidator is called first, and then ClientAlreadyBonusedValidator is called.
+
+If a validator returns false, an instance of ValidatorException is thrown. 
+```php
+ ...
+ 
+ use Sts\KafkaBundle\Exception\ValidationException;
+ 
+ public function handleException(KafkaException $exception, Context $context): bool
+ {
+     $thrown = $exception->getThrowable();
+     if ($thrown instanceof ValidationException) {
+         /** @var MessageDTO $denormalized */
+         $denormalized = $thrown->getData();
+         $this->logger->info(
+             sprintf(
+                 'Message has not passed validation for client %s. Reason %s', 
+                 $denormalized->getClientId(),
+                 $thrown->getFailedReason())
+         );
+
+         return true;
+     }
+ }
+```
+###`Offset for a message which has not passed validation is committed automatically.`
+
+## Kafka Callbacks
+
+Librdkafka (C/C++ library used underneath PHP) provides several callbacks that you can use in different situations (consuming/producing/error handling/logging). 
+Your consumer must implement CallableInterface which requires you to define `callbacks` method. This method should return an array
+of callbacks you wish to handle yourself.
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Consumers;
+
+use Sts\KafkaBundle\Client\Contract\CallableInterface;
+use Sts\KafkaBundle\RdKafka\Callbacks;
+
+class ExampleConsumer implements CallableInterface
+{
+    public function callbacks(): array
+    {
+        return [
+            Callbacks::OFFSET_COMMIT_CALLBACK => static function (
+                \RdKafka\KafkaConsumer $kafkaConsumer,
+                int $error,
+                array $partitions
+            ) {
+                // call some action according to i.e. error
+            },
+            Callbacks::LOG_CALLBACK => static function ($kafka, int $level, string $facility, string $message) {
+                // log it somewhere
+            }
+        ];
+    }
+    
+    // other methods
+}
+ 
+```
+
 ## Producing Messages
 
 1. To produce messages you must configure few options in sts_kafka.yaml:
@@ -294,9 +405,7 @@ namespace App\Command;
 use Sts\KafkaBundle\Client\Producer\ProducerClient;
 
 class ExampleCommand extends Command
-{
-   ...
-
+{ 
  public function __construct(ProducerClient $producerClient, TicketRepository $ticketRepository)
  {
      $this->producerClient = $producerClient;
@@ -307,7 +416,7 @@ class ExampleCommand extends Command
  {
      $tickets = $this->ticketRepository->findAll();
      foreach ($tickets as $ticket) {
-         $this->producerClient->produce($message);
+         $this->producerClient->produce($ticket);
      }
 
      $this->producerClient->flush(); // call flush after produce() method has finished
@@ -315,14 +424,21 @@ class ExampleCommand extends Command
      return Command::SUCCESS;
  }
 ```
-You can also set delivery callback to ProducerClient to check if messages were sent successfully.
+You can also set callbacks array to ProducerClient for example to check if messages were sent successfully.
 ```php
-$this->producerClient->setDeliveryCallback(static function (RdKafka\Kafka $kafka, RdKafka\Message $message) {
-   if ($message->err) {
-      throw new \Exception('Message lost permanently. Let's produce again');
+use Sts\KafkaBundle\RdKafka\Callbacks;
+
+$callbacks = [
+   Callbacks::MESSAGE_DELIVERY_CALLBACK => static function (\RdKafka\Producer $kafkaProducer, \RdKafka\Message $message) {
+       if ($message->err) {
+           throw new \RuntimeException('Message not produces. Try again');
+       }
    }
-});
- 
+];
+
+foreach ($tickets as $ticket) {
+   $this->producerClient->produce($ticket, $callbacks);
+} 
 ```
 
 ## Custom configurations
@@ -416,7 +532,6 @@ bin/console kafka:consumers:consume example_consumer --describe
 You can show producers configuration by running
 ```
 bin/console kafka:producers:describe
-
 ┌────────────────────┬─────────────────────────────────────────────────────────┐
 │ configuration      │ value                                                   │
 ├────────────────────┼─────────────────────────────────────────────────────────┤

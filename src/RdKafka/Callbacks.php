@@ -11,7 +11,7 @@ namespace Sts\KafkaBundle\RdKafka;
  * @method setDrMsgCb(\RdKafka\Producer $kafkaProducer, \RdKafka\Message $message)
  * @method setOffsetCommitCb(\RdKafka\KafkaConsumer $kafkaConsumer, int $error, array $partitions)
  * @method setRebalanceCb(\RdKafka\KafkaConsumer $kafkaConsumer, int $error, array $partitions)
- * @method setStatsCb($kafka, string $json, int $jsonLength) | todo: no idea what $kafka is here, unable to check this callback
+ * @method setStatsCb($kafka, string $json, int $jsonLength) unable to check this callback
  */
 class Callbacks
 {

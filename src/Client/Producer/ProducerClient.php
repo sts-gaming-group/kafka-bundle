@@ -21,17 +21,14 @@ class ProducerClient
     private int $flushTimeoutMs = 10000;
     private int $pollingBatch = 25000;
     private int $pollingTimeoutMs = 0;
+    private array $callbacks = [];
     private array $rdKafkaProducers;
-    /**
-     * @var callable
-     */
-    private $deliveryCallback = null;
+
     private ?Producer $lastCalledProducer = null;
 
     private ProducerProvider $producerProvider;
     private KafkaConfigurationFactory $kafkaConfigurationFactory;
     private ConfigurationResolver $configurationResolver;
-
 
     public function __construct(
         ProducerProvider $producerProvider,
@@ -54,7 +51,9 @@ class ProducerClient
         $producer = $this->producerProvider->provide($data);
 
         $rdKafkaConfig = $this->kafkaConfigurationFactory->create($producer);
-        $rdKafkaConfig->setDrMsgCb($this->deliveryCallback);
+        foreach ($this->callbacks as $name => $callback) {
+            $rdKafkaConfig->{$name}($callback);
+        }
 
         $producerClass = get_class($producer);
         if (!isset($this->rdKafkaProducers[$producerClass])) {
@@ -78,6 +77,13 @@ class ProducerClient
                 $this->lastCalledProducer->poll($this->pollingTimeoutMs);
             }
         }
+
+        return $this;
+    }
+
+    public function setCallbacks(array $callbacks): self
+    {
+        $this->callbacks = $callbacks;
 
         return $this;
     }
@@ -106,13 +112,6 @@ class ProducerClient
     public function setPollingTimeoutMs(int $pollingTimeoutMs): self
     {
         $this->pollingTimeoutMs = $pollingTimeoutMs;
-
-        return $this;
-    }
-
-    public function setDeliveryCallback(callable $deliveryCallback): self
-    {
-        $this->deliveryCallback = $deliveryCallback;
 
         return $this;
     }

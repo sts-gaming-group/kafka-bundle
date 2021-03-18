@@ -59,6 +59,7 @@ class MessageFactory
                 throw new ValidationException(
                     $this->validators[$requiredValidator],
                     $this->validators[$requiredValidator]->failureReason($denormalized),
+                    $denormalized,
                     sprintf('Validation not passed by %s', $requiredValidator)
                 );
             }
