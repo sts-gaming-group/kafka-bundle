@@ -12,4 +12,9 @@ class PlainValidator implements ValidatorInterface
     {
         return true;
     }
+
+    public function failureReason($denormalized): string
+    {
+        return '';
+    }
 }

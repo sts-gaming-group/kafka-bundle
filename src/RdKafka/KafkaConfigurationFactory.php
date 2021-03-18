@@ -26,15 +26,26 @@ class KafkaConfigurationFactory
         $configuration = $this->configurationResolver->resolve($client);
         $conf = new Conf();
 
-        foreach ($configuration->getConfigurations(ResolvedConfiguration::KAFKA_TYPES) as $globalConfiguration) {
-            $resolvedValue = $globalConfiguration['resolvedValue'];
+        foreach ($configuration->getConfigurations(ResolvedConfiguration::KAFKA_TYPES) as $kafkaConfiguration) {
+            $resolvedValue = $kafkaConfiguration['resolvedValue'];
             $value = is_array($resolvedValue) ? implode(',', $resolvedValue) : $resolvedValue;
             $conf->set(
-                $globalConfiguration['configuration']->getKafkaProperty(),
+                $kafkaConfiguration['configuration']->getKafkaProperty(),
                 $value
             );
         }
+        $conf->setConsumeCb(function(\RdKafka\Message  $message) {
+            dump('consume callback', $message);
+        });
 
+        $conf->setErrorCb(function($kafka, $err, $reason) {
+            dump('error callback', $err);
+        });
+
+        $conf->setLogCb(function($kafka, $level, $facility, $message) {
+            dump('log callback', $err);
+        });
+//        dump($conf->setErrorCb());
         $this->conf = $conf;
 
         return $conf;

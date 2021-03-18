@@ -56,7 +56,11 @@ class MessageFactory
         $requiredValidators = $configuration->getValue(Validators::NAME);
         foreach ($requiredValidators as $requiredValidator) {
             if (!$this->validators[$requiredValidator]->validate($denormalized)) {
-                throw new ValidationException(sprintf('Validation not passed by %s', $requiredValidator));
+                throw new ValidationException(
+                    $this->validators[$requiredValidator],
+                    $this->validators[$requiredValidator]->failureReason($denormalized),
+                    sprintf('Validation not passed by %s', $requiredValidator)
+                );
             }
         }
 

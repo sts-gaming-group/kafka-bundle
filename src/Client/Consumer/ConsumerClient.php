@@ -9,6 +9,7 @@ use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
 use Sts\KafkaBundle\Configuration\Type\MaxRetries;
 use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
 use Sts\KafkaBundle\Configuration\Type\RetryDelay;
@@ -17,9 +18,9 @@ use Sts\KafkaBundle\Configuration\Type\Timeout;
 use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\Exception\KafkaException;
 use Sts\KafkaBundle\Exception\NullMessageException;
-use Sts\KafkaBundle\Exception\NullPayloadException;
 use Sts\KafkaBundle\Exception\RecoverableMessageException;
 use Sts\KafkaBundle\Exception\UnrecoverableMessageException;
+use Sts\KafkaBundle\Exception\ValidationException;
 use Sts\KafkaBundle\Factory\MessageFactory;
 use Sts\KafkaBundle\RdKafka\Context;
 use Sts\KafkaBundle\RdKafka\KafkaConfigurationFactory;
@@ -55,6 +56,7 @@ class ConsumerClient
         $maxRetryDelay = $configuration->getValue(MaxRetryDelay::NAME);
         $retryMultiplier = $configuration->getValue(RetryMultiplier::NAME);
         $topics = $configuration->getValue(Topics::NAME);
+        $enableAutoOffsetStore = $configuration->getValue(EnableAutoOffsetStore::NAME);
 
         $rdKafkaConfig = $this->kafkaConfigurationFactory->create($consumer);
         $rdKafkaConsumer = new RdKafkaConsumer($rdKafkaConfig);
@@ -73,7 +75,7 @@ class ConsumerClient
             }
 
             try {
-                $this->validateMessage($rdKafkaMessage);
+                $this->validateRdKafkaMessage($rdKafkaMessage);
             } catch (\Throwable $throwable) {
                 $consumer->handleException(
                     new KafkaException($throwable),
@@ -86,6 +88,9 @@ class ConsumerClient
             try {
                 $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
             } catch (\Throwable $throwable) {
+                if ($throwable instanceof ValidationException && $enableAutoOffsetStore === 'false') {
+                    $rdKafkaConsumer->commit($rdKafkaMessage);
+                }
                 $consumer->handleException(
                     new KafkaException($throwable),
                     $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
@@ -129,7 +134,7 @@ class ConsumerClient
         }
     }
 
-    private function validateMessage(?RdKafkaMessage $message): void
+    private function validateRdKafkaMessage(?RdKafkaMessage $message): void
     {
         if (null === $message || RD_KAFKA_RESP_ERR__PARTITION_EOF === $message->err) {
             throw new NullMessageException('Currently, there are no more messages.');
@@ -142,7 +147,7 @@ class ConsumerClient
         }
 
         if (null === $message->payload) {
-            throw new NullPayloadException('Null payload received in kafka message.');
+            throw new NullMessageException('Null payload received in kafka message.');
         }
     }
 

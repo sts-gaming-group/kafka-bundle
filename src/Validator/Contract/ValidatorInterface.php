@@ -11,4 +11,10 @@ interface ValidatorInterface
      * @return bool
      */
     public function validate($denormalized): bool;
+
+    /**
+     * @param $denormalized
+     * @return string
+     */
+    public function failureReason($denormalized): string;
 }
