@@ -3,6 +3,7 @@
 namespace Sts\KafkaBundle\RdKafka;
 
 use RdKafka\Conf;
+use Sts\KafkaBundle\Client\Contract\CallableInterface;
 use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
@@ -34,18 +35,14 @@ class KafkaConfigurationFactory
                 $value
             );
         }
-        $conf->setConsumeCb(function(\RdKafka\Message  $message) {
-            dump('consume callback', $message);
-        });
 
-        $conf->setErrorCb(function($kafka, $err, $reason) {
-            dump('error callback', $err);
-        });
+        if ($client instanceof CallableInterface) {
+            $callbacks = $client->callbacks();
+            foreach ($callbacks as $name => $callback) {
+                $conf->{$name}($callback);
+            }
+        }
 
-        $conf->setLogCb(function($kafka, $level, $facility, $message) {
-            dump('log callback', $err);
-        });
-//        dump($conf->setErrorCb());
         $this->conf = $conf;
 
         return $conf;
