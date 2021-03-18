@@ -13,7 +13,7 @@ interface ValidatorInterface
     public function validate($denormalized): bool;
 
     /**
-     * @param $denormalized
+     * @param mixed $denormalized
      * @return string
      */
     public function failureReason($denormalized): string;
