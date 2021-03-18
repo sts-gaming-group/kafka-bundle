@@ -1,9 +1,17 @@
-
-High level Kafka consumer/producer
-
 [[_TOC_]]
 
-## Installation
+## General info
+
+High level Apache Kafka consumer/producer
+
+## Technologies
+
+- PHP >=7.4
+- ext-rdkafka for PHP
+- symfony components: refer to composer.json `require` section for required package versions
+
+
+## Setup
 
 Published versions of this package are available at https://gitlab.sts.pl/tech/kafka-bundle/-/packages
 
@@ -498,7 +506,7 @@ class ExampleConsumer implements ConsumerInterface
     }
 ```
 
-### Showing current consumer/producer configuration
+## Showing current consumer/producer configuration
 
 You can show current configuration that will be passed to consumer by adding --describe to command
 ```
