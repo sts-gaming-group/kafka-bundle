@@ -292,7 +292,7 @@ If a validator returns false, an instance of ValidatorException is thrown.
      }
  }
 ```
-###`Offset for a message which has not passed validation is committed automatically.`
+### Offset for a message which has not passed validation is committed automatically.
 
 ## Kafka Callbacks
 
@@ -340,7 +340,7 @@ producers:
  instances:
    App\Producers\ExampleProducer:
      brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
-     topics: [ 'topic_i_want_to_produce_to' ]
+     producer_topic: 'topic_i_want_to_produce_to' #only one topic allowed per producer
 ```
 
 2. Create data object which you want to work on (i.e. some entity or DTO)
@@ -444,10 +444,25 @@ $callbacks = [
    }
 ];
 
+$this->producerClient->setCallbacks($callbacks);
+
 foreach ($tickets as $ticket) {
-   $this->producerClient->produce($ticket, $callbacks);
+   $this->producerClient->produce($ticket);
 } 
 ```
+Other options that can be configured for ProducerClient at runtime:
+```php 
+$this->producerClient
+   ->setPollingBatch(25000)   
+   ->setPollingTimeoutMs(1000)
+   ->setFlushTimeoutMs(500)
+   ->setMaxFlushRetries(10);
+```
+- polling batch - after how many messages (in case of a loop, as in example above with $tickets) ProducerClient should call librdkafka `poll` method.
+If you produce big messages and do not call poll frequently there might be an issue of librdkafka full internal queue. Also, consumers will not receive anything until `poll` has been called.
+  So it is recommended to keep polling batch number at reasonable level i.e. 10000 or 20000
+- polling timeout ms - how long librdkafka will wait until polling of a message finishes
+- flush timeout ms, max flush retries - after calling `flush()` ProducerClient will try to flush remaining messages in librdkafka internal queue. Remaining messages are those who have not been `poll`ed yet.
 
 ## Custom configurations
 
