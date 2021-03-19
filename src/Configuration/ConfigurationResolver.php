@@ -54,25 +54,16 @@ class ConfigurationResolver
         $clientClass,
         ?InputInterface $input
     ) {
-        $name = $configuration->getName();
-
-        if ($input && $input->getParameterOption('--' . $name) !== false) {
-            $resolvedValue = $input->getOption($name);
-            $this->validateResolvedValue($configuration, $resolvedValue);
-
-            return $resolvedValue;
-        }
-
-        $configName = '';
+        $type = '';
         if (is_a($clientClass, ConsumerInterface::class, true)) {
-            $configName = 'consumers';
+            $type = 'consumers';
         }
 
         if (is_a($clientClass, ProducerInterface::class, true)) {
-            $configName = 'producers';
+            $type = 'producers';
         }
 
-        if (!$configName) {
+        if (!$type) {
             throw new \RuntimeException(sprintf(
                 'Object must implement %s or %s to properly resolve configuration.',
                 ConsumerInterface::class,
@@ -80,17 +71,31 @@ class ConfigurationResolver
             ));
         }
 
-        $className = is_string($clientClass) ? $clientClass : get_class($clientClass);
-
-        if (isset($this->yamlConfig[$configName]['instances'][$className][$name]) &&
-            $this->yamlConfig[$configName]['instances'][$className][$name] !== $configuration::getDefaultValue()) {
-            $resolvedValue = $this->yamlConfig[$configName]['instances'][$className][$name];
+        $name = $configuration->getName();
+        if ($input && $input->getParameterOption('--' . $name) !== false) {
+            $resolvedValue = $input->getOption($name);
             $this->validateResolvedValue($configuration, $resolvedValue);
 
             return $resolvedValue;
         }
 
-        $resolvedValue = $this->yamlConfig[$configName][$name] ??
+        $clientClass = is_string($clientClass) ? $clientClass : get_class($clientClass);
+        if ($this->shouldResolveInstance($clientClass, $type, $configuration)) {
+            $resolvedValue = $this->yamlConfig[$type]['instances'][$clientClass][$name];
+            $this->validateResolvedValue($configuration, $resolvedValue);
+
+            return $resolvedValue;
+        }
+
+        $parentClass = $this->getParentClass($clientClass);
+        if ($this->shouldResolveInstance($parentClass, $type, $configuration)) {
+            $resolvedValue = $this->yamlConfig[$type]['instances'][$parentClass][$name];
+            $this->validateResolvedValue($configuration, $resolvedValue);
+
+            return $resolvedValue;
+        }
+
+        $resolvedValue = $this->yamlConfig[$type][$name] ??
             $this->yamlConfig[$name] ??
             $configuration::getDefaultValue();
 
@@ -113,5 +118,24 @@ class ConfigurationResolver
                 $configuration->getDescription()
             ));
         }
+    }
+
+    /**
+     * @param string|ClientInterface $clientClass
+     * @return string
+     */
+    private function getParentClass($clientClass): string
+    {
+        $parentClass = get_parent_class($clientClass);
+
+        return $parentClass === false ? '' : $parentClass;
+    }
+
+    private function shouldResolveInstance(string $class, string $type, ConfigurationInterface $configuration): bool
+    {
+        $name = $configuration->getName();
+
+        return isset($this->yamlConfig[$type]['instances'][$class][$name]) &&
+            $this->yamlConfig[$type]['instances'][$class][$name] !== $configuration::getDefaultValue();
     }
 }
