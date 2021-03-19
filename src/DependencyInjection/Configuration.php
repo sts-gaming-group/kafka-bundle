@@ -15,9 +15,6 @@ use Sts\KafkaBundle\Configuration\Type\GroupId;
 use Sts\KafkaBundle\Configuration\Type\LogLevel;
 use Sts\KafkaBundle\Configuration\Type\MaxRetries;
 use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
-use Sts\KafkaBundle\Configuration\Type\Offset;
-use Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod;
-use Sts\KafkaBundle\Configuration\Type\Partition;
 use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
 use Sts\KafkaBundle\Configuration\Type\ProducerTopic;
 use Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
@@ -37,13 +34,9 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('sts_kafka');
+
         $rootNode = $treeBuilder->getRootNode();
-
         $builder = $rootNode->children();
-
-        $this->addBroker($builder)
-            ->addSchemaRegistry($builder);
-
         $builder->append($this->addConsumersNode())
             ->append($this->addProducersNode());
 
@@ -59,13 +52,9 @@ class Configuration implements ConfigurationInterface
         $consumersNode = $consumersTreeBuilder->getRootNode();
         $consumersBuilder = $consumersNode->children();
 
-        $this->addCommonConfigurations($consumersBuilder);
-        $this->addConsumerConfigurations($consumersBuilder);
-
         $instancesTreeBuilder = new TreeBuilder('instances');
         $instancesNode = $instancesTreeBuilder->getRootNode();
         $instancesBuilder = $instancesNode->arrayPrototype()->children();
-        $this->addCommonConfigurations($instancesBuilder);
         $this->addConsumerConfigurations($instancesBuilder);
 
         $consumersBuilder->append($instancesNode);
@@ -82,29 +71,14 @@ class Configuration implements ConfigurationInterface
         $producersNode = $producersTreeBuilder->getRootNode();
         $producersBuilder = $producersNode->children();
 
-        $this->addCommonConfigurations($producersBuilder);
-        $this->addProducerConfigurations($producersBuilder);
-
         $instancesTreeBuilder = new TreeBuilder('instances');
         $instancesNode = $instancesTreeBuilder->getRootNode();
         $instancesBuilder = $instancesNode->arrayPrototype()->children();
-        $this->addCommonConfigurations($instancesBuilder);
         $this->addProducerConfigurations($instancesBuilder);
 
         $producersBuilder->append($instancesNode);
 
         return $producersNode;
-    }
-
-    public function addCommonConfigurations(NodeBuilder $builder): void
-    {
-        $builder
-            ->integerNode(LogLevel::NAME)
-                ->defaultValue(LogLevel::getDefaultValue())
-            ->end();
-
-        $this->addBroker($builder)
-            ->addSchemaRegistry($builder);
     }
 
     private function addProducerConfigurations(NodeBuilder $builder): void
@@ -116,12 +90,25 @@ class Configuration implements ConfigurationInterface
             ->scalarNode(ProducerTopic::NAME)
                 ->defaultValue(ProducerTopic::getDefaultValue())
                 ->cannotBeEmpty()
+            ->end()
+            ->integerNode(LogLevel::NAME)
+                ->defaultValue(LogLevel::getDefaultValue())
+            ->end()
+            ->arrayNode(Brokers::NAME)
+                ->defaultValue(Brokers::getDefaultValue())
+                ->cannotBeEmpty()
+                    ->scalarPrototype()
+                    ->cannotBeEmpty()
             ->end();
     }
 
     private function addConsumerConfigurations(NodeBuilder $builder): void
     {
         $builder
+            ->scalarNode(SchemaRegistry::NAME)
+                ->defaultValue(SchemaRegistry::getDefaultValue())
+                ->cannotBeEmpty()
+            ->end()
             ->arrayNode(Validators::NAME)
                 ->defaultValue(Validators::getDefaultValue())
                 ->cannotBeEmpty()
@@ -156,10 +143,6 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue(GroupId::getDefaultValue())
                 ->cannotBeEmpty()
             ->end()
-            ->scalarNode(OffsetStoreMethod::NAME)
-                ->defaultValue(OffsetStoreMethod::getDefaultValue())
-                ->cannotBeEmpty()
-            ->end()
             ->integerNode(Timeout::NAME)
                 ->defaultValue(Timeout::getDefaultValue())
             ->end()
@@ -188,32 +171,15 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->integerNode(MaxRetryDelay::NAME)
                 ->defaultValue(MaxRetryDelay::getDefaultValue())
-            ->end();
-
-        $this->addBroker($builder);
-    }
-
-    private function addBroker(NodeBuilder $builder): self
-    {
-        $builder
+            ->end()
+            ->integerNode(LogLevel::NAME)
+                ->defaultValue(LogLevel::getDefaultValue())
+            ->end()
             ->arrayNode(Brokers::NAME)
                 ->defaultValue(Brokers::getDefaultValue())
                 ->cannotBeEmpty()
-                ->scalarPrototype()
+                    ->scalarPrototype()
                     ->cannotBeEmpty()
             ->end();
-
-        return $this;
-    }
-
-    private function addSchemaRegistry(NodeBuilder $builder): self
-    {
-        $builder
-            ->scalarNode(SchemaRegistry::NAME)
-                ->defaultValue(SchemaRegistry::getDefaultValue())
-                ->cannotBeEmpty()
-            ->end();
-
-        return $this;
     }
 }

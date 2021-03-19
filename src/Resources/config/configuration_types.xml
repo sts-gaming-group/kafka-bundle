@@ -14,10 +14,6 @@
         <service class="Sts\KafkaBundle\Configuration\Type\Brokers" id="sts_kafka.configuration.type.brokers">
             <tag name="sts_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\OffsetStoreMethod"
-                 id="sts_kafka.configuration.type.offset_store_method">
-            <tag name="sts_kafka.configuration.type"/>
-        </service>
         <service class="Sts\KafkaBundle\Configuration\Type\Timeout" id="sts_kafka.configuration.type.timeout">
             <tag name="sts_kafka.configuration.type"/>
         </service>

@@ -95,13 +95,7 @@ class ConfigurationResolver
             return $resolvedValue;
         }
 
-        $resolvedValue = $this->yamlConfig[$type][$name] ??
-            $this->yamlConfig[$name] ??
-            $configuration::getDefaultValue();
-
-        $this->validateResolvedValue($configuration, $resolvedValue);
-
-        return $resolvedValue;
+        return $configuration::getDefaultValue();
     }
 
     /**
@@ -136,6 +130,6 @@ class ConfigurationResolver
         $name = $configuration->getName();
 
         return isset($this->yamlConfig[$type]['instances'][$class][$name]) &&
-            $this->yamlConfig[$type]['instances'][$class][$name] !== $configuration::getDefaultValue();
+            $this->yamlConfig[$type]['instances'][$class][$name];
     }
 }
