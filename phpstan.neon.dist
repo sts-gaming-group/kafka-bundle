@@ -39,3 +39,6 @@ parameters:
         -
             message: '/Cannot access an offset on RdKafka\\ProducerTopic/'
             path: src/RdKafka/Factory/ProducerBuilder.php
+        -
+            message: '/Else branch is unreachable because ternary operator condition is always true/'
+            path: src/Configuration/ConfigurationResolver.php

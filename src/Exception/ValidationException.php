@@ -15,6 +15,13 @@ class ValidationException extends \RuntimeException
      */
     private $data;
 
+    /**
+     * ValidationException constructor.
+     * @param ValidatorInterface $validator
+     * @param string $failedReason
+     * @param mixed $data
+     * @param string $message
+     */
     public function __construct(ValidatorInterface $validator, string $failedReason, $data, string $message)
     {
         $this->validator = $validator;
