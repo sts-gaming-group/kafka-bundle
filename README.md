@@ -88,20 +88,16 @@ class ExampleConsumer implements ConsumerInterface
 {
     public const CONSUMER_NAME = 'example_consumer';
 
-    public function consume(Message $message, Context $context): bool
+    public function consume(Message $message, Context $context)
     {
         $data = $message->getData(); // contains denormalized data from Kafka
         $retryNo = $context->getRetryNo();  // contains retry count in case of a failure
-        
-        return true;
     }
 
-    public function handleException(KafkaException $exception, Context $context): bool
+    public function handleException(KafkaException $exception, Context $context)
     {
         $message = $exception->getMessage(); // contains exception message
         $throwable = $exception->getThrowable(); // contains last thrown object
-
-        return true;
     }
 
     public function getName(): string
@@ -161,7 +157,7 @@ class ExampleConsumer implements ConsumerInterface
 {
    use CommitOffsetTrait;
    
-   public function consume(Message $message, Context $context): bool
+   public function consume(Message $message, Context $context)
    {
       // process the message
       $this->commitOffset($context); // manually commits the offset
@@ -263,11 +259,9 @@ Receive it in your consumer:
 
 class ExampleConsumer implements ConsumerInterface
 {
-    public function consume(Message $message, Context $context): bool
+    public function consume(Message $message, Context $context)
     {
         $messageDTO = $message->getData(); // $messageDTO comes from CustomDenormalizer
-        
-        return true;
     }
 ```
 
@@ -293,20 +287,20 @@ class TicketStateValidator implements ValidatorInterface
     {
         /** @var MessageDTO $denormalized */
 
-        return $denormalized->getTicketState() === 'NON-WINNING';
+        return $denormalized->getTicketState() !== 'UNRESOLVED';
     }
 
     public function failureReason($denormalized): string
     {
         /** @var MessageDTO $denormalized */
 
-        return sprintf('Non-winning ticket expected. Got %s', $denormalized->getTicketState());
+        return sprintf('Unresolved tickets are not meant to be processed.');
     }
     
     public function type() : string
     {
-       // return Validator::PRE_DENORMALIZE_TYPE;
-       // return Validator::POST_DENORMALIZE_TYPE;
+       return Validator::POST_DENORMALIZE_TYPE; // runs after denormalization
+       // Validator::PRE_DENORMALIZE_TYPE // runs before denormalization
     }
 }
 ```
@@ -329,7 +323,7 @@ If a validator returns false, an instance of ValidatorException is thrown.
  
  use Sts\KafkaBundle\Exception\ValidationException;
  
- public function handleException(KafkaException $exception, Context $context): bool
+ public function handleException(KafkaException $exception, Context $context)
  {
      $thrown = $exception->getThrowable();
      if ($thrown instanceof ValidationException) {
@@ -341,8 +335,6 @@ If a validator returns false, an instance of ValidatorException is thrown.
                  $denormalized->getClientId(),
                  $thrown->getFailedReason())
          );
-
-         return true;
      }
  }
 ```
@@ -565,7 +557,7 @@ class ExampleConsumer implements ConsumerInterface
 {
     public const CONSUMER_NAME = 'example_consumer';
 
-    public function consume(Message $message, Context $context): bool
+    public function consume(Message $message, Context $context)
     {
         $modulo = $context->getValue(Modulo::NAME);
     }
