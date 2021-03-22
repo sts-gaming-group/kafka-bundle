@@ -9,13 +9,18 @@
             <tag name="console.command"/>
             <argument type="service" id="sts_kafka.configuration.raw_configuration"/>
             <argument type="service" id="sts_kafka.client.consumer.consumer_provider"/>
-            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
             <argument type="service" id="sts_kafka.client.consumer.consumer_client"/>
         </service>
         <service class="Sts\KafkaBundle\Command\ProducersDescribeCommand"
-                 id="sts_kafka.command.describe_producers_command">
+                 id="sts_kafka.command.producers_describe_command">
             <tag name="console.command"/>
             <argument type="service" id="sts_kafka.client.producer.producer_provider"/>
+            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
+        </service>
+        <service class="Sts\KafkaBundle\Command\ConsumersDescribeCommand"
+                 id="sts_kafka.command.consumers_describe_command">
+            <tag name="console.command"/>
+            <argument type="service" id="sts_kafka.client.consumer.consumer_provider"/>
             <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
         </service>
     </services>

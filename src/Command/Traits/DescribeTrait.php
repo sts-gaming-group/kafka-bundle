@@ -25,6 +25,7 @@ trait DescribeTrait
 
         $configurationType = ResolvedConfiguration::ALL_TYPES;
         if ($client instanceof ConsumerInterface) {
+            $values['name'] = $client->getName();
             $configurationType = ResolvedConfiguration::CONSUMER_TYPES;
         }
 
