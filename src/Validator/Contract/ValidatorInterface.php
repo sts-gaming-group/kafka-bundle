@@ -7,14 +7,16 @@ namespace Sts\KafkaBundle\Validator\Contract;
 interface ValidatorInterface
 {
     /**
-     * @param mixed $denormalized
+     * @param mixed $data
      * @return bool
      */
-    public function validate($denormalized): bool;
+    public function validate($data): bool;
 
     /**
-     * @param mixed $denormalized
+     * @param mixed $data
      * @return string
      */
-    public function failureReason($denormalized): string;
+    public function failureReason($data): string;
+
+    public function type(): string;
 }

@@ -5,7 +5,10 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Validator\PlainValidator" id="sts_kafka.validator.plain_validator">
+        <service class="Sts\KafkaBundle\Validator\Validator" id="sts_kafka.validator.validator">
+            <argument type="tagged_iterator" tag="sts_kafka.validator"/>
+        </service>
+        <service class="Sts\KafkaBundle\Validator\Type\PlainValidator" id="sts_kafka.validator.type.plain_validator">
             <tag name="sts_kafka.validator"/>
         </service>
     </services>

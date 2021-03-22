@@ -226,7 +226,7 @@ class ExampleConsumer implements ConsumerInterface
 
 ## Validators
 
-After denormalization, you may want to validate if given object should be passed to your consumer - you may want to verify if for example ticket states are satisfying for you.
+After denormalization, you may want to validate if given object should be passed to your consumer - you may want, for example, to filter out ticket states that are useless i.e. UNRESOLVED state.
 
 1. Create validator
 ```php
@@ -238,6 +238,7 @@ namespace App\Validator;
 
 use App\Normalizer\MessageDTO;
 use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
+use Sts\KafkaBundle\Validator\Validator;
 
 class TicketStateValidator implements ValidatorInterface
 {
@@ -253,6 +254,12 @@ class TicketStateValidator implements ValidatorInterface
         /** @var MessageDTO $denormalized */
 
         return sprintf('Non-winning ticket expected. Got %s', $denormalized->getTicketState());
+    }
+    
+    public function type() : string
+    {
+       // return Validator::PRE_DENORMALIZE_TYPE;
+       // return Validator::POST_DENORMALIZE_TYPE;
     }
 }
 ```

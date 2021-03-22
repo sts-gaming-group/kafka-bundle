@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Factory;
 
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Client\Consumer\Message;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Decoder;
 use Sts\KafkaBundle\Configuration\Type\Denormalizer;
-use Sts\KafkaBundle\Configuration\Type\Validators;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
-use Sts\KafkaBundle\Exception\ValidationException;
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
+use Sts\KafkaBundle\Validator\Validator;
 
 class MessageFactory
 {
@@ -27,12 +25,9 @@ class MessageFactory
      */
     private array $denormalizers;
 
-    /**
-     * @var array<ValidatorInterface>
-     */
-    private array $validators;
+    private Validator $validator;
 
-    public function __construct(iterable $decoders, iterable $denormalizers, iterable $validators)
+    public function __construct(iterable $decoders, iterable $denormalizers, Validator $validator)
     {
         foreach ($decoders as $decoder) {
             $this->decoders[get_class($decoder)] = $decoder;
@@ -40,9 +35,8 @@ class MessageFactory
         foreach ($denormalizers as $denormalizer) {
             $this->denormalizers[get_class($denormalizer)] = $denormalizer;
         }
-        foreach ($validators as $validator) {
-            $this->validators[get_class($validator)] = $validator;
-        }
+
+        $this->validator = $validator;
     }
 
     public function create(RdKafkaMessage $rdKafkaMessage, ResolvedConfiguration $configuration): Message
@@ -50,20 +44,12 @@ class MessageFactory
         $requiredDecoder = $configuration->getValue(Decoder::NAME);
         $decoded = $this->decoders[$requiredDecoder]->decode($configuration, $rdKafkaMessage->payload);
 
+        $this->validator->validate($configuration, $decoded, Validator::PRE_DENORMALIZE_TYPE);
+
         $requiredDenormalizer = $configuration->getValue(Denormalizer::NAME);
         $denormalized = $this->denormalizers[$requiredDenormalizer]->denormalize($decoded);
 
-        $requiredValidators = $configuration->getValue(Validators::NAME);
-        foreach ($requiredValidators as $requiredValidator) {
-            if (!$this->validators[$requiredValidator]->validate($denormalized)) {
-                throw new ValidationException(
-                    $this->validators[$requiredValidator],
-                    $this->validators[$requiredValidator]->failureReason($denormalized),
-                    $denormalized,
-                    sprintf('Validation not passed by %s', $requiredValidator)
-                );
-            }
-        }
+        $this->validator->validate($configuration, $denormalized, Validator::POST_DENORMALIZE_TYPE);
 
         return new Message(
             $rdKafkaMessage->topic_name,

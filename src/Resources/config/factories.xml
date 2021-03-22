@@ -8,7 +8,7 @@
         <service class="Sts\KafkaBundle\Factory\MessageFactory" id="sts_kafka.factory.message_factory">
             <argument type="tagged_iterator" tag="sts_kafka.decoder"/>
             <argument type="tagged_iterator" tag="sts_kafka.denormalizer"/>
-            <argument type="tagged_iterator" tag="sts_kafka.validator"/>
+            <argument type="service" id="sts_kafka.validator.validator"/>
         </service>
         <service id="Sts\KafkaBundle\Factory\MessageFactory" alias="sts_kafka.factory.message_factory"/>
     </services>
