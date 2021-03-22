@@ -45,18 +45,18 @@ Published versions of this package are available at https://gitlab.sts.pl/tech/k
 2. Add configuration to sts_kafka.yaml for example:
  ```yaml
 sts_kafka:
-  consumers: #applies only to consumers
-    brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
-    schema_registry: 'http://172.25.0.201:8081'
-    instances: #applies to specific consumer classes
+  consumers:
+    instances:
       App\Consumers\ExampleConsumer:
+        brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
+        schema_registry: 'http://172.25.0.201:8081'
         group_id: 'sts_kafka_test'
         topics: [ 'testing.dwh_kafka.tab_tickets_prematch' ]
-  producers: #applies only to producers
-    brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
-      instances: #applies to specific producer classes
-        App\Producers\ExampleProducer: 
-        topics: [ 'my_app_failed_message_topic' ]
+  producers:    
+    instances:
+      App\Producers\ExampleProducer:
+        brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]    
+        producer_topic: 'my_app_failed_message_topic'
    ```
 3. Most of the time you would like to keep your kafka configuration in sts_kafka.yaml, but you can also pass configuration directly in CLI for example:
 ```
@@ -66,8 +66,7 @@ bin/console kafka:consumers:consume example_consumer --group_id some_other_group
 The configurations are resolved in runtime. The priority is as follows:
 
 - Configurations passed in CLI will always take precedence
-- Configurations passed per consumer/producer basis (```instances:``` section in `consumers:` or `producers:` in sts_kafka.yaml) take precedence over global configuration in sts_kafka.yaml
-- Global consumer/producer configuration (`consumers:` and `producers:` section in sts_kafka.yaml) 
+- Configurations passed per consumer/producer basis (```instances:``` section in `consumers:` or `producers:` in sts_kafka.yaml)
 
 ## Consuming messages
 1. Create consumer
