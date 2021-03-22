@@ -42,3 +42,6 @@ parameters:
         -
             message: '/Else branch is unreachable because ternary operator condition is always true/'
             path: src/Configuration/ConfigurationResolver.php
+        -
+            message: '/ConsumerProvider::provide\(\) expects string/'
+            path: src/Command/ConsumersDescribeCommand.php
