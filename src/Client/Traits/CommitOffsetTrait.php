@@ -23,7 +23,7 @@ trait CommitOffsetTrait
         if ($context->getValue(EnableAutoCommit::NAME) === 'true') {
             throw new InvalidConfigurationException(sprintf(
                 'Unable to manually commit offset when %s configuration is set to `true`.',
-                EnableAutoOffsetStore::NAME
+                EnableAutoCommit::NAME
             ));
         }
 
