@@ -6,7 +6,6 @@ namespace Sts\KafkaBundle\Client\Traits;
 
 use RdKafka\Exception;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
-use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\RdKafka\Context;
 
