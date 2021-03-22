@@ -9,7 +9,7 @@ use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
+use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
 use Sts\KafkaBundle\Configuration\Type\MaxRetries;
 use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
 use Sts\KafkaBundle\Configuration\Type\RetryDelay;
@@ -56,7 +56,7 @@ class ConsumerClient
         $maxRetryDelay = $configuration->getValue(MaxRetryDelay::NAME);
         $retryMultiplier = $configuration->getValue(RetryMultiplier::NAME);
         $topics = $configuration->getValue(Topics::NAME);
-        $enableAutoOffsetStore = $configuration->getValue(EnableAutoOffsetStore::NAME);
+        $enableAutoCommit = $configuration->getValue(EnableAutoCommit::NAME);
 
         $rdKafkaConfig = $this->kafkaConfigurationFactory->create($consumer);
         $rdKafkaConsumer = new RdKafkaConsumer($rdKafkaConfig);
@@ -85,35 +85,23 @@ class ConsumerClient
                 continue;
             }
 
-            try {
-                $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
-            } catch (\Throwable $throwable) {
-                if ($throwable instanceof ValidationException && $enableAutoOffsetStore === 'false') {
-                    $rdKafkaConsumer->commit($rdKafkaMessage);
-                }
-                $consumer->handleException(
-                    new KafkaException($throwable),
-                    $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
-                );
-
-                continue;
-            }
-
             for ($retry = 0; $retry <= $maxRetries; ++$retry) {
                 $context = $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage, $retry);
-                $failed = false;
                 try {
+                    $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
                     $consumer->consume($message, $context);
                 } catch (\Throwable $throwable) {
-                    $failed = true;
                     $consumer->handleException(new KafkaException($throwable), $context);
+                    if ($throwable instanceof ValidationException) {
+                        if ($enableAutoCommit === 'false') {
+                            $rdKafkaConsumer->commit($rdKafkaMessage);
+                        }
 
-                    if ($throwable instanceof UnrecoverableMessageException) {
                         break;
                     }
 
-                    if ($throwable instanceof RecoverableMessageException) {
-                        ++$maxRetries;
+                    if ($throwable instanceof UnrecoverableMessageException) {
+                        break;
                     }
 
                     if ($retry !== $maxRetries) {
@@ -123,11 +111,15 @@ class ConsumerClient
                             $retryDelay = $maxRetryDelay;
                         }
                     }
+
+                    if ($throwable instanceof RecoverableMessageException) {
+                        ++$maxRetries;
+                    }
+
+                    continue;
                 }
 
-                if (!$failed) {
-                    break;
-                }
+                break;
             }
 
             $retryDelay = $configuration->getValue(RetryDelay::NAME);
