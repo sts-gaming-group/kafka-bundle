@@ -45,6 +45,6 @@ class AutoCommitIntervalMs implements ConsumerConfigurationInterface, KafkaConfi
 
     public static function getDefaultValue(): string
     {
-        return '5';
+        return '50';
     }
 }

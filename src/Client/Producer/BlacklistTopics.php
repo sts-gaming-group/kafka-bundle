@@ -12,6 +12,7 @@ class BlacklistTopics
 {
     public function getTopics(): array
     {
+        // todo: fill in more topics or find a way to automate this
         $topics = [
             '%env%.dwh_kafka.tab_client_action_history',
             '%env%.dwh_kafka.tab_client_informations',
