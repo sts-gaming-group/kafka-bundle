@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
-use Sts\KafkaBundle\Validator\PlainValidator;
+use Sts\KafkaBundle\Validator\Type\PlainValidator;
 use Symfony\Component\Console\Input\InputOption;
 
 class Validators implements ConsumerConfigurationInterface
