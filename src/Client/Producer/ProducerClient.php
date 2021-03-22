@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Client\Producer;
 
 use RdKafka\Producer;
-use Sts\KafkaBundle\Client\Traits\CheckProducerTopic;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
 use Sts\KafkaBundle\Configuration\Type\ProducerTopic;
@@ -15,7 +14,6 @@ use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 class ProducerClient
 {
     use CheckForRdKafkaExtensionTrait;
-    use CheckProducerTopic;
 
     private int $maxFlushRetries = 10;
     private int $flushTimeoutMs = 10000;
