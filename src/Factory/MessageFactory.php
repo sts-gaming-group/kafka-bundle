@@ -55,9 +55,9 @@ class MessageFactory
             $rdKafkaMessage->topic_name,
             $rdKafkaMessage->partition,
             $rdKafkaMessage->payload,
-            $rdKafkaMessage->key,
             $rdKafkaMessage->offset,
-            $denormalized
+            $denormalized,
+            $rdKafkaMessage->key
         );
     }
 }
