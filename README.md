@@ -63,6 +63,8 @@ sts_kafka:
 bin/console kafka:consumers:consume example_consumer --group_id some_other_group_id
 ```
 
+Currently, options passed in CLI only work for consumers which are run by command `kafka:consumers:consume`.
+
 The configurations are resolved in runtime. The priority is as follows:
 
 - Configurations passed in CLI will always take precedence
