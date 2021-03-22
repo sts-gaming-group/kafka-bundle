@@ -139,7 +139,7 @@ It also means, that if you consume a message, and your PHP process dies after 49
 after restarting the consumer you will receive the same message again. Such a situation is very unlikely but may happen.
 
 
-Kafka guarantess at-least-once-delivery per message - per topic - per consumer group.id. It means that if offset is not committed 
+Kafka guarantess at-least-once-delivery per message - per topic - per consumer group.id. One of implications of such behavior is that if offset is not committed 
 to Broker, Kafka will resend you the same message again. It is up to developer to handle such cases.
 
 One approach to be 100% sure about offsets commit is to handle them manually by setting `enable.auto.commit` to false.
@@ -165,7 +165,7 @@ class ExampleConsumer implements ConsumerInterface
 }
 ```
 
-Manually committing offsets gives you almost 100% confidence that you will not receive the same message again. There is, however, still chance that offset will not be saved
+Manually committing offsets gives you almost 100% confidence that you will not receive the same message again. There is, however, still small chance that offset will not be saved
 to Broker for example when there is a network issue. Again, it is up to a developer to handle such cases (probably with a `try...catch` block while committing offsets).
 
 There is, however, one big downside to manual commits - they are slow. The reason is that commits have to be done inside your 
