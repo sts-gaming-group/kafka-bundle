@@ -226,7 +226,7 @@ class ExampleConsumer implements ConsumerInterface
 
 ## Validators
 
-After denormalization, you may want to validate if given object should be passed to your consumer - you may want, for example, to filter out ticket states that are useless i.e. UNRESOLVED state.
+After of before denormalization, you may want to validate if given object should be passed to your consumer - you may want, for example, to filter out ticket states that are useless i.e. UNRESOLVED state.
 
 1. Create validator
 ```php

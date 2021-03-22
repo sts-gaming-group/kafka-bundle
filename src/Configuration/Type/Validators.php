@@ -27,7 +27,7 @@ class Validators implements ConsumerConfigurationInterface
     {
         return sprintf(
             <<<EOT
-            'Which validators to use after payload has been denormalized. Must implement %s.
+            'Which validators to use after/before payload has been denormalized. Must implement %s.
             Defaults to %s which returns true by default.',
             EOT,
             ValidatorInterface::class,
