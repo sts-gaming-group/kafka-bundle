@@ -445,7 +445,7 @@ class ExampleProducer implements ProducerInterface
     public function supports($data): bool
     {
         // in case of many producers you should check what $data is passed here
-        return get_class($data )=== Ticket::class;
+        return get_class($data ) === Ticket::class;
     }
 }
 ```
@@ -565,9 +565,9 @@ class ExampleConsumer implements ConsumerInterface
 
 ## Showing current consumer/producer configuration
 
-You can show current configuration that will be passed to consumer by adding --describe to command
+You can show current configuration that will be passed to consumer by calling following command
 ```
-bin/console kafka:consumers:consume example_consumer --describe
+bin/console kafka:consumers:describe example_consumer
 ┌───────────────────────────┬─────────────────────────────────────────────────────────┐
 │ configuration             │ value                                                   │
 ├───────────────────────────┼─────────────────────────────────────────────────────────┤
