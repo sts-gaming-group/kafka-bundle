@@ -17,11 +17,11 @@ class Validator
     /**
      * @var array<ValidatorInterface>
      */
-    private array $preDenormalizeValidators;
+    private array $preDenormalizeValidators = [];
     /**
      * @var array<ValidatorInterface>
      */
-    private array $postDenormalizeValidators;
+    private array $postDenormalizeValidators = [];
 
     /**
      * @param iterable<ValidatorInterface> $validators
