@@ -10,7 +10,6 @@ use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class KafkaConfigurationFactory
 {
-    private ?Conf $conf = null;
     private ConfigurationResolver $configurationResolver;
 
     public function __construct(ConfigurationResolver $configurationResolver)
@@ -20,10 +19,6 @@ class KafkaConfigurationFactory
 
     public function create(ClientInterface $client): Conf
     {
-        if ($this->conf) {
-            return $this->conf;
-        }
-
         $configuration = $this->configurationResolver->resolve($client);
         $conf = new Conf();
 
@@ -42,8 +37,6 @@ class KafkaConfigurationFactory
                 $conf->{$name}($callback);
             }
         }
-
-        $this->conf = $conf;
 
         return $conf;
     }

@@ -21,7 +21,6 @@ class ProducerClient
     private int $flushTimeoutMs = 10000;
     private int $pollingBatch = 25000;
     private int $pollingTimeoutMs = 0;
-    private array $callbacks = [];
     private array $rdKafkaProducers;
 
     private ?Producer $lastCalledProducer = null;
@@ -49,11 +48,7 @@ class ProducerClient
         $this->isKafkaExtensionLoaded();
 
         $producer = $this->producerProvider->provide($data);
-
         $rdKafkaConfig = $this->kafkaConfigurationFactory->create($producer);
-        foreach ($this->callbacks as $name => $callback) {
-            $rdKafkaConfig->{$name}($callback);
-        }
 
         $producerClass = get_class($producer);
         if (!isset($this->rdKafkaProducers[$producerClass])) {
@@ -77,13 +72,6 @@ class ProducerClient
                 $this->lastCalledProducer->poll($this->pollingTimeoutMs);
             }
         }
-
-        return $this;
-    }
-
-    public function setCallbacks(array $callbacks): self
-    {
-        $this->callbacks = $callbacks;
 
         return $this;
     }
