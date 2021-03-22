@@ -440,23 +440,18 @@ class ExampleCommand extends Command
      return Command::SUCCESS;
  }
 ```
-You can also set callbacks array to ProducerClient for example to check if messages were sent successfully.
+You can also set callbacks array to ProducerClient for example to check if messages were sent successfully. Your producer class should implement CallableInterface.
 ```php
-use Sts\KafkaBundle\RdKafka\Callbacks;
+use Sts\KafkaBundle\Client\Contract\CallableInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 
-$callbacks = [
-   Callbacks::MESSAGE_DELIVERY_CALLBACK => static function (\RdKafka\Producer $kafkaProducer, \RdKafka\Message $message) {
-       if ($message->err) {
-           throw new \RuntimeException('Message not produces. Try again');
-       }
-   }
-];
-
-$this->producerClient->setCallbacks($callbacks);
-
-foreach ($tickets as $ticket) {
-   $this->producerClient->produce($ticket);
-} 
+class ExampleProducer implements ProducerInterface, CallableInterface
+{
+    public function callbacks(): array
+    {
+        // callbacks array just like in Consumer example
+    }
+}
 ```
 Other options that can be configured for ProducerClient at runtime:
 ```php 
