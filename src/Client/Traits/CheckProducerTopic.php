@@ -10,16 +10,17 @@ trait CheckProducerTopic
 {
     public function isTopicBlacklisted(string $topic): bool
     {
-        if (strpos($topic, 'dwh_kafka') !== false) {
-            throw new BlacklistTopicException(
-                sprintf('Unable to produce to topic %s. It is blacklisted.', $topic)
-            );
-        }
+        $blacklistedPatterns = [
+            'dwh_kafka',
+            'sts_internal'
+        ];
 
-        if (strpos($topic, 'sts_internal') !== false) {
-            throw new BlacklistTopicException(
-                sprintf('Unable to produce to topic %s. It is blacklisted.', $topic)
-            );
+        foreach ($blacklistedPatterns as $blacklistedPattern) {
+            if (strpos($topic, $blacklistedPattern) !== false) {
+                throw new BlacklistTopicException(
+                    sprintf('Unable to produce to topic %s. It is blacklisted.', $topic)
+                );
+            }
         }
 
         return true;
