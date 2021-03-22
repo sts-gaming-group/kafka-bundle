@@ -132,7 +132,53 @@ sts_kafka:
 
 With such configuration you will receive the same message 4 times maximum (first consumption + 3 retries). Before the first retry, there will be 300 ms delay.
 Before the second retry, there will be 900 ms delay (retry_delay * retry_multiplier). Before the third retry, there will be 2500 ms delay (max_retry_delay).
-`It is important to remember about committing offsets in Kafka in case of a permanently failed message.` More about it later.
+`It is important to remember about committing offsets in Kafka in case of a permanently failed message (in case enable_auto_commit is set to false).`
+
+## Handling offsets
+
+By default, option `enable.auto.commit` is set true. In such cases after consuming a message, offsets will be committed automatically to Kafka brokers.
+Frequency in which offsets are committed is described by option `auto.commit.interval.ms` (defaults to 50ms). It means
+that every 50ms Librdkafka (library that manages Kafka underneath PHP process) will send currently stored offset to Kafka Broker.
+It also means, that if you consume a message, and your PHP process dies after 49ms the message will not be committed and 
+after restarting the consumer you will receive the same message again. Such a situation is very unlikely but may happen.
+
+
+Kafka guarantess at-least-once-delivery per message - per topic - per consumer group.id. It means that if offset is not committed 
+to Broker, Kafka will resend you the same message again. It is up to developer to handle such cases.
+
+One approach to be 100% sure about offsets commit is to handle them manually by setting `enable.auto.commit` to false.
+You can then use `CommitOffsetTrait::commitOffset()` method to send current offset to Broker.
+```php 
+<?php
+
+declare(strict_types=1);
+
+namespace App\Consumers;
+
+use Sts\KafkaBundle\Client\Traits\CommitOffsetTrait;
+
+class ExampleConsumer implements ConsumerInterface
+{
+   use CommitOffsetTrait;
+   
+   public function consume(Message $message, Context $context): bool
+   {
+      // process the message
+      $this->commitOffset($context); // manually commits the offset
+   }
+}
+```
+
+Manually committing offsets gives you almost 100% confidence that you will not receive the same message again. There is, however, still chance that offset will not be saved
+to Broker for example when there is a network issue. Again, it is up to a developer to handle such cases (probably with a `try...catch` block while committing offsets).
+
+There is, however, one big downside to manual commits - they are slow. The reason is that commits have to be done inside your 
+PHP process and therefore it blocks your main thread. Each commit lasts about 40-50 ms which in case of Kafka is incredibly slow.
+You can pass `true` as a second argument to `$this->commitOffset($context, true);` Manual commits will then be handled asynchronously
+and will be much faster - but again in case your PHP process dies while committing, some offsets may not be send to Broker (almost the same story when `enable.auto.commit` is set to true and your process dies).
+
+Looking at above situations it is rather recommended to keep `enable.auto.commit` option set to true and handle possible duplicated
+messages inside your application.
 
 ## Decoders
 
@@ -441,7 +487,7 @@ class ExampleCommand extends Command
      return Command::SUCCESS;
  }
 ```
-You can also set callbacks array to ProducerClient for example to check if messages were sent successfully. Your producer class should implement CallableInterface.
+You can also set callbacks array to Producer, for example, to check if messages were sent successfully. Your producer class should implement CallableInterface.
 ```php
 use Sts\KafkaBundle\Client\Contract\CallableInterface;
 use Sts\KafkaBundle\Client\Contract\ProducerInterface;
