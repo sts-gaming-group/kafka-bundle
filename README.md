@@ -306,6 +306,7 @@ If a validator returns false, an instance of ValidatorException is thrown.
 Librdkafka (C/C++ library used underneath PHP) provides several callbacks that you can use in different situations (consuming/producing/error handling/logging). 
 Your consumer must implement CallableInterface which requires you to define `callbacks` method. This method should return an array
 of callbacks you wish to handle yourself.
+
 ```php
 <?php
 
@@ -314,9 +315,9 @@ declare(strict_types=1);
 namespace App\Consumers;
 
 use Sts\KafkaBundle\Client\Contract\CallableInterface;
-use Sts\KafkaBundle\RdKafka\Callbacks;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;use Sts\KafkaBundle\RdKafka\Callbacks;
 
-class ExampleConsumer implements CallableInterface
+class ExampleConsumer implements ConsumerInterface, CallableInterface
 {
     public function callbacks(): array
     {
