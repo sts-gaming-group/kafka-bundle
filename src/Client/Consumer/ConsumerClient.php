@@ -4,94 +4,156 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Consumer;
 
+use RdKafka\KafkaConsumer as RdKafkaConsumer;
 use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\KafkaExceptionAwareConsumerInterface;
+use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
+use Sts\KafkaBundle\Configuration\Type\MaxRetries;
+use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
+use Sts\KafkaBundle\Configuration\Type\RetryDelay;
+use Sts\KafkaBundle\Configuration\Type\RetryMultiplier;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
+use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\Exception\KafkaException;
 use Sts\KafkaBundle\Exception\NullMessageException;
-use Sts\KafkaBundle\Exception\NullPayloadException;
+use Sts\KafkaBundle\Exception\RecoverableMessageException;
+use Sts\KafkaBundle\Exception\UnrecoverableMessageException;
+use Sts\KafkaBundle\Exception\ValidationException;
 use Sts\KafkaBundle\Factory\MessageFactory;
 use Sts\KafkaBundle\RdKafka\Context;
-use Sts\KafkaBundle\RdKafka\Factory\ConsumerQueueFactory;
-use Sts\KafkaBundle\RdKafka\NullRdKafkaMessage;
+use Sts\KafkaBundle\RdKafka\KafkaConfigurationFactory;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
 class ConsumerClient
 {
     use CheckForRdKafkaExtensionTrait;
 
-    private ConsumerQueueFactory $consumerQueueFactory;
+    private KafkaConfigurationFactory $kafkaConfigurationFactory;
     private MessageFactory $messageFactory;
+    private ConfigurationResolver $configurationResolver;
 
-    public function __construct(ConsumerQueueFactory $consumerQueueFactory, MessageFactory $messageFactory)
-    {
-        $this->consumerQueueFactory = $consumerQueueFactory;
+    public function __construct(
+        KafkaConfigurationFactory $kafkaConfigurationFactory,
+        MessageFactory $messageFactory,
+        ConfigurationResolver $configurationResolver
+    ) {
+        $this->kafkaConfigurationFactory = $kafkaConfigurationFactory;
         $this->messageFactory = $messageFactory;
+        $this->configurationResolver = $configurationResolver;
     }
 
-    public function consume(ConsumerInterface $consumer, ResolvedConfiguration $resolvedConfiguration): bool
+    public function consume(ConsumerInterface $consumer): bool
     {
         $this->isKafkaExtensionLoaded();
 
-        $context = new Context($resolvedConfiguration);
-        $queue = $this->consumerQueueFactory->create($resolvedConfiguration, $context);
+        $configuration = $this->configurationResolver->resolve($consumer);
+
+        $timeout = $configuration->getValue(Timeout::NAME);
+        $maxRetries = $configuration->getValue(MaxRetries::NAME);
+        $retryDelay = $configuration->getValue(RetryDelay::NAME);
+        $maxRetryDelay = $configuration->getValue(MaxRetryDelay::NAME);
+        $retryMultiplier = $configuration->getValue(RetryMultiplier::NAME);
+        $topics = $configuration->getValue(Topics::NAME);
+        $enableAutoCommit = $configuration->getValue(EnableAutoCommit::NAME);
+
+        $rdKafkaConfig = $this->kafkaConfigurationFactory->create($consumer);
+        $rdKafkaConsumer = new RdKafkaConsumer($rdKafkaConfig);
+        $rdKafkaConsumer->subscribe($topics);
 
         while (true) {
             try {
-                $rdKafkaMessage = $queue->consume($resolvedConfiguration->getConfigurationValue(Timeout::NAME));
-            } catch (\Exception $exception) {
-                if ($consumer instanceof KafkaExceptionAwareConsumerInterface) {
-                    $consumer->handleException(
-                        new KafkaException($exception, new NullRdKafkaMessage(), $context)
-                    );
-                }
+                $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
+            } catch (\Throwable $throwable) {
+                $consumer->handleException(
+                    new KafkaException($throwable),
+                    $this->createContext($configuration, $rdKafkaConsumer)
+                );
 
                 continue;
             }
 
             try {
-                $this->validateMessage($rdKafkaMessage, $context);
-            } catch (KafkaException $exception) {
-                if ($consumer instanceof KafkaExceptionAwareConsumerInterface) {
-                    $consumer->handleException($exception);
-                }
+                $this->validateRdKafkaMessage($rdKafkaMessage);
+            } catch (\Throwable $throwable) {
+                $consumer->handleException(
+                    new KafkaException($throwable),
+                    $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
+                );
 
                 continue;
             }
 
-            $consumer->consume(
-                $this->messageFactory->create($rdKafkaMessage, $resolvedConfiguration),
-                $context
-            );
+            for ($retry = 0; $retry <= $maxRetries; ++$retry) {
+                $context = $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage, $retry);
+                try {
+                    $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
+                    $consumer->consume($message, $context);
+                } catch (\Throwable $throwable) {
+                    $consumer->handleException(new KafkaException($throwable), $context);
+                    if ($throwable instanceof ValidationException) {
+                        if ($enableAutoCommit === 'false') {
+                            $rdKafkaConsumer->commit($rdKafkaMessage);
+                        }
+
+                        break;
+                    }
+
+                    if ($throwable instanceof UnrecoverableMessageException) {
+                        break;
+                    }
+
+                    if ($retry !== $maxRetries) {
+                        usleep($retryDelay * 1000);
+                        $retryDelay *= $retryMultiplier;
+                        if ($retryDelay > $maxRetryDelay) {
+                            $retryDelay = $maxRetryDelay;
+                        }
+                    }
+
+                    if ($throwable instanceof RecoverableMessageException) {
+                        ++$maxRetries;
+                    }
+
+                    continue;
+                }
+
+                break;
+            }
+
+            $retryDelay = $configuration->getValue(RetryDelay::NAME);
         }
     }
 
-    private function validateMessage(?RdKafkaMessage $message, Context $context): void
+    private function validateRdKafkaMessage(?RdKafkaMessage $message): void
     {
-        if (null === $message) {
+        if (null === $message || RD_KAFKA_RESP_ERR__PARTITION_EOF === $message->err) {
+            throw new NullMessageException('Currently, there are no more messages.');
+        }
+
+        if (RD_KAFKA_RESP_ERR__TIMED_OUT === $message->err) {
             throw new NullMessageException(
-                new \Exception('Null message received from kafka.'),
-                new NullRdKafkaMessage(),
-                $context
+                'Kafka brokers have timed out or there are no messages. Unable to differentiate the reason.'
             );
         }
 
         if (null === $message->payload) {
-            throw new NullPayloadException(
-                new \Exception('Null payload received from kafka.'),
-                $message,
-                $context
-            );
+            throw new NullMessageException('Null payload received in kafka message.');
         }
+    }
 
-        if ($message->err) {
-            throw new KafkaException(
-                new \Exception(sprintf('Received error with code %s from Kafka', $message->err)),
-                new NullRdKafkaMessage(),
-                $context
-            );
-        }
+    private function createContext(
+        ResolvedConfiguration $configuration,
+        RdKafkaConsumer $rdKafkaConsumer,
+        ?RdKafkaMessage $rdKafkaMessage = null,
+        int $retryNo = 0
+    ): Context {
+        return new Context(
+            $configuration,
+            $retryNo,
+            $rdKafkaConsumer,
+            $rdKafkaMessage
+        );
     }
 }

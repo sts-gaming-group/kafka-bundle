@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\TopicConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class AutoCommitIntervalMs implements TopicConfigurationInterface
+class AutoCommitIntervalMs implements ConsumerConfigurationInterface, KafkaConfigurationInterface
 {
     public const NAME = 'auto_commit_interval_ms';
-    public const DEFAULT_VALUE = '1000';
 
     public function getName(): string
     {
@@ -45,6 +45,6 @@ class AutoCommitIntervalMs implements TopicConfigurationInterface
 
     public static function getDefaultValue(): string
     {
-        return '1000';
+        return '50';
     }
 }

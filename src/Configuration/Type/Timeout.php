@@ -6,9 +6,10 @@ namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class Timeout implements ConfigurationInterface, CastValueInterface
+class Timeout implements ConsumerConfigurationInterface, CastValueInterface
 {
     public const NAME = 'timeout';
 

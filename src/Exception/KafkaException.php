@@ -4,29 +4,21 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Exception;
 
-use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\RdKafka\Context;
+use Throwable;
 
 class KafkaException extends \RuntimeException
 {
-    private RdKafkaMessage $rdKafkaMessage;
-    private Context $context;
+    private Throwable $throwable;
 
-    public function __construct(\Exception $exception, RdKafkaMessage $rdKafkaMessage, Context $context)
+    public function __construct(Throwable $throwable)
     {
-        $this->rdKafkaMessage = $rdKafkaMessage;
-        $this->context = $context;
+        $this->throwable = $throwable;
 
-        parent::__construct($exception->getMessage(), $exception->getCode(), $exception->getPrevious());
+        parent::__construct($throwable->getMessage(), $throwable->getCode(), $throwable->getPrevious());
     }
 
-    public function getRdKafkaMessage(): RdKafkaMessage
+    public function getThrowable(): Throwable
     {
-        return $this->rdKafkaMessage;
-    }
-
-    public function getContext(): Context
-    {
-        return $this->context;
+        return $this->throwable;
     }
 }

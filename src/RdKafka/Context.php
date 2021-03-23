@@ -4,45 +4,51 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\RdKafka;
 
+use RdKafka\KafkaConsumer as RdKafkaConsumer;
 use RdKafka\ConsumerTopic as RdKafkaConsumerTopic;
+use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class Context
 {
-    private ResolvedConfiguration $resolvedConfiguration;
-    /**
-     * @var array<RdKafkaConsumerTopic>
-     */
-    private array $rdKafkaConsumerTopics;
+    private ResolvedConfiguration $configuration;
+    private int $retryNo;
+    private RdKafkaConsumer $rdKafkaConsumer;
+    private ?RdKafkaMessage $rdKafkaMessage;
 
-    public function __construct(ResolvedConfiguration $resolvedConfiguration)
-    {
-        $this->resolvedConfiguration = $resolvedConfiguration;
-    }
-
-    public function addKafkaConsumerTopic(RdKafkaConsumerTopic $rdKafkaConsumerTopic): self
-    {
-        $this->rdKafkaConsumerTopics[$rdKafkaConsumerTopic->getName()] = $rdKafkaConsumerTopic;
-
-        return $this;
-    }
-
-    public function getResolvedConfiguration(): ResolvedConfiguration
-    {
-        return $this->resolvedConfiguration;
+    public function __construct(
+        ResolvedConfiguration $configuration,
+        int $retryNo,
+        RdKafkaConsumer $rdKafkaConsumer,
+        ?RdKafkaMessage $rdKafkaMessage = null
+    ) {
+        $this->configuration = $configuration;
+        $this->retryNo = $retryNo;
+        $this->rdKafkaConsumer = $rdKafkaConsumer;
+        $this->rdKafkaMessage = $rdKafkaMessage;
     }
 
     /**
      * @param string $name
      * @return mixed
      */
-    public function getResolvedConfigurationValue(string $name)
+    public function getValue(string $name)
     {
-        return $this->resolvedConfiguration->getConfigurationValue($name);
+        return $this->configuration->getValue($name);
     }
 
-    public function getRdKafkaConsumerTopicByName(string $name): RdKafkaConsumerTopic
+    public function getRetryNo(): int
     {
-        return $this->rdKafkaConsumerTopics[$name];
+        return $this->retryNo;
+    }
+
+    public function getRdKafkaConsumer(): RdKafkaConsumer
+    {
+        return $this->rdKafkaConsumer;
+    }
+
+    public function getRdKafkaMessage(): ?RdKafkaMessage
+    {
+        return $this->rdKafkaMessage;
     }
 }

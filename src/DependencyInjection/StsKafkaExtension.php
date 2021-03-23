@@ -8,6 +8,8 @@ use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
+use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -26,7 +28,9 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         'configurations',
         'configuration_types',
         'decoders',
-        'producers'
+        'producers',
+        'denormalizers',
+        'validators'
     ];
 
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void
@@ -40,7 +44,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
             ->addTag('sts_kafka.kafka.consumer');
 
         $container->registerForAutoconfiguration(ProducerInterface::class)
-            ->addTag('sts_kafka.kafka.producer');
+            ->addTag('sts_kafka.kafka.producer_handler');
 
         $container->registerForAutoconfiguration(ConfigurationInterface::class)
             ->addTag('sts_kafka.configuration.type');
@@ -48,7 +52,13 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         $container->registerForAutoconfiguration(DecoderInterface::class)
             ->addTag('sts_kafka.decoder');
 
-        $configurationResolver = $container->getDefinition('sts_kafka.configuration.resolver');
+        $container->registerForAutoconfiguration(DenormalizerInterface::class)
+            ->addTag('sts_kafka.denormalizer');
+
+        $container->registerForAutoconfiguration(ValidatorInterface::class)
+            ->addTag('sts_kafka.validator');
+
+        $configurationResolver = $container->getDefinition('sts_kafka.configuration.configuration_resolver');
         $configurationResolver->setArgument(1, $mergedConfig);
     }
 
@@ -57,12 +67,11 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         $this->addConsumersAndProvider($container);
         $this->addProducersAndProvider($container);
         $this->addConfigurations($container);
-        $this->addDecoders($container);
     }
 
     private function addConsumersAndProvider(ContainerBuilder $container): void
     {
-        $providerId = 'sts_kafka.client.consumer.provider';
+        $providerId = 'sts_kafka.client.consumer.consumer_provider';
         if (!$container->has($providerId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find any consumer provider. Looking for service id %s', $providerId)
@@ -78,7 +87,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
 
     private function addProducersAndProvider(ContainerBuilder $container): void
     {
-        $providerId = 'sts_kafka.client.producer.provider';
+        $providerId = 'sts_kafka.client.producer.producer_provider';
         if (!$container->has($providerId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find any producer provider. Looking for service id %s', $providerId)
@@ -86,7 +95,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         }
 
         $producerProvider = $container->findDefinition($providerId);
-        $producers = $container->findTaggedServiceIds('sts_kafka.kafka.producer');
+        $producers = $container->findTaggedServiceIds('sts_kafka.kafka.producer_handler');
         foreach ($producers as $id => $tags) {
             $producerProvider->addMethodCall('addProducer', [new Reference($id)]);
         }
@@ -94,7 +103,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
 
     private function addConfigurations(ContainerBuilder $container): void
     {
-        $configurationsId = 'sts_kafka.raw.configuration';
+        $configurationsId = 'sts_kafka.configuration.raw_configuration';
         if (!$container->has($configurationsId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find configurations class. Looking for service id %s', $configurationsId)
@@ -105,22 +114,6 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         $configurationTypes = $container->findTaggedServiceIds('sts_kafka.configuration.type');
         foreach ($configurationTypes as $id => $tags) {
             $configurations->addMethodCall('addConfiguration', [new Reference($id)]);
-        }
-    }
-
-    private function addDecoders(ContainerBuilder $container): void
-    {
-        $decoderFactoryId = 'sts_kafka.decoder.factory';
-        if (!$container->has($decoderFactoryId)) {
-            throw new InvalidDefinitionException(
-                sprintf('Unable to find decoder factory class. Looking for service id %s', $decoderFactoryId)
-            );
-        }
-
-        $decoderFactory = $container->findDefinition($decoderFactoryId);
-        $decoders = $container->findTaggedServiceIds('sts_kafka.decoder');
-        foreach ($decoders as $id => $tags) {
-            $decoderFactory->addMethodCall('addDecoder', [new Reference($id)]);
         }
     }
 }

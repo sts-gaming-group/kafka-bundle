@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class Partition implements ConfigurationInterface, CastValueInterface
+class MaxRetries implements ConsumerConfigurationInterface
 {
-    public const NAME = 'partition';
+    public const NAME = 'max_retries';
 
     public function getName(): string
     {
@@ -25,22 +24,14 @@ class Partition implements ConfigurationInterface, CastValueInterface
     public function getDescription(): string
     {
         return sprintf(
-            <<<EOT
-        Which partition consumer should consume from. Defaults to %s. 
-        Must be an integer equal to or greater than 0.
-        EOT,
+            'How many times message should be consumed if exception is thrown. Defaults to %s',
             self::getDefaultValue()
         );
     }
 
     public function isValueValid($value): bool
     {
-        return is_numeric($value) && $value >= 0;
-    }
-
-    public function cast($validatedValue): int
-    {
-        return (int) $validatedValue;
+        return is_int($value) && $value >= 0;
     }
 
     public static function getDefaultValue(): int

@@ -33,3 +33,15 @@ parameters:
         -
             message: '/RecordSerializer constructor expects array<string, mixed>/'
             path: src/Decoder/AvroDecoder.php
+        -
+            message: '/should return array<RdKafka\\ProducerTopic> but returns RdKafka\\ProducerTopic/'
+            path: src/RdKafka/Factory/ProducerBuilder.php
+        -
+            message: '/Cannot access an offset on RdKafka\\ProducerTopic/'
+            path: src/RdKafka/Factory/ProducerBuilder.php
+        -
+            message: '/Else branch is unreachable because ternary operator condition is always true/'
+            path: src/Configuration/ConfigurationResolver.php
+        -
+            message: '/ConsumerProvider::provide\(\) expects string/'
+            path: src/Command/ConsumersDescribeCommand.php

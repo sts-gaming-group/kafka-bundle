@@ -20,11 +20,11 @@ class AvroDecoder implements DecoderInterface
     private ?CachedRegistry $cachedRegistry = null;
     private ?RecordSerializer $recordSerializer = null;
 
-    public function decode(ResolvedConfiguration $resolvedConfiguration, string $message): array
+    public function decode(ResolvedConfiguration $configuration, string $message): array
     {
         if (!$this->cachedRegistry) {
             $client = new Client(
-                ['base_uri' => $resolvedConfiguration->getConfigurationValue(SchemaRegistry::NAME)]
+                ['base_uri' => $configuration->getValue(SchemaRegistry::NAME)]
             );
             $this->cachedRegistry = new CachedRegistry(
                 new PromisingRegistry($client),
@@ -36,8 +36,8 @@ class AvroDecoder implements DecoderInterface
             $this->recordSerializer = new RecordSerializer(
                 $this->cachedRegistry,
                 [
-                    $resolvedConfiguration->getConfigurationValue(RegisterMissingSchemas::NAME),
-                    $resolvedConfiguration->getConfigurationValue(RegisterMissingSubjects::NAME),
+                    $configuration->getValue(RegisterMissingSchemas::NAME),
+                    $configuration->getValue(RegisterMissingSubjects::NAME),
                 ]
             );
         }

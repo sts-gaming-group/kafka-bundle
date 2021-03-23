@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
-use Sts\KafkaBundle\Configuration\Contract\DecoderConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Traits\BooleanConfigurationTrait;
 
-class RegisterMissingSubjects implements DecoderConfigurationInterface
+class RegisterMissingSubjects implements ConsumerConfigurationInterface
 {
     use BooleanConfigurationTrait;
 
@@ -30,8 +30,8 @@ class RegisterMissingSubjects implements DecoderConfigurationInterface
         );
     }
 
-    public static function getDefaultValue(): bool
+    public static function getDefaultValue(): string
     {
-        return false;
+        return 'false';
     }
 }

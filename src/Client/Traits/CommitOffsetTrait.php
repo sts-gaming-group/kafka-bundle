@@ -4,30 +4,34 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Client\Traits;
 
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
-use Sts\KafkaBundle\Client\Consumer\Message;
+use RdKafka\Exception;
+use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\RdKafka\Context;
 
 trait CommitOffsetTrait
 {
-    public function commitOffset(Message $message, Context $context): bool
+    /**
+     * @param Context $context
+     * @param bool $async
+     * @return bool
+     * @throws Exception
+     */
+    public function commitOffset(Context $context, bool $async = false): bool
     {
-        if (!$this->canCommitOffset($context->getResolvedConfiguration())) {
+        if ($context->getValue(EnableAutoCommit::NAME) === 'true') {
             throw new InvalidConfigurationException(sprintf(
                 'Unable to manually commit offset when %s configuration is set to `true`.',
-                EnableAutoOffsetStore::NAME
+                EnableAutoCommit::NAME
             ));
         }
-        $rdKafkaConsumerTopic = $context->getRdKafkaConsumerTopicByName($message->getTopicName());
-        $rdKafkaConsumerTopic->offsetStore($message->getPartition(), $message->getOffset());
+
+        if ($async) {
+            $context->getRdKafkaConsumer()->commitAsync($context->getRdKafkaMessage());
+        } else {
+            $context->getRdKafkaConsumer()->commit($context->getRdKafkaMessage());
+        }
 
         return true;
-    }
-
-    private function canCommitOffset(ResolvedConfiguration $resolvedConfiguration): bool
-    {
-        return $resolvedConfiguration->getConfigurationValue(EnableAutoOffsetStore::NAME) === 'false';
     }
 }

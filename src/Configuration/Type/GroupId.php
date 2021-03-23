@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class GroupId implements GlobalConfigurationInterface
+class GroupId implements KafkaConfigurationInterface, ConsumerConfigurationInterface
 {
     public const NAME = 'group_id';
 

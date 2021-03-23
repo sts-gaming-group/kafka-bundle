@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class LogLevel implements GlobalConfigurationInterface, CastValueInterface
+class LogLevel implements KafkaConfigurationInterface, ConsumerConfigurationInterface, ProducerConfigurationInterface, CastValueInterface
 {
     public const NAME = 'log_level';
 

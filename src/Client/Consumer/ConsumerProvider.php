@@ -45,4 +45,12 @@ class ConsumerProvider
 
         return $consumers[0];
     }
+
+    /**
+     * @return array<ConsumerInterface>
+     */
+    public function getAll(): array
+    {
+        return $this->consumers;
+    }
 }

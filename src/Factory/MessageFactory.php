@@ -5,39 +5,59 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Factory;
 
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Client\Consumer\Message;
+use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use Sts\KafkaBundle\Configuration\Type\Decoder;
+use Sts\KafkaBundle\Configuration\Type\Denormalizer;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
+use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use Sts\KafkaBundle\Validator\Validator;
 
 class MessageFactory
 {
-    private DecoderFactory $decoderFactory;
-    private ?DecoderInterface $decoder = null;
+    /**
+     * @var array<DecoderInterface>
+     */
+    private array $decoders;
 
-    public function __construct(DecoderFactory $decoderFactory)
-    {
-        $this->decoderFactory = $decoderFactory;
-    }
+    /**
+     * @var array<DenormalizerInterface>
+     */
+    private array $denormalizers;
 
-    public function create(RdKafkaMessage $rdKafkaMessage, ResolvedConfiguration $resolvedConfiguration): Message
+    private Validator $validator;
+
+    public function __construct(iterable $decoders, iterable $denormalizers, Validator $validator)
     {
-        if (!$this->decoder) {
-            $this->decoder = $this->decoderFactory->create($resolvedConfiguration);
+        foreach ($decoders as $decoder) {
+            $this->decoders[get_class($decoder)] = $decoder;
+        }
+        foreach ($denormalizers as $denormalizer) {
+            $this->denormalizers[get_class($denormalizer)] = $denormalizer;
         }
 
-        $decodedPayload = $this->decoder->decode($resolvedConfiguration, $rdKafkaMessage->payload);
+        $this->validator = $validator;
+    }
+
+    public function create(RdKafkaMessage $rdKafkaMessage, ResolvedConfiguration $configuration): Message
+    {
+        $requiredDecoder = $configuration->getValue(Decoder::NAME);
+        $decoded = $this->decoders[$requiredDecoder]->decode($configuration, $rdKafkaMessage->payload);
+
+        $this->validator->validate($configuration, $decoded, Validator::PRE_DENORMALIZE_TYPE);
+
+        $requiredDenormalizer = $configuration->getValue(Denormalizer::NAME);
+        $denormalized = $this->denormalizers[$requiredDenormalizer]->denormalize($decoded);
+
+        $this->validator->validate($configuration, $denormalized, Validator::POST_DENORMALIZE_TYPE);
 
         return new Message(
-            $rdKafkaMessage->err,
             $rdKafkaMessage->topic_name,
-            $rdKafkaMessage->timestamp,
             $rdKafkaMessage->partition,
             $rdKafkaMessage->payload,
-            $rdKafkaMessage->len,
-            $rdKafkaMessage->key,
             $rdKafkaMessage->offset,
-            $rdKafkaMessage->headers,
-            $decodedPayload
+            $denormalized,
+            $rdKafkaMessage->key
         );
     }
 }

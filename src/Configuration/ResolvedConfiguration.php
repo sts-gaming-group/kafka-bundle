@@ -5,11 +5,17 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration;
 
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\GlobalConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\TopicConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
 
 class ResolvedConfiguration
 {
+    public const ALL_TYPES = 'all';
+    public const KAFKA_TYPES = 'kafka';
+    public const CONSUMER_TYPES = 'consumer';
+    public const PRODUCER_TYPES = 'producer';
+
     private array $configurations = [];
 
     /**
@@ -28,46 +34,44 @@ class ResolvedConfiguration
     }
 
     /**
+     * @param string $type
      * @return array<ConfigurationInterface|mixed>
      */
-    public function getConfigurations(): array
+    public function getConfigurations(string $type = self::ALL_TYPES): array
     {
-        return $this->configurations;
+        switch ($type) {
+            case self::ALL_TYPES:
+                $interface = ConfigurationInterface::class;
+                break;
+            case self::KAFKA_TYPES:
+                $interface = KafkaConfigurationInterface::class;
+                break;
+            case self::CONSUMER_TYPES:
+                $interface = ConsumerConfigurationInterface::class;
+                break;
+            case self::PRODUCER_TYPES:
+                $interface = ProducerConfigurationInterface::class;
+                break;
+            default:
+                throw new \RuntimeException(sprintf('Unknown configuration type %s', $type));
+        }
+
+        $configurations = [];
+        foreach ($this->configurations as $configuration) {
+            if ($configuration['configuration'] instanceof $interface) {
+                $configurations[] = $configuration;
+            }
+        }
+
+        return $configurations;
     }
 
     /**
      * @param string $name
      * @return mixed
      */
-    public function getConfigurationValue(string $name)
+    public function getValue(string $name)
     {
         return $this->configurations[$name]['resolvedValue'];
-    }
-
-    /**
-     * @return array<TopicConfigurationInterface|mixed>
-     */
-    public function getTopicConfigurations(): array
-    {
-        $topicConfigurations = [];
-        foreach ($this->configurations as $configuration) {
-            if ($configuration['configuration'] instanceof TopicConfigurationInterface) {
-                $topicConfigurations[] = $configuration;
-            }
-        }
-
-        return $topicConfigurations;
-    }
-
-    public function getGlobalConfigurations(): array
-    {
-        $globalConfigurations = [];
-        foreach ($this->configurations as $configuration) {
-            if ($configuration['configuration'] instanceof GlobalConfigurationInterface) {
-                $globalConfigurations[] = $configuration;
-            }
-        }
-
-        return $globalConfigurations;
     }
 }

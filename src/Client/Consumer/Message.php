@@ -6,44 +6,38 @@ namespace Sts\KafkaBundle\Client\Consumer;
 
 class Message
 {
-    private int $error;
     private string $topicName;
-    private int $timestamp;
     private int $partition;
-    private string $originalPayload;
-    private int $length;
-    private string $key;
+    private string $payload;
     private int $offset;
-    private ?array $headers;
-    private array $decodedPayload;
+    /**
+     * @var mixed
+     */
+    private $data;
+    private ?string $key;
 
+    /**
+     * @param string $topicName
+     * @param int $partition
+     * @param string $payload
+     * @param int $offset
+     * @param mixed $data
+     * @param string|null $key
+     */
     public function __construct(
-        int $error,
         string $topicName,
-        int $timestamp,
         int $partition,
-        string $originalPayload,
-        int $length,
-        string $key,
+        string $payload,
         int $offset,
-        ?array $headers,
-        array $decodedPayload
+        $data,
+        ?string $key = null
     ) {
-        $this->error = $error;
         $this->topicName = $topicName;
-        $this->timestamp = $timestamp;
         $this->partition = $partition;
-        $this->originalPayload = $originalPayload;
-        $this->length = $length;
-        $this->key = $key;
+        $this->payload = $payload;
         $this->offset = $offset;
-        $this->headers = $headers;
-        $this->decodedPayload = $decodedPayload;
-    }
-
-    public function getError(): int
-    {
-        return $this->error;
+        $this->data = $data;
+        $this->key = $key;
     }
 
     public function getTopicName(): string
@@ -51,29 +45,14 @@ class Message
         return $this->topicName;
     }
 
-    public function getTimestamp(): int
-    {
-        return $this->timestamp;
-    }
-
     public function getPartition(): int
     {
         return $this->partition;
     }
 
-    public function getOriginalPayload(): string
+    public function getPayload(): string
     {
-        return $this->originalPayload;
-    }
-
-    public function getLength(): int
-    {
-        return $this->length;
-    }
-
-    public function getKey(): string
-    {
-        return $this->key;
+        return $this->payload;
     }
 
     public function getOffset(): int
@@ -81,13 +60,16 @@ class Message
         return $this->offset;
     }
 
-    public function getHeaders(): ?array
+    /**
+     * @return mixed
+     */
+    public function getData()
     {
-        return $this->headers;
+        return $this->data;
     }
 
-    public function getDecodedPayload(): array
+    public function getKey(): ?string
     {
-        return $this->decodedPayload;
+        return $this->key;
     }
 }

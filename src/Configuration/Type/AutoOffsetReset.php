@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\TopicConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class AutoOffsetReset implements TopicConfigurationInterface
+class AutoOffsetReset implements ConsumerConfigurationInterface, KafkaConfigurationInterface
 {
     public const NAME = 'auto_offset_reset';
     public const SMALLEST = 'smallest';

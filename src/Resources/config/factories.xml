@@ -5,13 +5,11 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Factory\DecoderFactory" id="sts_kafka.decoder.factory"/>
-        <service id="Sts\KafkaBundle\Factory\DecoderFactory" alias="sts_kafka.decoder.factory"/>
-        <service class="Sts\KafkaBundle\Factory\MessageFactory" id="sts_kafka.message.factory">
-            <argument type="service" id="sts_kafka.decoder.factory"/>
+        <service class="Sts\KafkaBundle\Factory\MessageFactory" id="sts_kafka.factory.message_factory">
+            <argument type="tagged_iterator" tag="sts_kafka.decoder"/>
+            <argument type="tagged_iterator" tag="sts_kafka.denormalizer"/>
+            <argument type="service" id="sts_kafka.validator.validator"/>
         </service>
-        <service id="Sts\KafkaBundle\Factory\MessageFactory" alias="sts_kafka.message.factory"/>
-        <service class="Sts\KafkaBundle\Factory\ValidatorFactory" id="sts_kafka.validator.factory"/>
-        <service id="Sts\KafkaBundle\Factory\ValidatorFactory" alias="sts_kafka.validator.factory"/>
+        <service id="Sts\KafkaBundle\Factory\MessageFactory" alias="sts_kafka.factory.message_factory"/>
     </services>
 </container>

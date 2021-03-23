@@ -9,9 +9,9 @@ use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 interface DecoderInterface
 {
     /**
-     * @param ResolvedConfiguration $resolvedConfiguration
+     * @param ResolvedConfiguration $configuration
      * @param string $message
      * @return mixed
      */
-    public function decode(ResolvedConfiguration $resolvedConfiguration, string $message);
+    public function decode(ResolvedConfiguration $configuration, string $message);
 }

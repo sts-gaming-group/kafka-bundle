@@ -5,11 +5,11 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Configuration\RawConfiguration" id="sts_kafka.raw.configuration"/>
-        <service id="Sts\KafkaBundle\Configuration\RawConfiguration" alias="sts_kafka.raw.configuration"/>
-        <service class="Sts\KafkaBundle\Configuration\ConfigurationResolver" id="sts_kafka.configuration.resolver">
-            <argument type="service" id="sts_kafka.raw.configuration"/>
+        <service class="Sts\KafkaBundle\Configuration\RawConfiguration" id="sts_kafka.configuration.raw_configuration"/>
+        <service id="Sts\KafkaBundle\Configuration\RawConfiguration" alias="sts_kafka.configuration.raw_configuration"/>
+        <service class="Sts\KafkaBundle\Configuration\ConfigurationResolver" id="sts_kafka.configuration.configuration_resolver">
+            <argument type="service" id="sts_kafka.configuration.raw_configuration"/>
         </service>
-        <service id="Sts\KafkaBundle\Configuration\ConfigurationResolver" alias="sts_kafka.configuration.resolver"/>
+        <service id="Sts\KafkaBundle\Configuration\ConfigurationResolver" alias="sts_kafka.configuration.configuration_resolver"/>
     </services>
 </container>

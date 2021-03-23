@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration;
 
 use Sts\KafkaBundle\Client\Contract\ClientInterface;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
 class ConfigurationResolver
@@ -23,53 +23,47 @@ class ConfigurationResolver
         $this->yamlConfig = $yamlConfig;
     }
 
-    public function resolve(ClientInterface $client, ?InputInterface $input = null): ResolvedConfiguration
+    /**
+     * @param string|ClientInterface $clientClass
+     * @param InputInterface|null $input
+     * @return ResolvedConfiguration
+     */
+    public function resolve($clientClass, ?InputInterface $input = null): ResolvedConfiguration
     {
-        $resolvedConfiguration = new ResolvedConfiguration();
+        $configuration = new ResolvedConfiguration();
 
-        foreach ($this->rawConfiguration->getConfigurations() as $configuration) {
-            $resolvedValue = $this->getResolvedValue($configuration, $client, $input);
-            if ($configuration instanceof CastValueInterface) {
-                $resolvedValue = $configuration->cast($resolvedValue);
+        foreach ($this->rawConfiguration->getConfigurations() as $rawConfiguration) {
+            $resolvedValue = $this->getResolvedValue($rawConfiguration, $clientClass, $input);
+            if ($rawConfiguration instanceof CastValueInterface) {
+                $resolvedValue = $rawConfiguration->cast($resolvedValue);
             }
-            $resolvedConfiguration->addConfiguration($configuration, $resolvedValue);
+            $configuration->addConfiguration($rawConfiguration, $resolvedValue);
         }
 
-        return $resolvedConfiguration;
+        return $configuration;
     }
 
     /**
      * @param ConfigurationInterface $configuration
-     * @param ClientInterface $client
+     * @param string|ClientInterface $clientClass
      * @param InputInterface|null $input
      * @return mixed
      */
     private function getResolvedValue(
         ConfigurationInterface $configuration,
-        ClientInterface $client,
+        $clientClass,
         ?InputInterface $input
     ) {
-        $name = $configuration->getName();
-
-        if ($input && $input->getParameterOption('--' . $name) !== false) {
-            $value = $input->getOption($name);
-            if (!$configuration->isValueValid($value)) {
-                throw new InvalidConfigurationException(sprintf(
-                    'Invalid option passed for %s. Passed value `%s`. Configuration description: %s',
-                    $name,
-                    is_array($value) ? implode(', ', $value) : $value,
-                    $configuration->getDescription()
-                ));
-            }
-
-            return $value;
+        $type = '';
+        if (is_a($clientClass, ConsumerInterface::class, true)) {
+            $type = 'consumers';
         }
 
-        if ($client instanceof ConsumerInterface) {
-            $configName = 'consumers';
-        } elseif ($client instanceof ProducerInterface) {
-            $configName = 'producers';
-        } else {
+        if (is_a($clientClass, ProducerInterface::class, true)) {
+            $type = 'producers';
+        }
+
+        if (!$type) {
             throw new \RuntimeException(sprintf(
                 'Object must implement %s or %s to properly resolve configuration.',
                 ConsumerInterface::class,
@@ -77,21 +71,65 @@ class ConfigurationResolver
             ));
         }
 
-        $className = get_class($client);
-        if (isset($this->yamlConfig[$configName][$className][$name]) &&
-            $this->yamlConfig[$configName][$className][$name] !== $configuration::getDefaultValue()) {
-            return $this->yamlConfig[$configName][$className][$name];
+        $name = $configuration->getName();
+        if ($input && $input->getParameterOption('--' . $name) !== false) {
+            $resolvedValue = $input->getOption($name);
+            $this->validateResolvedValue($configuration, $resolvedValue);
+
+            return $resolvedValue;
         }
 
-        if (isset($this->yamlConfig[$name])) {
-            return $this->yamlConfig[$name];
+        $clientClass = is_string($clientClass) ? $clientClass : get_class($clientClass);
+        if ($this->shouldResolveInstance($clientClass, $type, $configuration)) {
+            $resolvedValue = $this->yamlConfig[$type]['instances'][$clientClass][$name];
+            $this->validateResolvedValue($configuration, $resolvedValue);
+
+            return $resolvedValue;
         }
 
-        throw new InvalidConfigurationException(
-            sprintf(
-                'Set `%s` configuration either in global config, consumer definition or pass it as an option in CLI.',
-                $name
-            )
-        );
+        $parentClass = $this->getParentClass($clientClass);
+        if ($this->shouldResolveInstance($parentClass, $type, $configuration)) {
+            $resolvedValue = $this->yamlConfig[$type]['instances'][$parentClass][$name];
+            $this->validateResolvedValue($configuration, $resolvedValue);
+
+            return $resolvedValue;
+        }
+
+        return $configuration::getDefaultValue();
+    }
+
+    /**
+     * @param ConfigurationInterface $configuration
+     * @param mixed $resolvedValue
+     */
+    private function validateResolvedValue(ConfigurationInterface $configuration, $resolvedValue): void
+    {
+        if (!$configuration->isValueValid($resolvedValue)) {
+            throw new InvalidConfigurationException(sprintf(
+                'Invalid option passed for %s. Passed value `%s`. Configuration description: %s',
+                $configuration->getName(),
+                is_array($resolvedValue) ? implode(', ', $resolvedValue) : $resolvedValue,
+                $configuration->getDescription()
+            ));
+        }
+    }
+
+    /**
+     * @param string|ClientInterface $clientClass
+     * @return string
+     */
+    private function getParentClass($clientClass): string
+    {
+        $parentClass = get_parent_class($clientClass);
+
+        return $parentClass === false ? '' : $parentClass;
+    }
+
+    private function shouldResolveInstance(string $class, string $type, ConfigurationInterface $configuration): bool
+    {
+        $name = $configuration->getName();
+
+        return isset($this->yamlConfig[$type]['instances'][$class][$name]) &&
+            $this->yamlConfig[$type]['instances'][$class][$name];
     }
 }

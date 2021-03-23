@@ -22,27 +22,35 @@ class ProducerProvider
     }
 
     /**
-     * @param string $name
+     * @param mixed $data
      * @return ProducerInterface
      */
-    public function provide(string $name): ProducerInterface
+    public function provide($data): ProducerInterface
     {
         $producers = [];
 
         foreach ($this->producers as $producer) {
-            if ($producer->getName() === $name) {
+            if ($producer->supports($data)) {
                 $producers[] = $producer;
             }
         }
 
         if (count($producers) > 1) {
-            throw new ProducerProviderException(sprintf('Multiple producers found with name %s', $name));
+            throw new ProducerProviderException('Multiple producers found');
         }
 
         if (!$producers) {
-            throw new ProducerProviderException(sprintf('There is no matching producer with name %s.', $name));
+            throw new ProducerProviderException('There is no matching producer.');
         }
 
         return $producers[0];
+    }
+
+    /**
+     * @return array<ProducerInterface>
+     */
+    public function getProducers(): array
+    {
+        return $this->producers;
     }
 }
