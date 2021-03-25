@@ -76,9 +76,9 @@ class ConsumerClient
 
             try {
                 $this->validateRdKafkaMessage($rdKafkaMessage);
-            } catch (\Throwable $throwable) {
+            } catch (NullMessageException $exception) {
                 $consumer->handleException(
-                    new KafkaException($throwable),
+                    new KafkaException($exception),
                     $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
                 );
 
@@ -90,9 +90,14 @@ class ConsumerClient
                 try {
                     $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
                     $consumer->consume($message, $context);
-                } catch (\Throwable $throwable) {
-                    $consumer->handleException(new KafkaException($throwable), $context);
-                    if ($throwable instanceof ValidationException) {
+                } catch (ValidationException | RecoverableMessageException | UnrecoverableMessageException $exception) {
+                    $consumer->handleException(new KafkaException($exception), $context);
+
+                    if ($exception instanceof UnrecoverableMessageException) {
+                        break;
+                    }
+
+                    if ($exception instanceof ValidationException) {
                         if ($enableAutoCommit === 'false') {
                             $rdKafkaConsumer->commit($rdKafkaMessage);
                         }
@@ -100,23 +105,19 @@ class ConsumerClient
                         break;
                     }
 
-                    if ($throwable instanceof UnrecoverableMessageException) {
-                        break;
-                    }
-
-                    if ($retry !== $maxRetries) {
-                        usleep($retryDelay * 1000);
-                        $retryDelay *= $retryMultiplier;
-                        if ($retryDelay > $maxRetryDelay) {
-                            $retryDelay = $maxRetryDelay;
+                    if ($exception instanceof RecoverableMessageException) {
+                        if ($retry !== $maxRetries) {
+                            usleep($retryDelay * 1000);
+                            $retryDelay *= $retryMultiplier;
+                            if ($retryDelay > $maxRetryDelay) {
+                                $retryDelay = $maxRetryDelay;
+                            }
                         }
+
+                        continue;
                     }
 
-                    if ($throwable instanceof RecoverableMessageException) {
-                        ++$maxRetries;
-                    }
-
-                    continue;
+                    break;
                 }
 
                 break;
