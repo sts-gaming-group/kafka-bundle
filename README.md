@@ -112,7 +112,10 @@ class ExampleConsumer implements ConsumerInterface
  ```
 ## Retrying failed messages
 
-To trigger backoff retry your consumer should throw RecoverableMessageException. Configure retry options in sts_kafka.yaml
+To trigger a backoff retry, your consumer should throw RecoverableMessageException in `consume` method. Also, you have to configure few retry options in sts_kafka.yaml
+```php
+use Sts\KafkaBundle\Exception\RecoverableMessageException;
+```
 ```yaml
 sts_kafka:
   consumers:
@@ -131,7 +134,9 @@ Before the second retry, there will be 900 ms delay (retry_delay * retry_multipl
 `It is important to remember about committing offsets in Kafka in case of a permanently failed message (in case enable_auto_commit is set to false).`
 
 If you wish to continue consuming messages without retrying, throw UnrecoverableMessageException. Any other uncaught exception in your consumer will shut down the consumer.
-
+```php
+use Sts\KafkaBundle\Exception\UnrecoverableMessageException;
+```
 
 ## Handling offsets
 
