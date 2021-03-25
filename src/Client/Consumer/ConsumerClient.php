@@ -116,8 +116,6 @@ class ConsumerClient
 
                         continue;
                     }
-
-                    break;
                 }
 
                 break;
