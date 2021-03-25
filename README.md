@@ -133,10 +133,7 @@ With such configuration you will receive the same message 4 times maximum (first
 Before the second retry, there will be 900 ms delay (retry_delay * retry_multiplier). Before the third retry, there will be 2500 ms delay (max_retry_delay).
 `It is important to remember about committing offsets in Kafka in case of a permanently failed message (in case enable_auto_commit is set to false).`
 
-If you wish to continue consuming messages without retrying, throw UnrecoverableMessageException. Any other uncaught exception in your consumer will shut down the consumer.
-```php
-use Sts\KafkaBundle\Exception\UnrecoverableMessageException;
-```
+Any uncaught exception in your consumer will shut down the consumer.
 
 ## Handling offsets
 

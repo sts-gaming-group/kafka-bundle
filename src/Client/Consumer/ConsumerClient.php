@@ -19,7 +19,6 @@ use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\Exception\KafkaException;
 use Sts\KafkaBundle\Exception\NullMessageException;
 use Sts\KafkaBundle\Exception\RecoverableMessageException;
-use Sts\KafkaBundle\Exception\UnrecoverableMessageException;
 use Sts\KafkaBundle\Exception\ValidationException;
 use Sts\KafkaBundle\Factory\MessageFactory;
 use Sts\KafkaBundle\RdKafka\Context;
@@ -90,12 +89,8 @@ class ConsumerClient
                 try {
                     $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
                     $consumer->consume($message, $context);
-                } catch (ValidationException | RecoverableMessageException | UnrecoverableMessageException $exception) {
+                } catch (ValidationException | RecoverableMessageException $exception) {
                     $consumer->handleException(new KafkaException($exception), $context);
-
-                    if ($exception instanceof UnrecoverableMessageException) {
-                        break;
-                    }
 
                     if ($exception instanceof ValidationException) {
                         if ($enableAutoCommit === 'false') {
