@@ -64,9 +64,9 @@ class ConsumerClient
         while (true) {
             try {
                 $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
-            } catch (\Throwable $throwable) {
+            } catch (\Exception $exception) {
                 $consumer->handleException(
-                    new KafkaException($throwable),
+                    $exception,
                     $this->createContext($configuration, $rdKafkaConsumer)
                 );
 
@@ -77,7 +77,7 @@ class ConsumerClient
                 $this->validateRdKafkaMessage($rdKafkaMessage);
             } catch (NullMessageException $exception) {
                 $consumer->handleException(
-                    new KafkaException($exception),
+                    $exception,
                     $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
                 );
 
@@ -90,7 +90,7 @@ class ConsumerClient
                     $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
                     $consumer->consume($message, $context);
                 } catch (ValidationException | RecoverableMessageException $exception) {
-                    $consumer->handleException(new KafkaException($exception), $context);
+                    $consumer->handleException($exception, $context);
 
                     if ($exception instanceof ValidationException) {
                         if ($enableAutoCommit === 'false') {
