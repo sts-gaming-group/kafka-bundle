@@ -19,7 +19,6 @@ use Sts\KafkaBundle\Configuration\Type\Topics;
 use Sts\KafkaBundle\Exception\KafkaException;
 use Sts\KafkaBundle\Exception\NullMessageException;
 use Sts\KafkaBundle\Exception\RecoverableMessageException;
-use Sts\KafkaBundle\Exception\UnrecoverableMessageException;
 use Sts\KafkaBundle\Exception\ValidationException;
 use Sts\KafkaBundle\Factory\MessageFactory;
 use Sts\KafkaBundle\RdKafka\Context;
@@ -65,9 +64,9 @@ class ConsumerClient
         while (true) {
             try {
                 $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
-            } catch (\Throwable $throwable) {
+            } catch (\Exception $exception) {
                 $consumer->handleException(
-                    new KafkaException($throwable),
+                    $exception,
                     $this->createContext($configuration, $rdKafkaConsumer)
                 );
 
@@ -76,9 +75,9 @@ class ConsumerClient
 
             try {
                 $this->validateRdKafkaMessage($rdKafkaMessage);
-            } catch (\Throwable $throwable) {
+            } catch (NullMessageException $exception) {
                 $consumer->handleException(
-                    new KafkaException($throwable),
+                    $exception,
                     $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
                 );
 
@@ -90,9 +89,10 @@ class ConsumerClient
                 try {
                     $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
                     $consumer->consume($message, $context);
-                } catch (\Throwable $throwable) {
-                    $consumer->handleException(new KafkaException($throwable), $context);
-                    if ($throwable instanceof ValidationException) {
+                } catch (ValidationException | RecoverableMessageException $exception) {
+                    $consumer->handleException($exception, $context);
+
+                    if ($exception instanceof ValidationException) {
                         if ($enableAutoCommit === 'false') {
                             $rdKafkaConsumer->commit($rdKafkaMessage);
                         }
@@ -100,23 +100,17 @@ class ConsumerClient
                         break;
                     }
 
-                    if ($throwable instanceof UnrecoverableMessageException) {
-                        break;
-                    }
-
-                    if ($retry !== $maxRetries) {
-                        usleep($retryDelay * 1000);
-                        $retryDelay *= $retryMultiplier;
-                        if ($retryDelay > $maxRetryDelay) {
-                            $retryDelay = $maxRetryDelay;
+                    if ($exception instanceof RecoverableMessageException) {
+                        if ($retry !== $maxRetries) {
+                            usleep($retryDelay * 1000);
+                            $retryDelay *= $retryMultiplier;
+                            if ($retryDelay > $maxRetryDelay) {
+                                $retryDelay = $maxRetryDelay;
+                            }
                         }
-                    }
 
-                    if ($throwable instanceof RecoverableMessageException) {
-                        ++$maxRetries;
+                        continue;
                     }
-
-                    continue;
                 }
 
                 break;

@@ -7,9 +7,9 @@ namespace Sts\KafkaBundle\Client\Producer;
 class Message
 {
     private string $payload;
-    private string $key;
+    private ?string $key;
 
-    public function __construct(string $payload, string $key)
+    public function __construct(string $payload, ?string $key)
     {
         $this->payload = $payload;
         $this->key = $key;
@@ -20,7 +20,7 @@ class Message
         return $this->payload;
     }
 
-    public function getKey(): string
+    public function getKey(): ?string
     {
         return $this->key;
     }
