@@ -8,8 +8,15 @@ use Throwable;
 
 class RecoverableMessageException extends \RuntimeException
 {
-    public function __construct(Throwable $throwable)
+    private array $data;
+
+    public function __construct(Throwable $throwable, array $data = [])
     {
         parent::__construct($throwable->getMessage(), $throwable->getCode(), $throwable->getPrevious());
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
     }
 }
