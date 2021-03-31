@@ -12,6 +12,8 @@ class RecoverableMessageException extends \RuntimeException
 
     public function __construct(Throwable $throwable, array $data = [])
     {
+        $this->data = $data;
+        
         parent::__construct($throwable->getMessage(), $throwable->getCode(), $throwable->getPrevious());
     }
 
