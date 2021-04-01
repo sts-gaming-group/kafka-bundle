@@ -10,6 +10,7 @@
             <argument type="service" id="sts_kafka.configuration.raw_configuration"/>
             <argument type="service" id="sts_kafka.client.consumer.consumer_provider"/>
             <argument type="service" id="sts_kafka.client.consumer.consumer_client"/>
+            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
         </service>
         <service class="Sts\KafkaBundle\Command\ProducersDescribeCommand"
                  id="sts_kafka.command.producers_describe_command">
