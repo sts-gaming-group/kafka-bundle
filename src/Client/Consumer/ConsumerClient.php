@@ -44,7 +44,7 @@ class ConsumerClient
         $this->configurationResolver = $configurationResolver;
     }
 
-    public function consume(ConsumerInterface $consumer, ?InputInterface $input): bool
+    public function consume(ConsumerInterface $consumer, ?InputInterface $input = null): bool
     {
         $this->isKafkaExtensionLoaded();
 
