@@ -62,12 +62,12 @@ class ConsumeCommand extends Command
         $consumer = $this->consumerProvider->provide($input->getArgument('name'));
 
         if ($input->getOption('describe')) {
-            $this->describe($this->configurationResolver->resolve($consumer), $output, $consumer);
+            $this->describe($this->configurationResolver->resolve($consumer, $input), $output, $consumer);
 
             return 0;
         }
 
-        $this->consumerClient->consume($consumer);
+        $this->consumerClient->consume($consumer, $input);
 
         return 0;
     }
