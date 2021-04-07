@@ -24,6 +24,7 @@ use Sts\KafkaBundle\Factory\MessageFactory;
 use Sts\KafkaBundle\RdKafka\Context;
 use Sts\KafkaBundle\RdKafka\KafkaConfigurationFactory;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
+use Symfony\Component\Console\Input\InputInterface;
 
 class ConsumerClient
 {
@@ -43,11 +44,11 @@ class ConsumerClient
         $this->configurationResolver = $configurationResolver;
     }
 
-    public function consume(ConsumerInterface $consumer): bool
+    public function consume(ConsumerInterface $consumer, ?InputInterface $input = null): bool
     {
         $this->isKafkaExtensionLoaded();
 
-        $configuration = $this->configurationResolver->resolve($consumer);
+        $configuration = $this->configurationResolver->resolve($consumer, $input);
 
         $timeout = $configuration->getValue(Timeout::NAME);
         $maxRetries = $configuration->getValue(MaxRetries::NAME);
