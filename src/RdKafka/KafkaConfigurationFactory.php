@@ -18,7 +18,7 @@ class KafkaConfigurationFactory
         $this->configurationResolver = $configurationResolver;
     }
 
-    public function create(ClientInterface $client, ?InputInterface $input): Conf
+    public function create(ClientInterface $client, ?InputInterface $input = null): Conf
     {
         $configuration = $this->configurationResolver->resolve($client, $input);
         $conf = new Conf();
