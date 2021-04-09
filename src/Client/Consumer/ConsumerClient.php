@@ -58,7 +58,7 @@ class ConsumerClient
         $topics = $configuration->getValue(Topics::NAME);
         $enableAutoCommit = $configuration->getValue(EnableAutoCommit::NAME);
 
-        $rdKafkaConfig = $this->kafkaConfigurationFactory->create($consumer);
+        $rdKafkaConfig = $this->kafkaConfigurationFactory->create($consumer, $input);
         $rdKafkaConsumer = new RdKafkaConsumer($rdKafkaConfig);
         $rdKafkaConsumer->subscribe($topics);
 

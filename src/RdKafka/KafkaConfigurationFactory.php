@@ -7,6 +7,7 @@ use Sts\KafkaBundle\Client\Contract\CallableInterface;
 use Sts\KafkaBundle\Client\Contract\ClientInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use Symfony\Component\Console\Input\InputInterface;
 
 class KafkaConfigurationFactory
 {
@@ -17,9 +18,9 @@ class KafkaConfigurationFactory
         $this->configurationResolver = $configurationResolver;
     }
 
-    public function create(ClientInterface $client): Conf
+    public function create(ClientInterface $client, ?InputInterface $input = null): Conf
     {
-        $configuration = $this->configurationResolver->resolve($client);
+        $configuration = $this->configurationResolver->resolve($client, $input);
         $conf = new Conf();
 
         foreach ($configuration->getConfigurations(ResolvedConfiguration::KAFKA_TYPES) as $kafkaConfiguration) {
