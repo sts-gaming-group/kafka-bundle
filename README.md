@@ -81,7 +81,6 @@ namespace App\Consumers;
 
 use Sts\KafkaBundle\Client\Consumer\Message;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Exception\KafkaException;
 use Sts\KafkaBundle\RdKafka\Context;
 
 class ExampleConsumer implements ConsumerInterface
@@ -94,10 +93,9 @@ class ExampleConsumer implements ConsumerInterface
         $retryNo = $context->getRetryNo();  // contains retry count in case of a failure
     }
 
-    public function handleException(KafkaException $exception, Context $context)
+    public function handleException(\Exception $exception, Context $context)
     {
-        $message = $exception->getMessage(); // contains exception message
-        $throwable = $exception->getThrowable(); // contains last thrown object
+        // log it or i.e. produce to retry topic based on type of exception
     }
 
     public function getName(): string
@@ -328,17 +326,16 @@ If a validator returns false, an instance of ValidatorException is thrown.
  
  use Sts\KafkaBundle\Exception\ValidationException;
  
- public function handleException(KafkaException $exception, Context $context)
+ public function handleException(\Exception $exception, Context $context)
  {
-     $thrown = $exception->getThrowable();
-     if ($thrown instanceof ValidationException) {
+     if ($exception instanceof ValidationException) {
          /** @var MessageDTO $denormalized */
-         $denormalized = $thrown->getData();
+         $denormalized = $exception->getData();
          $this->logger->info(
              sprintf(
                  'Message has not passed validation for client %s. Reason %s', 
                  $denormalized->getClientId(),
-                 $thrown->getFailedReason())
+                 $exception->getFailedReason())
          );
      }
  }
