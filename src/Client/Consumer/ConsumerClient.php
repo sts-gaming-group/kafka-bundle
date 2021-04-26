@@ -73,10 +73,12 @@ class ConsumerClient
         $consumptionStart = microtime(true);
         while (true) {
             try {
-                $this->dispatcher->dispatch(
-                    new PreMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
-                    PreMessageConsumedEvent::getEventName($consumer->getName())
-                );
+                if ($this->dispatcher) {
+                    $this->dispatcher->dispatch(
+                        new PreMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
+                        PreMessageConsumedEvent::getEventName($consumer->getName())
+                    );
+                }
                 $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
                 $this->validateRdKafkaMessage($rdKafkaMessage);
             } catch (NullMessageException $exception) {
@@ -126,10 +128,12 @@ class ConsumerClient
             $this->increaseConsumedMessages();
             $this->setConsumptionTime($consumptionStart);
 
-            $this->dispatcher->dispatch(
-                new PostMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
-                PostMessageConsumedEvent::getEventName($consumer->getName())
-            );
+            if ($this->dispatcher) {
+                $this->dispatcher->dispatch(
+                    new PostMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
+                    PostMessageConsumedEvent::getEventName($consumer->getName())
+                );
+            }
         }
     }
 

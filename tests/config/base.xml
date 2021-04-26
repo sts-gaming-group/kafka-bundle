@@ -16,6 +16,6 @@
         <service class="Sts\KafkaBundle\Tests\Dummy\DummyConsumerTwo" id="sts_kafka.test.dummy.consumer.two">
             <tag name="sts_kafka.kafka.consumer"/>
         </service>
-        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.configuration.configuration_resolver" public="true"/>
+        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client_consumer.consumer_provider" public="true"/>
     </services>
 </container>
