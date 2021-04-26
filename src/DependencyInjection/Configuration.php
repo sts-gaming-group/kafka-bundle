@@ -11,7 +11,6 @@ use Sts\KafkaBundle\Configuration\Type\Decoder;
 use Sts\KafkaBundle\Configuration\Type\Denormalizer;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
-use Sts\KafkaBundle\Configuration\Type\EventEveryMessageCount;
 use Sts\KafkaBundle\Configuration\Type\GroupId;
 use Sts\KafkaBundle\Configuration\Type\LogLevel;
 use Sts\KafkaBundle\Configuration\Type\MaxRetries;

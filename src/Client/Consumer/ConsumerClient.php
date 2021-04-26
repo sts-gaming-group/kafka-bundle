@@ -10,7 +10,6 @@ use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
-use Sts\KafkaBundle\Configuration\Type\EventEveryMessageCount;
 use Sts\KafkaBundle\Configuration\Type\MaxRetries;
 use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
 use Sts\KafkaBundle\Configuration\Type\RetryDelay;
