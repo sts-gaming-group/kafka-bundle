@@ -118,6 +118,10 @@ As the name suggests - first event is dispatched before the message is consumed,
 You can hook up into these events using symfony event subscriber/listener i.e.
 
 ```php
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Sts\KafkaBundle\Event\PostMessageConsumedEvent;
+use Sts\KafkaBundle\Event\PreMessageConsumedEvent;
+
 class TicketConsumerEventSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
@@ -136,6 +140,8 @@ class TicketConsumerEventSubscriber implements EventSubscriberInterface
 
     public function onPostMessageConsumed(PostMessageConsumedEvent $event): void
     {
+        $event->getConsumedMessages();
+        $event->getConsumptionTimeMs();
     }
 }
 ```
