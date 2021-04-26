@@ -46,7 +46,7 @@ parameters:
             message: '/ConsumerProvider::provide\(\) expects string/'
             path: src/Command/ConsumersDescribeCommand.php
         -
-            message: '/Cannot call method dispatch\(\) on Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\|null/'
+            message: '/Cannot call method dispatch\(\) on Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\s|null/'
             path: src/Client/Consumer/ConsumerClient.php
         -
             message: '/Variable \$rdKafkaMessage might not be defined/'

@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class PreMessageConsumedEvent extends Event
+class PostMessageConsumedEvent extends Event
 {
     private int $consumedMessages;
     private float $consumptionTimeMs;
@@ -29,6 +29,6 @@ class PreMessageConsumedEvent extends Event
 
     public static function getEventName(string $consumerName): string
     {
-        return 'sts_kafka.pre_message_consumed_event_' . $consumerName;
+        return 'sts_kafka.post_message_consumed_event_' . $consumerName;
     }
 }

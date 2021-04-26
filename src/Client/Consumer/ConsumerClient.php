@@ -16,6 +16,7 @@ use Sts\KafkaBundle\Configuration\Type\RetryDelay;
 use Sts\KafkaBundle\Configuration\Type\RetryMultiplier;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
 use Sts\KafkaBundle\Configuration\Type\Topics;
+use Sts\KafkaBundle\Event\PostMessageConsumedEvent;
 use Sts\KafkaBundle\Event\PreMessageConsumedEvent;
 use Sts\KafkaBundle\Exception\NullMessageException;
 use Sts\KafkaBundle\Exception\RecoverableMessageException;
@@ -124,6 +125,11 @@ class ConsumerClient
 
             $this->increaseConsumedMessages();
             $this->setConsumptionTime($consumptionStart);
+
+            $this->dispatcher->dispatch(
+                new PostMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
+                PostMessageConsumedEvent::getEventName($consumer->getName())
+            );
         }
     }
 

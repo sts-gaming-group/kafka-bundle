@@ -610,4 +610,34 @@ bin/console kafka:producers:describe
 └────────────────────┴─────────────────────────────────────────────────────────┘
 ```
 
-# To be continued...
+## Events
+Consumer dispatches two events (using symfony/event-dispatcher component as an optional dependency):
+- **sts_kafka.pre_message_consumed_event_{consumer_name}** e.g. sts_kafka.pre_message_consumed_event_ticket_consumer
+- **sts_kafka.post_message_consumed_event_{consumer_name}** e.g. sts_kafka.post_message_consumed_event_ticket_consumer
+
+As the name suggests - first event is dispatched before the message is consumed, and the second event is dispatched just after the message has been consumed (retry mechanism is not taken into account, message needs to be processed fully for the event to be dispatched).
+You can hook up into these events using symfony event subscriber/listener i.e.
+
+```php
+class TicketConsumerEventSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            PreMessageConsumedEvent::getEventName(TicketConsumer::NAME) => 'onPreMessageConsumed',
+            PostMessageConsumedEvent::getEventName(TicketConsumer::NAME) => 'onPostMessageConsumed'
+        ];
+    }
+
+    public function onPreMessageConsumed(PreMessageConsumedEvent $event): void
+    {
+        $event->getConsumedMessages(); // number of processed messages
+        $event->getConsumptionTimeMs(); // how long consumer is running
+    }
+
+    public function onPostMessageConsumed(PostMessageConsumedEvent $event): void
+    {
+    }
+}
+```
+
