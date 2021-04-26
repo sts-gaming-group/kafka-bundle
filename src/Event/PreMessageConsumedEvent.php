@@ -4,31 +4,12 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Event;
 
-use Symfony\Contracts\EventDispatcher\Event;
-
-class PreMessageConsumedEvent extends Event
+class PreMessageConsumedEvent extends AbstractMessageConsumedEvent
 {
-    private int $consumedMessages;
-    private float $consumptionTimeMs;
-
-    public function __construct(int $consumedMessages, float $consumptionTimeMs)
-    {
-        $this->consumedMessages = $consumedMessages;
-        $this->consumptionTimeMs = $consumptionTimeMs;
-    }
-
-    public function getConsumedMessages(): int
-    {
-        return $this->consumedMessages;
-    }
-
-    public function getConsumptionTimeMs(): float
-    {
-        return $this->consumptionTimeMs;
-    }
+    public const EVENT_PREFIX = 'sts_kafka.pre_message_consumed_event_';
 
     public static function getEventName(string $consumerName): string
     {
-        return 'sts_kafka.pre_message_consumed_event_' . $consumerName;
+        return self::EVENT_PREFIX . $consumerName;
     }
 }
