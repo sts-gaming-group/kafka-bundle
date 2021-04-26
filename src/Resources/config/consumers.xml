@@ -11,6 +11,7 @@
             <argument type="service" id="sts_kafka.rd_kafka.kafka_configuration_factory"/>
             <argument type="service" id="sts_kafka.factory.message_factory"/>
             <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
+            <argument type="service" id="event_dispatcher" on-invalid="null"/>
         </service>
         <service id="Sts\KafkaBundle\Client\Consumer\ConsumerClient" alias="sts_kafka.client.consumer.consumer_client"/>
     </services>

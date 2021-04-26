@@ -30,7 +30,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         'decoders',
         'producers',
         'denormalizers',
-        'validators'
+        'validators',
     ];
 
     public function loadInternal(array $mergedConfig, ContainerBuilder $container): void

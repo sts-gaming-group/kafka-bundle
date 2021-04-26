@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Type;
 
+use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class MaxRetryDelay implements ConsumerConfigurationInterface
+class MaxRetryDelay implements ConsumerConfigurationInterface, CastValueInterface
 {
     public const NAME = 'max_retry_delay';
 
@@ -28,11 +29,16 @@ class MaxRetryDelay implements ConsumerConfigurationInterface
 
     public function isValueValid($value): bool
     {
-        return is_int($value) && $value >= 0;
+        return is_numeric($value) && $value >= 0;
     }
 
     public static function getDefaultValue(): int
     {
         return 2000;
+    }
+
+    public function cast($validatedValue): int
+    {
+        return (int) $validatedValue;
     }
 }
