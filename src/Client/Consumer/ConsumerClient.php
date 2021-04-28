@@ -16,7 +16,8 @@ use Sts\KafkaBundle\Configuration\Type\RetryDelay;
 use Sts\KafkaBundle\Configuration\Type\RetryMultiplier;
 use Sts\KafkaBundle\Configuration\Type\Timeout;
 use Sts\KafkaBundle\Configuration\Type\Topics;
-use Sts\KafkaBundle\Exception\KafkaException;
+use Sts\KafkaBundle\Event\PostMessageConsumedEvent;
+use Sts\KafkaBundle\Event\PreMessageConsumedEvent;
 use Sts\KafkaBundle\Exception\NullMessageException;
 use Sts\KafkaBundle\Exception\RecoverableMessageException;
 use Sts\KafkaBundle\Exception\ValidationException;
@@ -25,6 +26,7 @@ use Sts\KafkaBundle\RdKafka\Context;
 use Sts\KafkaBundle\RdKafka\KafkaConfigurationFactory;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ConsumerClient
 {
@@ -33,15 +35,21 @@ class ConsumerClient
     private KafkaConfigurationFactory $kafkaConfigurationFactory;
     private MessageFactory $messageFactory;
     private ConfigurationResolver $configurationResolver;
+    private ?EventDispatcherInterface $dispatcher;
+
+    private int $consumedMessages = 0;
+    private float $consumptionTimeMs = 0;
 
     public function __construct(
         KafkaConfigurationFactory $kafkaConfigurationFactory,
         MessageFactory $messageFactory,
-        ConfigurationResolver $configurationResolver
+        ConfigurationResolver $configurationResolver,
+        ?EventDispatcherInterface $dispatcher
     ) {
         $this->kafkaConfigurationFactory = $kafkaConfigurationFactory;
         $this->messageFactory = $messageFactory;
         $this->configurationResolver = $configurationResolver;
+        $this->dispatcher = $dispatcher;
     }
 
     public function consume(ConsumerInterface $consumer, ?InputInterface $input = null): bool
@@ -62,25 +70,23 @@ class ConsumerClient
         $rdKafkaConsumer = new RdKafkaConsumer($rdKafkaConfig);
         $rdKafkaConsumer->subscribe($topics);
 
+        $consumptionStart = microtime(true);
         while (true) {
             try {
+                if ($this->dispatcher) {
+                    $this->dispatcher->dispatch(
+                        new PreMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
+                        PreMessageConsumedEvent::getEventName($consumer->getName())
+                    );
+                }
                 $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
-            } catch (\Exception $exception) {
-                $consumer->handleException(
-                    $exception,
-                    $this->createContext($configuration, $rdKafkaConsumer)
-                );
-
-                continue;
-            }
-
-            try {
                 $this->validateRdKafkaMessage($rdKafkaMessage);
             } catch (NullMessageException $exception) {
                 $consumer->handleException(
                     $exception,
                     $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
                 );
+                $this->setConsumptionTime($consumptionStart);
 
                 continue;
             }
@@ -103,11 +109,11 @@ class ConsumerClient
 
                     if ($exception instanceof RecoverableMessageException) {
                         if ($retry !== $maxRetries) {
-                            usleep($retryDelay * 1000);
                             $retryDelay *= $retryMultiplier;
                             if ($retryDelay > $maxRetryDelay) {
                                 $retryDelay = $maxRetryDelay;
                             }
+                            usleep($retryDelay * 1000);
                         }
 
                         continue;
@@ -118,7 +124,27 @@ class ConsumerClient
             }
 
             $retryDelay = $configuration->getValue(RetryDelay::NAME);
+
+            $this->increaseConsumedMessages();
+            $this->setConsumptionTime($consumptionStart);
+
+            if ($this->dispatcher) {
+                $this->dispatcher->dispatch(
+                    new PostMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
+                    PostMessageConsumedEvent::getEventName($consumer->getName())
+                );
+            }
         }
+    }
+
+    private function setConsumptionTime(float $consumptionStart): void
+    {
+        $this->consumptionTimeMs = microtime(true) - $consumptionStart;
+    }
+
+    private function increaseConsumedMessages(): void
+    {
+        ++$this->consumedMessages;
     }
 
     private function validateRdKafkaMessage(?RdKafkaMessage $message): void
