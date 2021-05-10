@@ -6,10 +6,10 @@ namespace Sts\KafkaBundle\Event;
 
 class PostMessageConsumedEvent extends AbstractMessageConsumedEvent
 {
-    public const EVENT_PREFIX = 'sts_kafka.post_message_consumed_';
+    private const NAME = 'sts_kafka.post_message_consumed';
 
     public static function getEventName(string $consumerName): string
     {
-        return self::EVENT_PREFIX . $consumerName;
+        return self::NAME . '_' . $consumerName;
     }
 }

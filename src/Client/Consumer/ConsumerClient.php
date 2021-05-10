@@ -73,12 +73,8 @@ class ConsumerClient
         $consumptionStart = microtime(true);
         while (true) {
             try {
-                if ($this->dispatcher) {
-                    $this->dispatcher->dispatch(
-                        new PreMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
-                        PreMessageConsumedEvent::getEventName($consumer->getName())
-                    );
-                }
+                $this->dispatch(PreMessageConsumedEvent::class, $consumer);
+
                 $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
                 $this->validateRdKafkaMessage($rdKafkaMessage);
             } catch (NullMessageException $exception) {
@@ -128,12 +124,7 @@ class ConsumerClient
             $this->increaseConsumedMessages();
             $this->setConsumptionTime($consumptionStart);
 
-            if ($this->dispatcher) {
-                $this->dispatcher->dispatch(
-                    new PostMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs),
-                    PostMessageConsumedEvent::getEventName($consumer->getName())
-                );
-            }
+            $this->dispatch(PostMessageConsumedEvent::class, $consumer);
         }
     }
 
@@ -176,5 +167,26 @@ class ConsumerClient
             $rdKafkaConsumer,
             $rdKafkaMessage
         );
+    }
+
+    private function dispatch(string $eventClass, ConsumerInterface $consumer): void
+    {
+        if (!$this->dispatcher) {
+            return;
+        }
+
+        switch ($eventClass) {
+            case PostMessageConsumedEvent::class:
+                $event = new PostMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs);
+                break;
+            case PreMessageConsumedEvent::class:
+                $event = new PreMessageConsumedEvent($this->consumedMessages, $this->consumptionTimeMs);
+                break;
+            default:
+                throw new \RuntimeException(sprintf('Event class %s does not exist', $eventClass));
+        }
+
+        $this->dispatcher->dispatch($event, $event::getEventName($consumer->getName()));
+        $this->dispatcher->dispatch($event);
     }
 }

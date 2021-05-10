@@ -110,9 +110,15 @@ class ExampleConsumer implements ConsumerInterface
  ```
 
 ## Events
-Consumer dispatches two events (using symfony/event-dispatcher component as an optional dependency):
-- **sts_kafka.pre_message_consumed_event_{consumer_name}** e.g. sts_kafka.pre_message_consumed_event_ticket_consumer
-- **sts_kafka.post_message_consumed_event_{consumer_name}** e.g. sts_kafka.post_message_consumed_event_ticket_consumer
+Consumer dispatches events using **symfony/event-dispatcher** component as an optional dependency:
+
+Only for currently running consumer:
+- **sts_kafka.pre_message_consumed_{consumer_name}** e.g. sts_kafka.pre_message_consumed_ticket_consumer
+- **sts_kafka.post_message_consumed_{consumer_name}** e.g. sts_kafka.post_message_consumed_ticket_consumer
+  
+Global event for all consumers:
+- **Sts\KafkaBundle\Event\PreMessageConsumedEvent**
+- **Sts\KafkaBundle\Event\PostMessageConsumedEvent**
 
 As the name suggests - first event is dispatched before the message is consumed, and the second event is dispatched just after the message has been consumed (retry mechanism is not taken into account, message needs to be processed fully for the event to be dispatched).
 You can hook up into these events using symfony event subscriber/listener i.e.
@@ -127,8 +133,10 @@ class TicketConsumerEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            PreMessageConsumedEvent::getEventName('my_consumer_name') => 'onPreMessageConsumed',
-            PostMessageConsumedEvent::getEventName('my_consumer_name') => 'onPostMessageConsumed'
+            PreMessageConsumedEvent::getEventName('ticket_consumer') => 'onPreMessageConsumed',
+            PostMessageConsumedEvent::getEventName('ticket_consumer') => 'onPostMessageConsumed',
+            PreMessageConsumedEvent::class => 'onGlobalPreMessageConsumed',
+            PostMessageConsumedEvent::class => 'onGlobalPostMessageConsumed'
         ];
     }
 
