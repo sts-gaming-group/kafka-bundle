@@ -37,7 +37,7 @@ trait DescribeTrait
             $resolvedValue = $configuration['resolvedValue'];
             $name = $configuration['configuration']->getName();
             if (is_array($resolvedValue)) {
-                $values[$name] = implode(', ', $resolvedValue);
+                $values[$name] = implode(PHP_EOL, $resolvedValue);
 
                 continue;
             }
