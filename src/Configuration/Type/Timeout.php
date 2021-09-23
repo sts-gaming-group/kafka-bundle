@@ -33,7 +33,7 @@ class Timeout implements ConsumerConfigurationInterface, CastValueInterface
 
     public function isValueValid($value): bool
     {
-        return is_numeric($value) && $value >= 0;
+        return is_numeric($value) && strpos((string) $value, '.') === false && $value >= 0;
     }
 
     public function cast($validatedValue): int

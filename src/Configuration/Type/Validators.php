@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
 use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
 use Sts\KafkaBundle\Validator\Type\PlainValidator;
 use Symfony\Component\Console\Input\InputOption;
 
 class Validators implements ConsumerConfigurationInterface
 {
+    use ObjectConfigurationTrait;
+
     public const NAME = 'validators';
 
     public function getName(): string
@@ -35,27 +38,13 @@ class Validators implements ConsumerConfigurationInterface
         );
     }
 
-    public function isValueValid($value): bool
-    {
-        if (!is_array($value)) {
-            return false;
-        }
-
-        foreach ($value as $item) {
-            $classImplements = class_implements($item);
-            if (!$classImplements) {
-                return false;
-            }
-            if (!class_exists($item) || !in_array(ValidatorInterface::class, $classImplements, true)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     public static function getDefaultValue(): array
     {
         return [PlainValidator::class];
+    }
+
+    protected function getInterface(): string
+    {
+        return ValidatorInterface::class;
     }
 }

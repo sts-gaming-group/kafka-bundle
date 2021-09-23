@@ -9,6 +9,7 @@
     </imports>
 
     <services>
+        <!-- consumers -->
         <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client.consumer.consumer_provider" public="true"/>
         <service class="Sts\KafkaBundle\Tests\Dummy\DummyConsumerOne" id="sts_kafka.test.dummy.consumer.one">
             <tag name="sts_kafka.kafka.consumer"/>
@@ -17,5 +18,24 @@
             <tag name="sts_kafka.kafka.consumer"/>
         </service>
         <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client_consumer.consumer_provider" public="true"/>
+        <!-- consumers -->
+
+        <!-- decoders -->
+        <service class="Sts\KafkaBundle\Tests\Dummy\Decoder\DummyDecoderOne" id="sts_kafka.test.dummy.decoder.one" public="true">
+            <tag name="sts_kafka.decoder"/>
+        </service>
+        <!-- decoders -->
+
+        <!-- denormalizers -->
+        <service class="Sts\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne" id="sts_kafka.test.dummy.denormalizer.one" public="true">
+            <tag name="sts_kafka.denormalizer"/>
+        </service>
+        <!-- denormalizers -->
+
+        <!-- validators -->
+        <service class="Sts\KafkaBundle\Tests\Dummy\Validator\DummyValidatorOne" id="sts_kafka.test.dummy.validator.one" public="true">
+            <tag name="sts_kafka.validator"/>
+        </service>
+        <!-- validators -->
     </services>
 </container>

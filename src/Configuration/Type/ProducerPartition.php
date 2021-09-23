@@ -32,7 +32,8 @@ class ProducerPartition implements ProducerConfigurationInterface
 
     public function isValueValid($value): bool
     {
-        return (is_numeric($value) && $value >= 0) || $value === self::getDefaultValue();
+        return (is_numeric($value) && strpos((string) $value, '.') === false && $value >= 0) ||
+            $value === self::getDefaultValue();
     }
 
     public static function getDefaultValue(): int

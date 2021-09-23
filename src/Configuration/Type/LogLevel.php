@@ -39,7 +39,7 @@ class LogLevel implements KafkaConfigurationInterface, ConsumerConfigurationInte
 
     public function isValueValid($value): bool
     {
-        return is_numeric($value);
+        return is_numeric($value) && strpos((string) $value, '.') === false;
     }
 
     public function cast($validatedValue): int

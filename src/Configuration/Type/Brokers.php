@@ -31,11 +31,12 @@ class Brokers implements KafkaConfigurationInterface, ConsumerConfigurationInter
 
     public function isValueValid($value): bool
     {
-        if (!is_array($value)) {
+        if (!is_array($value) || empty($value)) {
             return false;
         }
-        foreach ($value as $topic) {
-            if (!is_string($topic) || '' === $topic) {
+
+        foreach ($value as $broker) {
+            if (!is_string($broker) || '' === $broker) {
                 return false;
             }
         }

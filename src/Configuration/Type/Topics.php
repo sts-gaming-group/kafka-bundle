@@ -29,9 +29,10 @@ class Topics implements ConsumerConfigurationInterface
 
     public function isValueValid($value): bool
     {
-        if (!is_array($value)) {
+        if (!is_array($value) || empty($value)) {
             return false;
         }
+
         foreach ($value as $topic) {
             if (!is_string($topic) || '' === $topic) {
                 return false;
