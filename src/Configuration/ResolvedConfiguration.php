@@ -36,7 +36,7 @@ class ResolvedConfiguration
 
     /**
      * @param string $type
-     * @return array<int, array{resolvedValue: string, configuration: ConfigurationInterface}>
+     * @return array
      */
     public function getConfigurations(string $type = self::ALL_TYPES): array
     {

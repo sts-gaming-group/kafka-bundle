@@ -18,6 +18,7 @@ abstract class AbstractConfigurationTest extends TestCase
 
     /**
      * @dataProvider getValidValuesProvider
+     * @param mixed $value
      */
     public function testValidValue($value): void
     {
@@ -28,6 +29,7 @@ abstract class AbstractConfigurationTest extends TestCase
 
     /**
      * @dataProvider getInvalidValuesProvider
+     * @param mixed $value
      */
     public function testInvalidValue($value): void
     {
