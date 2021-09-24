@@ -9,6 +9,7 @@ use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Client\Contract\ProducerInterface;
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Exception\WrongClientException;
 use Sts\KafkaBundle\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Input\InputInterface;
 
@@ -34,9 +35,11 @@ class ConfigurationResolver
 
         foreach ($this->rawConfiguration->getConfigurations() as $rawConfiguration) {
             $resolvedValue = $this->getResolvedValue($rawConfiguration, $clientClass, $input);
+
             if ($rawConfiguration instanceof CastValueInterface) {
                 $resolvedValue = $rawConfiguration->cast($resolvedValue);
             }
+
             $configuration->addConfiguration($rawConfiguration, $resolvedValue);
         }
 
@@ -64,7 +67,7 @@ class ConfigurationResolver
         }
 
         if (!$type) {
-            throw new \RuntimeException(sprintf(
+            throw new WrongClientException(sprintf(
                 'Object must implement %s or %s to properly resolve configuration.',
                 ConsumerInterface::class,
                 ProducerInterface::class
@@ -95,7 +98,7 @@ class ConfigurationResolver
             return $resolvedValue;
         }
 
-        return $configuration::getDefaultValue();
+        return $configuration->getDefaultValue();
     }
 
     /**

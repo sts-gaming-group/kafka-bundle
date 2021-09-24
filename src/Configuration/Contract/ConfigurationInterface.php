@@ -18,5 +18,5 @@ interface ConfigurationInterface
     /**
      * @return mixed
      */
-    public static function getDefaultValue();
+    public function getDefaultValue();
 }

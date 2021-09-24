@@ -36,11 +36,11 @@ class Decoder implements ConsumerConfigurationInterface
             Default decoder %s',
             implode(', ', [AvroDecoder::class, JsonDecoder::class, PlainDecoder::class]),
             DecoderInterface::class,
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return AvroDecoder::class;
     }

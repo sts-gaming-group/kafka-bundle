@@ -42,7 +42,7 @@ class Topics implements ConsumerConfigurationInterface
         return true;
     }
 
-    public static function getDefaultValue(): array
+    public function getDefaultValue(): array
     {
         return ['topic_1', 'topic_2'];
     }

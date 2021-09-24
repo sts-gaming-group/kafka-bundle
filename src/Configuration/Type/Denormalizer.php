@@ -38,7 +38,7 @@ class Denormalizer implements ConsumerConfigurationInterface
         );
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return PlainDenormalizer::class;
     }

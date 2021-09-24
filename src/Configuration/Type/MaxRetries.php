@@ -26,7 +26,7 @@ class MaxRetries implements ConsumerConfigurationInterface, CastValueInterface
     {
         return sprintf(
             'How many times message should be consumed if exception is thrown. Defaults to %s',
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
@@ -35,7 +35,7 @@ class MaxRetries implements ConsumerConfigurationInterface, CastValueInterface
         return is_numeric($value) && strpos((string) $value, '.') === false && $value >= 0;
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return 0;
     }

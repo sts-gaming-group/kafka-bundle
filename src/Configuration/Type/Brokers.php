@@ -49,7 +49,7 @@ class Brokers implements KafkaConfigurationInterface, ConsumerConfigurationInter
         return 'metadata.broker.list';
     }
 
-    public static function getDefaultValue(): array
+    public function getDefaultValue(): array
     {
         return ['127.0.0.1', '127.0.0.2'];
     }

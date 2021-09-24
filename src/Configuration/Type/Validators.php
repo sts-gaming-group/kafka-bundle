@@ -38,7 +38,7 @@ class Validators implements ConsumerConfigurationInterface
         );
     }
 
-    public static function getDefaultValue(): array
+    public function getDefaultValue(): array
     {
         return [PlainValidator::class];
     }

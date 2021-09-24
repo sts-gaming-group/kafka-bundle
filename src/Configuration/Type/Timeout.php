@@ -27,7 +27,7 @@ class Timeout implements ConsumerConfigurationInterface, CastValueInterface
     {
         return sprintf(
             'Maximum amount of time to wait for a message to be received. Defaults to %s ms.',
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
@@ -41,7 +41,7 @@ class Timeout implements ConsumerConfigurationInterface, CastValueInterface
         return (int) $validatedValue;
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return 1000;
     }

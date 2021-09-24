@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Traits;
 
-use Symfony\Component\Console\Input\InputOption;
-
 trait ObjectConfigurationTrait
 {
     abstract protected function getInterface(): string;
@@ -14,12 +12,31 @@ trait ObjectConfigurationTrait
     {
         $interface = $this->getInterface();
 
-        if (is_object($value)) {
-            return in_array($interface, class_implements($value), true);
+        if (is_array($value)) {
+            if (empty($value)) {
+                return false;
+            }
+
+            foreach ($value as $item) {
+                if (!$this->doValidate($interface, $item)) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        if (is_string($value)) {
-            return class_exists($value) && in_array($interface, class_implements($value), true);
+        return $this->doValidate($interface, $value);
+    }
+
+    private function doValidate(string $interface, $item): bool
+    {
+        if (is_object($item)) {
+            return in_array($interface, class_implements($item), true);
+        }
+
+        if (is_string($item)) {
+            return class_exists($item) && in_array($interface, class_implements($item), true);
         }
 
         return false;

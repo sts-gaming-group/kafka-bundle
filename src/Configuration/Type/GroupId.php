@@ -40,7 +40,7 @@ class GroupId implements KafkaConfigurationInterface, ConsumerConfigurationInter
         return is_string($value) && '' !== $value;
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return 'sts_kafka';
     }

@@ -33,7 +33,7 @@ class EnableAutoOffsetStore implements KafkaConfigurationInterface, ConsumerConf
         EOT;
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return 'true';
     }

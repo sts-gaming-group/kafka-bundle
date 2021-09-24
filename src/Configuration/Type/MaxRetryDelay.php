@@ -24,7 +24,7 @@ class MaxRetryDelay implements ConsumerConfigurationInterface, CastValueInterfac
 
     public function getDescription(): string
     {
-        return sprintf('Maximum retry delay in ms. Defaults to %s', self::getDefaultValue());
+        return sprintf('Maximum retry delay in ms. Defaults to %s', $this->getDefaultValue());
     }
 
     public function isValueValid($value): bool
@@ -32,7 +32,7 @@ class MaxRetryDelay implements ConsumerConfigurationInterface, CastValueInterfac
         return is_numeric($value) && strpos((string) $value, '.') === false && $value >= 0;
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return 2000;
     }

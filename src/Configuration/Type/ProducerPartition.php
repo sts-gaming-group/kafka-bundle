@@ -33,10 +33,10 @@ class ProducerPartition implements ProducerConfigurationInterface
     public function isValueValid($value): bool
     {
         return (is_numeric($value) && strpos((string) $value, '.') === false && $value >= 0) ||
-            $value === self::getDefaultValue();
+            $value === $this->getDefaultValue();
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return defined('RD_KAFKA_PARTITION_UA') ? RD_KAFKA_PARTITION_UA : -1;
     }

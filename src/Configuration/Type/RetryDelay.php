@@ -25,7 +25,7 @@ class RetryDelay implements ConsumerConfigurationInterface
     {
         return sprintf(
             'Delay (in ms) before message is consumed again after thrown exception. Defaults to %s',
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
@@ -34,7 +34,7 @@ class RetryDelay implements ConsumerConfigurationInterface
         return is_int($value) && $value >= 0;
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return 200;
     }

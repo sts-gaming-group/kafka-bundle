@@ -25,7 +25,7 @@ class RetryMultiplier implements ConsumerConfigurationInterface
     {
         return sprintf(
             'Causes the retry delay to be higher before each retry. Defaults to %s',
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
@@ -34,7 +34,7 @@ class RetryMultiplier implements ConsumerConfigurationInterface
         return is_int($value) && $value > 0;
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return 2;
     }

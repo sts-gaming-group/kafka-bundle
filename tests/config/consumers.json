@@ -1,0 +1,66 @@
+{
+  "consumers": {
+    "instances": {
+      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Consumer\\DummyConsumerOne": {
+        "brokers": [
+          "127.0.0.1:9092",
+          "127.0.0.2:9092",
+          "127.0.0.3:9092"
+        ],
+        "topics": [
+          "dummy_topic_one",
+          "dummy_topic_two"
+        ],
+        "group_id": "dummy_group_id_one",
+        "schema_registry": "http://127.0.0.1:8081",
+        "max_retries": 5,
+        "max_retry_delay": 1000,
+        "denormalizer": "Sts\\KafkaBundle\\Tests\\Dummy\\Denormalizer\\DummyDenormalizerOne",
+        "validators": [
+          "Sts\\KafkaBundle\\Tests\\Dummy\\Validator\\DummyValidatorOne"
+        ],
+        "decoder": "Sts\\KafkaBundle\\Tests\\Dummy\\Decoder\\DummyDecoderOne",
+        "auto_commit_interval_ms": "50",
+        "auto_offset_reset": "smallest",
+        "timeout": 1000,
+        "enable_auto_offset_store": "true",
+        "enable_auto_commit": "true",
+        "register_missing_schemas": "false",
+        "register_missing_subjects": "false",
+        "retry_delay": 200,
+        "retry_multiplier": 2,
+        "log_level": 3
+      },
+      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Consumer\\DummyConsumerTwo": {
+        "brokers": [
+          "127.0.0.4:9092",
+          "127.0.0.5:9092",
+          "127.0.0.6:9092"
+        ],
+        "topics": [
+          "dummy_topic_three",
+          "dummy_topic_four"
+        ],
+        "group_id": "dummy_group_id_two",
+        "schema_registry": "http://127.0.0.2:8081",
+        "max_retries": 4,
+        "max_retry_delay": 2000,
+        "denormalizer": "Sts\\KafkaBundle\\Tests\\Dummy\\Denormalizer\\DummyDenormalizerOne",
+        "validators": [
+          "Sts\\KafkaBundle\\Tests\\Dummy\\Validator\\DummyValidatorOne"
+        ],
+        "decoder": "Sts\\KafkaBundle\\Tests\\Dummy\\Decoder\\DummyDecoderOne",
+        "auto_commit_interval_ms": "40",
+        "auto_offset_reset": "largest",
+        "timeout": 2000,
+        "enable_auto_offset_store": "false",
+        "enable_auto_commit": "false",
+        "register_missing_schemas": "true",
+        "register_missing_subjects": "true",
+        "retry_delay": 300,
+        "retry_multiplier": 3,
+        "log_level": 2
+      }
+    }
+  }
+}
