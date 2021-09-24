@@ -57,3 +57,6 @@ parameters:
         -
             message: '/assertInstanceOf\(\) expects class-string/'
             path: tests/Unit/Configuration/ResolvedConfigurationTest.php
+        -
+            message: '/in_array expects array/'
+            path: src/Configuration/Traits/ObjectConfigurationTrait.php

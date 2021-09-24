@@ -36,18 +36,12 @@ trait ObjectConfigurationTrait
      */
     private function doValidate(string $interface, $item): bool
     {
-        $classImplements = class_implements($item);
-
-        if (false === $classImplements) {
-            return false;
-        }
-
         if (is_object($item)) {
-            return in_array($interface, $classImplements, true);
+            return in_array($interface, class_implements($item), true);
         }
 
         if (is_string($item)) {
-            return class_exists($item) && in_array($interface, $classImplements, true);
+            return class_exists($item) && in_array($interface, class_implements($item), true);
         }
 
         return false;
