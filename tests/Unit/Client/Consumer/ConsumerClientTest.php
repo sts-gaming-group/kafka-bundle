@@ -36,9 +36,5 @@ class ConsumerClientTest extends TestCase
             $this->eventDispatcher
         );
     }
-
-    public function testWhatever(): void
-    {
-        $this->client->consume(new DummyConsumerOne());
-    }
+    // TODO: maybe some tests
 }
