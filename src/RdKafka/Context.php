@@ -4,28 +4,17 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\RdKafka;
 
-use RdKafka\KafkaConsumer as RdKafkaConsumer;
-use RdKafka\ConsumerTopic as RdKafkaConsumerTopic;
-use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class Context
 {
     private ResolvedConfiguration $configuration;
     private int $retryNo;
-    private RdKafkaConsumer $rdKafkaConsumer;
-    private ?RdKafkaMessage $rdKafkaMessage;
 
-    public function __construct(
-        ResolvedConfiguration $configuration,
-        int $retryNo,
-        RdKafkaConsumer $rdKafkaConsumer,
-        ?RdKafkaMessage $rdKafkaMessage = null
-    ) {
+    public function __construct(ResolvedConfiguration $configuration, int $retryNo)
+    {
         $this->configuration = $configuration;
         $this->retryNo = $retryNo;
-        $this->rdKafkaConsumer = $rdKafkaConsumer;
-        $this->rdKafkaMessage = $rdKafkaMessage;
     }
 
     /**
@@ -40,15 +29,5 @@ class Context
     public function getRetryNo(): int
     {
         return $this->retryNo;
-    }
-
-    public function getRdKafkaConsumer(): RdKafkaConsumer
-    {
-        return $this->rdKafkaConsumer;
-    }
-
-    public function getRdKafkaMessage(): ?RdKafkaMessage
-    {
-        return $this->rdKafkaMessage;
     }
 }

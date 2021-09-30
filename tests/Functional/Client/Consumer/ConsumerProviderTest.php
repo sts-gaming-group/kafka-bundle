@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Functional\Consumer;
+namespace Sts\KafkaBundle\Tests\Functional\Client\Consumer;
 
 use Sts\KafkaBundle\Client\Consumer\ConsumerProvider;
 use Sts\KafkaBundle\Exception\ConsumerProviderException;
