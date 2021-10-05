@@ -12,21 +12,21 @@ trait ObjectConfigurationTrait
     {
         $interface = $this->getInterface();
 
-        if (is_array($value)) {
-            if (empty($value)) {
-                return false;
-            }
-
-            foreach ($value as $item) {
-                if (!$this->doValidate($interface, $item)) {
-                    return false;
-                }
-            }
-
-            return true;
+        if (!is_array($value)) {
+            return $this->doValidate($interface, $value);
         }
 
-        return $this->doValidate($interface, $value);
+        if (empty($value)) {
+            return false;
+        }
+
+        foreach ($value as $item) {
+            if (!$this->doValidate($interface, $item)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
