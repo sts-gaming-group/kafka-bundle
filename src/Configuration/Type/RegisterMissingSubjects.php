@@ -26,11 +26,11 @@ class RegisterMissingSubjects implements ConsumerConfigurationInterface
         If you want to auto-register missing subjects set this to true. Defaults to %s.
         Refer to flix-tech/avro-serde-php composer package for more information.
         EOT,
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return 'false';
     }

@@ -33,13 +33,13 @@ class LogLevel implements KafkaConfigurationInterface, ConsumerConfigurationInte
     {
         return sprintf(
             'Logging level (syslog(3) levels). Defaults to LOG_ERR (%s)',
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
     public function isValueValid($value): bool
     {
-        return is_numeric($value);
+        return is_numeric($value) && strpos((string) $value, '.') === false;
     }
 
     public function cast($validatedValue): int
@@ -47,7 +47,7 @@ class LogLevel implements KafkaConfigurationInterface, ConsumerConfigurationInte
         return (int) $validatedValue;
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return LOG_ERR;
     }

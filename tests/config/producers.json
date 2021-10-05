@@ -1,0 +1,26 @@
+{
+  "producers": {
+    "instances": {
+      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Producer\\DummyProducerOne": {
+        "brokers": [
+          "127.0.0.1:9092",
+          "127.0.0.2:9092",
+          "127.0.0.3:9092"
+        ],
+        "producer_topic": "dummy_topic_one",
+        "producer_partition": "1",
+        "log_level": 3
+      },
+      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Producer\\DummyProducerTwo": {
+        "brokers": [
+          "127.0.0.4:9092",
+          "127.0.0.5:9092",
+          "127.0.0.6:9092"
+        ],
+        "producer_topic": "dummy_topic_two",
+        "producer_partition": "2",
+        "log_level": 2
+      }
+    }
+  }
+}

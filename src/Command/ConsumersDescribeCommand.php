@@ -33,7 +33,8 @@ class ConsumersDescribeCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription('Show consumers configuration.')
+        $this
+            ->setDescription('Show consumers configuration.')
             ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Shows specific consumer configuration.');
     }
 

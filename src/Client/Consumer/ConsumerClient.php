@@ -8,7 +8,6 @@ use RdKafka\KafkaConsumer as RdKafkaConsumer;
 use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
 use Sts\KafkaBundle\Configuration\Type\MaxRetries;
 use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
@@ -78,17 +77,15 @@ class ConsumerClient
                 $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
                 $this->validateRdKafkaMessage($rdKafkaMessage);
             } catch (NullMessageException $exception) {
-                $consumer->handleException(
-                    $exception,
-                    $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage)
-                );
+                $consumer->handleException($exception, new Context($configuration, 0));
+
                 $this->setConsumptionTime($consumptionStart);
 
                 continue;
             }
 
             for ($retry = 0; $retry <= $maxRetries; ++$retry) {
-                $context = $this->createContext($configuration, $rdKafkaConsumer, $rdKafkaMessage, $retry);
+                $context = new Context($configuration, $retry);
                 try {
                     $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
                     $consumer->consume($message, $context);
@@ -153,20 +150,6 @@ class ConsumerClient
         if (null === $message->payload) {
             throw new NullMessageException('Null payload received in kafka message.');
         }
-    }
-
-    private function createContext(
-        ResolvedConfiguration $configuration,
-        RdKafkaConsumer $rdKafkaConsumer,
-        ?RdKafkaMessage $rdKafkaMessage = null,
-        int $retryNo = 0
-    ): Context {
-        return new Context(
-            $configuration,
-            $retryNo,
-            $rdKafkaConsumer,
-            $rdKafkaMessage
-        );
     }
 
     private function dispatch(string $eventClass, ConsumerInterface $consumer): void

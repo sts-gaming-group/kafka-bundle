@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Configuration\Type;
 
 use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
 use Sts\KafkaBundle\Decoder\AvroDecoder;
 use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
 use Sts\KafkaBundle\Decoder\JsonDecoder;
@@ -13,6 +14,8 @@ use Symfony\Component\Console\Input\InputOption;
 
 class Decoder implements ConsumerConfigurationInterface
 {
+    use ObjectConfigurationTrait;
+
     public const NAME = 'decoder';
 
     public function getName(): string
@@ -33,22 +36,17 @@ class Decoder implements ConsumerConfigurationInterface
             Default decoder %s',
             implode(', ', [AvroDecoder::class, JsonDecoder::class, PlainDecoder::class]),
             DecoderInterface::class,
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
-    public function isValueValid($value): bool
-    {
-        $classImplements = class_implements($value);
-        if (!$classImplements) {
-            return false;
-        }
-
-        return class_exists($value) && in_array(DecoderInterface::class, $classImplements, true);
-    }
-
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return AvroDecoder::class;
+    }
+
+    protected function getInterface(): string
+    {
+        return DecoderInterface::class;
     }
 }

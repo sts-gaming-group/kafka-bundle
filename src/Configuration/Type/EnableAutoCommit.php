@@ -34,7 +34,7 @@ class EnableAutoCommit implements KafkaConfigurationInterface, ConsumerConfigura
         EOT;
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return 'true';
     }

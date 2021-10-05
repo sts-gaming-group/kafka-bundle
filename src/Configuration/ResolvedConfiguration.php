@@ -8,6 +8,7 @@ use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
+use Sts\KafkaBundle\Configuration\Exception\UnknownConfigurationType;
 
 class ResolvedConfiguration
 {
@@ -35,7 +36,7 @@ class ResolvedConfiguration
 
     /**
      * @param string $type
-     * @return array<ConfigurationInterface|mixed>
+     * @return array
      */
     public function getConfigurations(string $type = self::ALL_TYPES): array
     {
@@ -53,7 +54,7 @@ class ResolvedConfiguration
                 $interface = ProducerConfigurationInterface::class;
                 break;
             default:
-                throw new \RuntimeException(sprintf('Unknown configuration type %s', $type));
+                throw new UnknownConfigurationType(sprintf('Unknown configuration type %s', $type));
         }
 
         $configurations = [];

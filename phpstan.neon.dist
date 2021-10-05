@@ -48,3 +48,18 @@ parameters:
         -
             message: '/Variable \$rdKafkaMessage might not be defined/'
             path: src/Client/Consumer/ConsumerClient.php
+        -
+            message: '/ConsumerProviderTest::\$provider/'
+            path: tests/Functional/Consumer/ConsumerProviderTest.php
+        -
+            message: '/json_decode expects string/'
+            path: tests/Unit/Configuration/ConfigurationResolverTest.php
+        -
+            message: '/assertInstanceOf\(\) expects class-string/'
+            path: tests/Unit/Configuration/ResolvedConfigurationTest.php
+        -
+            message: '/in_array expects array/'
+            path: src/Configuration/Traits/ObjectConfigurationTrait.php
+        -
+            message: '/does not accept object\|null/'
+            path: tests/Functional/Client/Consumer/ConsumerProviderTest.php

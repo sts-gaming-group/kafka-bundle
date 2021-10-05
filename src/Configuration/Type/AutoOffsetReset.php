@@ -48,7 +48,7 @@ class AutoOffsetReset implements ConsumerConfigurationInterface, KafkaConfigurat
         return in_array($value, [self::SMALLEST, self::LARGEST], true);
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return self::SMALLEST;
     }

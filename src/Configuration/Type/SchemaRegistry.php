@@ -25,7 +25,7 @@ class SchemaRegistry implements ConsumerConfigurationInterface
     {
         return sprintf(
             'Schema registry url needed for decoding/encoding messages. Defaults to %s.',
-            self::getDefaultValue()
+            $this->getDefaultValue()
         );
     }
 
@@ -34,7 +34,7 @@ class SchemaRegistry implements ConsumerConfigurationInterface
         return is_string($value) && '' !== $value;
     }
 
-    public static function getDefaultValue(): string
+    public function getDefaultValue(): string
     {
         return '127.0.0.1';
     }

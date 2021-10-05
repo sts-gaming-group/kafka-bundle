@@ -589,7 +589,7 @@ class Modulo implements ConfigurationInterface
         return is_numeric($value) && $value > 0;
     }
 
-    public static function getDefaultValue(): int
+    public function getDefaultValue(): int
     {
         return 1;
     }

@@ -44,7 +44,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
             ->addTag('sts_kafka.kafka.consumer');
 
         $container->registerForAutoconfiguration(ProducerInterface::class)
-            ->addTag('sts_kafka.kafka.producer_handler');
+            ->addTag('sts_kafka.kafka.producer');
 
         $container->registerForAutoconfiguration(ConfigurationInterface::class)
             ->addTag('sts_kafka.configuration.type');
@@ -95,7 +95,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         }
 
         $producerProvider = $container->findDefinition($providerId);
-        $producers = $container->findTaggedServiceIds('sts_kafka.kafka.producer_handler');
+        $producers = $container->findTaggedServiceIds('sts_kafka.kafka.producer');
         foreach ($producers as $id => $tags) {
             $producerProvider->addMethodCall('addProducer', [new Reference($id)]);
         }
