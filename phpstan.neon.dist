@@ -60,3 +60,6 @@ parameters:
         -
             message: '/in_array expects array/'
             path: src/Configuration/Traits/ObjectConfigurationTrait.php
+        -
+            message: '/does not accept object\|null/'
+            path: tests/Functional/Client/Consumer/ConsumerProviderTest.php
