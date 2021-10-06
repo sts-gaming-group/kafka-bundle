@@ -10,7 +10,7 @@ use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Exception\UnknownConfigurationType;
+use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationType;
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class ResolvedConfigurationTest extends TestCase
@@ -68,7 +68,7 @@ class ResolvedConfigurationTest extends TestCase
 
     public function testUnknownConfigurationType(): void
     {
-        $this->expectException(UnknownConfigurationType::class);
+        $this->expectException(InvalidConfigurationType::class);
 
         $resolved = new ResolvedConfiguration();
 

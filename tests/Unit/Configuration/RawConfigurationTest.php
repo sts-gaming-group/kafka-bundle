@@ -8,7 +8,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Configuration\RawConfiguration;
-use Sts\KafkaBundle\Exception\InvalidConfigurationException;
+use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
 
 class RawConfigurationTest extends TestCase
 {

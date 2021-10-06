@@ -9,9 +9,9 @@ use PHPUnit\Framework\TestCase;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Exception\WrongClientException;
+use Sts\KafkaBundle\Configuration\Exception\InvalidClientException;
 use Sts\KafkaBundle\Configuration\RawConfiguration;
-use Sts\KafkaBundle\Exception\InvalidConfigurationException;
+use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne;
 use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerThree;
 use Symfony\Component\Console\Input\Input;
@@ -82,7 +82,7 @@ class ConfigurationResolverTest extends TestCase
 
         $resolver = new ConfigurationResolver($rawConfiguration, $this->yamlConfig);
 
-        $this->expectException(WrongClientException::class);
+        $this->expectException(InvalidClientException::class);
 
         $resolver->resolve('foo');
     }

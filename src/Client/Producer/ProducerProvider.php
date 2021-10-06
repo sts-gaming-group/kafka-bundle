@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Client\Producer;
 
 use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Exception\ProducerProviderException;
+use Sts\KafkaBundle\Client\Producer\Exception\InvalidProducerException;
 
 class ProducerProvider
 {
@@ -36,11 +36,11 @@ class ProducerProvider
         }
 
         if (count($producers) > 1) {
-            throw new ProducerProviderException('Multiple producers found');
+            throw new InvalidProducerException('Multiple producers found');
         }
 
         if (!$producers) {
-            throw new ProducerProviderException('There is no matching producer.');
+            throw new InvalidProducerException('There is no matching producer.');
         }
 
         return $producers[0];

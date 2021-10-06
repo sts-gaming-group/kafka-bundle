@@ -11,7 +11,7 @@ High level Apache Kafka consumer/producer
 - symfony components: refer to composer.json `require` section for required package versions
 
 
-## Setup
+## Setup # TODO: SA-5151
 
 Published versions of this package are available at https://gitlab.sts.pl/tech/kafka-bundle/-/packages
 
@@ -48,14 +48,14 @@ sts_kafka:
   consumers:
     instances:
       App\Consumers\ExampleConsumer:
-        brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
-        schema_registry: 'http://172.25.0.201:8081'
-        group_id: 'sts_kafka_test'
-        topics: [ 'testing.dwh_kafka.tab_tickets_prematch' ]
+        brokers: [ '127.0.0.1:9092', '127.0.0.2:9092', '127.0.0.3:9092' ]
+        schema_registry: 'http://127.0.0.1:8081'
+        group_id: 'some_group_id'
+        topics: [ 'some_topic' ]
   producers:    
     instances:
       App\Producers\ExampleProducer:
-        brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]    
+        brokers: [ '127.0.0.1:9092', '127.0.0.2:9092', '127.0.0.3:9092' ]    
         producer_topic: 'my_app_failed_message_topic'
    ```
 3. Most of the time you would like to keep your kafka configuration in sts_kafka.yaml, but you can also pass configuration directly in CLI for example:
@@ -87,13 +87,13 @@ class ExampleConsumer implements ConsumerInterface
 {
     public const CONSUMER_NAME = 'example_consumer';
 
-    public function consume(Message $message, Context $context)
+    public function consume(Message $message, Context $context): void
     {
         $data = $message->getData(); // contains denormalized data from Kafka
         $retryNo = $context->getRetryNo();  // contains retry count in case of a failure
     }
 
-    public function handleException(\Exception $exception, Context $context)
+    public function handleException(\Exception $exception, Context $context): void
     {
         // log it or i.e. produce to retry topic based on type of exception
     }
@@ -113,8 +113,8 @@ class ExampleConsumer implements ConsumerInterface
 Consumer dispatches events using **symfony/event-dispatcher** component as an optional dependency:
 
 Only for currently running consumer:
-- **sts_kafka.pre_message_consumed_{consumer_name}** e.g. sts_kafka.pre_message_consumed_ticket_consumer
-- **sts_kafka.post_message_consumed_{consumer_name}** e.g. sts_kafka.post_message_consumed_ticket_consumer
+- **sts_kafka.pre_message_consumed_{consumer_name}** e.g. sts_kafka.pre_message_consumed_example_consumer
+- **sts_kafka.post_message_consumed_{consumer_name}** e.g. sts_kafka.post_message_consumed_example_consumer
   
 Global event for all consumers:
 - **Sts\KafkaBundle\Event\PreMessageConsumedEvent**
@@ -128,13 +128,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Sts\KafkaBundle\Event\PostMessageConsumedEvent;
 use Sts\KafkaBundle\Event\PreMessageConsumedEvent;
 
-class TicketConsumerEventSubscriber implements EventSubscriberInterface
+class ExampleConsumerEventSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
         return [
-            PreMessageConsumedEvent::getEventName('ticket_consumer') => 'onPreMessageConsumed',
-            PostMessageConsumedEvent::getEventName('ticket_consumer') => 'onPostMessageConsumed',
+            PreMessageConsumedEvent::getEventName('example_consumer') => 'onPreMessageConsumed',
+            PostMessageConsumedEvent::getEventName('example_consumer') => 'onPostMessageConsumed',
             PreMessageConsumedEvent::class => 'onGlobalPreMessageConsumed',
             PostMessageConsumedEvent::class => 'onGlobalPostMessageConsumed'
         ];
@@ -158,7 +158,7 @@ class TicketConsumerEventSubscriber implements EventSubscriberInterface
 
 To trigger a backoff retry, your consumer should throw RecoverableMessageException in `consume` method. Also, you have to configure few retry options in sts_kafka.yaml
 ```php
-use Sts\KafkaBundle\Exception\RecoverableMessageException;
+use Sts\KafkaBundle\Client\Consumer\Exception\RecoverableMessageException;
 ```
 ```yaml
 sts_kafka:
@@ -206,7 +206,7 @@ class ExampleConsumer implements ConsumerInterface
 {
    use CommitOffsetTrait;
    
-   public function consume(Message $message, Context $context)
+   public function consume(Message $message, Context $context): void
    {
       // process the message
       $this->commitOffset($context); // manually commits the offset
@@ -218,7 +218,7 @@ Manually committing offsets gives you almost 100% confidence that you will not r
 to Broker for example when there is a network issue. Again, it is up to a developer to handle such cases (probably with a `try...catch` block while committing offsets).
 
 There is, however, one big downside to manual commits - they are slow. The reason is that commits have to be done inside your 
-PHP process and therefore it blocks your main thread. Each commit lasts about 40-50 ms which in case of Kafka is incredibly slow.
+PHP process and therefore it blocks your main thread. Each commit may last i.e. about 40-50 ms which in case of Kafka is incredibly slow.
 You can pass `true` as a second argument to `$this->commitOffset($context, true);` Manual commits will then be handled asynchronously
 and will be much faster - but again in case your PHP process dies while committing, some offsets may not be send to Broker (almost the same story when `enable.auto.commit` is set to true and your process dies).
 
@@ -285,7 +285,7 @@ class CustomDenormalizer implements DenormalizerInterface
     {
         // $data is an array which comes from AvroDecoder or some other registered Decoder
         $messageDTO = new MessageDTO();
-        $messageDTO->setTicketNumber($data['ticket_number']);
+        $messageDTO->setName($data['name']);
 
         return $messageDTO;
     }
@@ -308,15 +308,16 @@ Receive it in your consumer:
 
 class ExampleConsumer implements ConsumerInterface
 {
-    public function consume(Message $message, Context $context)
+    public function consume(Message $message, Context $context): void
     {
         $messageDTO = $message->getData(); // $messageDTO comes from CustomDenormalizer
     }
+}
 ```
 
 ## Validators
 
-After of before denormalization, you may want to validate if given object should be passed to your consumer - you may want, for example, to filter out ticket states that are useless i.e. UNRESOLVED state.
+After of before denormalization, you may want to validate if given object should be passed to your consumer - you may want, for example, to filter out incomplete data that came from Broker.
 
 1. Create validator
 ```php
@@ -326,30 +327,25 @@ declare(strict_types=1);
 
 namespace App\Validator;
 
-use App\Normalizer\MessageDTO;
 use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
 use Sts\KafkaBundle\Validator\Validator;
 
-class TicketStateValidator implements ValidatorInterface
+class ExampleValidator implements ValidatorInterface
 {
-    public function validate($denormalized): bool
+    public function validate($decoded): bool
     {
-        /** @var MessageDTO $denormalized */
-
-        return $denormalized->getTicketState() !== 'UNRESOLVED';
+        return !array_key_exists('foo', $decoded);
     }
 
-    public function failureReason($denormalized): string
+    public function failureReason($decoded): string
     {
-        /** @var MessageDTO $denormalized */
-
-        return sprintf('Unresolved tickets are not meant to be processed.');
+        return sprintf('Missing foo key in decoded message.');
     }
     
     public function type() : string
     {
-       return Validator::POST_DENORMALIZE_TYPE; // runs after denormalization
-       // Validator::PRE_DENORMALIZE_TYPE // runs before denormalization
+       return Validator::PRE_DENORMALIZE_TYPE; // runs before denormalization
+       // Validator::POST_DENORMALIZE_TYPE // runs after denormalization
     }
 }
 ```
@@ -360,27 +356,26 @@ sts_kafka:
     instances:
       App\Consumers\ExampleConsumer:
         validators: 
-         - App\Validator\TicketStateValidator
-         - App\Validator\ClientAlreadyBonusedValidator      
+         - App\Validator\ExampleValidator
+         - App\Validator\SomeOtherValidator      
 ```
 You may have multiple validators attached to one consumer. The priority of called validators is exactly how you defined them in sts_kafka.yaml - 
-so in this case TicketStateValidator is called first, and then ClientAlreadyBonusedValidator is called.
+so in this case ExampleValidator is called first, and then SomeOtherValidator is called.
 
 If a validator returns false, an instance of ValidatorException is thrown. 
 ```php
  ...
  
- use Sts\KafkaBundle\Exception\ValidationException;
+ use Sts\KafkaBundle\Validator\Exception\ValidationException;
  
  public function handleException(\Exception $exception, Context $context)
  {
-     if ($exception instanceof ValidationException) {
-         /** @var MessageDTO $denormalized */
-         $denormalized = $exception->getData();
+     if ($exception instanceof ValidationException) {      
+         $decoded = $exception->getData();
          $this->logger->info(
              sprintf(
-                 'Message has not passed validation for client %s. Reason %s', 
-                 $denormalized->getClientId(),
+                 'Message has not passed validation. Id: %s  | Reason: %s', 
+                 $decoded['id'],
                  $exception->getFailedReason())
          );
      }
@@ -434,7 +429,7 @@ class ExampleConsumer implements ConsumerInterface, CallableInterface
 producers:
  instances:
    App\Producers\ExampleProducer:
-     brokers: [ '172.25.0.201:9092', '172.25.0.202:9092', '172.25.0.203:9092' ]
+     brokers: [ '127.0.0.1:9092', '127.0.0.2:9092', '127.0.0.3:9092' ]
      producer_topic: 'topic_i_want_to_produce_to' #only one topic allowed per producer
 ```
 
@@ -446,25 +441,22 @@ declare(strict_types=1);
 
 namespace App\Producers;
 
-class Ticket
+class SomeEntity
 {
-    private int $clientId;
-    private string $ticketNumber;
-    private int $totalBet;
+    private int $id;
+    private string $name;
 
-    public function __construct(int $clientId, string $ticketNumber, int $totalBet)
+    public function __construct(int $id, string $name)
     {
-        $this->clientId = $clientId;
-        $this->ticketNumber = $ticketNumber;
-        $this->totalBet = $totalBet;
+        $this->id = $id;
+        $this->name = $name;
     }
 
     public function toArray(): array
     {
         return [
-            'clientId' => $this->clientId,
-            'ticketNumber' => $this->ticketNumber,
-            'totalBet' => $this->totalBet
+            'id' => $this->id,
+            'name' => $this->name
         ];
     }
 }
@@ -484,8 +476,8 @@ class ExampleProducer implements ProducerInterface
 {
     public function produce($data): Message
     {
-        /** @var Ticket $data */
-        return new Message(json_encode($data->toArray()), $data->getClientId());
+        /** @var SomeEntity $data */
+        return new Message(json_encode($data->toArray()), $data->getId());
         // first argument of Message is the payload as a string
         // second argument is a message key which is used to help kafka partition messages
     }
@@ -493,7 +485,7 @@ class ExampleProducer implements ProducerInterface
     public function supports($data): bool
     {
         // in case of many producers you should check what $data is passed here
-        return get_class($data ) === Ticket::class;
+        return $data instanceof SomeEntity;
     }
 }
 ```
@@ -509,20 +501,20 @@ use Sts\KafkaBundle\Client\Producer\ProducerClient;
 
 class ExampleCommand extends Command
 { 
- public function __construct(ProducerClient $producerClient, TicketRepository $ticketRepository)
+ public function __construct(ProducerClient $client, SomeEntityRepository $repository)
  {
-     $this->producerClient = $producerClient;
-     $this->ticketRepository = $ticketRepository;
+     $this->client = $client;
+     $this->repository = $repository;
  }
  
  protected function execute(InputInterface $input, OutputInterface $output): int
  {
-     $tickets = $this->ticketRepository->findAll();
-     foreach ($tickets as $ticket) {
-         $this->producerClient->produce($ticket);
+     $someEntities = $this->repository->findAll();
+     foreach ($someEntities as $entity) {
+         $this->client->produce($entity);
      }
 
-     $this->producerClient->flush(); // call flush after produce() method has finished
+     $this->client->flush(); // call flush after produce() method has finished
 
      return Command::SUCCESS;
  }
@@ -548,7 +540,7 @@ $this->producerClient
    ->setFlushTimeoutMs(500)
    ->setMaxFlushRetries(10);
 ```
-- polling batch - after how many messages (in case of a loop, as in example above with $tickets) ProducerClient should call librdkafka `poll` method.
+- polling batch - after how many messages (in case of a loop, as in example above with $someEntities) ProducerClient should call librdkafka `poll` method.
 If you produce big messages and do not call poll frequently there might be an issue of librdkafka full internal queue. Also, consumers will not receive anything until `poll` has been called.
   So it is recommended to keep polling batch number at reasonable level i.e. 10000 or 20000
 - polling timeout ms - how long librdkafka will wait until polling of a message finishes
@@ -567,11 +559,11 @@ namespace App\Configuration;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class Modulo implements ConfigurationInterface
+class Divisor implements ConfigurationInterface
 {
     public function getName(): string
     {
-        return 'modulo';
+        return 'divisor';
     }
 
     public function getMode(): int
@@ -597,7 +589,9 @@ class Modulo implements ConfigurationInterface
 ```
 Custom option may only be passed in CLI
 ```
-bin/console kafka:consumers:consume example_consumer --modulo 4
+bin/console kafka:consumers:consume example_consumer --divisor 4 --remainder 1
+bin/console kafka:consumers:consume example_consumer --divisor 4 --remainder 2
+etc.
 ```
 You will receive it in consume method, and you may take actions accordingly.
 ```php
@@ -605,11 +599,21 @@ class ExampleConsumer implements ConsumerInterface
 {
     public const CONSUMER_NAME = 'example_consumer';
 
-    public function consume(Message $message, Context $context)
+    public function consume(Message $message, Context $context): void
     {
-        $modulo = $context->getValue(Modulo::NAME);
+        $divisor = $context->getValue(Divisor::NAME);
+        $remainder = $context->getValue(Remainder::NAME);
+        
+        if ($message->getId() % $divisor !== $remainder) {
+            return; // let's skip that message
+        }
+        
+        // process message normally
     }
+}
 ```
+
+Example above shows how you could scale up your application by executing i.e. 4 consumers/commands with different remainders. Problem with scaling may exist if your topic has only one partition, and the actual message processing is the bottleneck.
 
 ## Showing current consumer/producer configuration
 
@@ -620,15 +624,15 @@ bin/console kafka:consumers:describe example_consumer
 │ configuration             │ value                                                   │
 ├───────────────────────────┼─────────────────────────────────────────────────────────┤
 │ class                     │ App\Consumers\ExampleConsumer                           │
-│ topics                    │ testing.dwh_kafka.tab_tickets_prematch                  │
-│ group_id                  │ sts_kafka_test                                          │
-│ brokers                   │ 172.25.0.201:9092, 172.25.0.202:9092, 172.25.0.203:9092 │
+│ topics                    │ some_topic                                              │
+│ group_id                  │ some_group_id                                           │
+│ brokers                   │ 127.0.0.1:9092, 127.0.0.2:9092, 127.0.0.3:9092          │
 │ offset_store_method       │ broker                                                  │
 │ timeout                   │ 1000                                                    │
 │ auto_offset_reset         │ smallest                                                │
 │ auto_commit_interval_ms   │ 5                                                       │
 │ decoder                   │ Sts\KafkaBundle\Decoder\AvroDecoder                     │
-│ schema_registry           │ http://172.25.0.201:8081                                │
+│ schema_registry           │ http://127.0.0.1:8081                                   │
 │ enable_auto_offset_store  │ true                                                    │
 │ enable_auto_commit        │ true                                                    │
 │ log_level                 │ 3                                                       │
@@ -649,7 +653,7 @@ bin/console kafka:producers:describe
 │ configuration      │ value                                                   │
 ├────────────────────┼─────────────────────────────────────────────────────────┤
 │ class              │ App\Producers\ExampleProducer                           │
-│ brokers            │ 172.25.0.201:9092, 172.25.0.202:9092, 172.25.0.203:9092 │
+│ brokers            │ 127.0.0.1:9092, 127.0.0.2:9092, 127.0.0.3:9092          │
 │ log_level          │ 3                                                       │
 │ producer_partition │ -1                                                      │
 │ producer_topic     │ topic_i_want_to_produce_to                              │

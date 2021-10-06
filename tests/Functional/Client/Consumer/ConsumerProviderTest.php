@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Tests\Functional\Client\Consumer;
 
 use Sts\KafkaBundle\Client\Consumer\ConsumerProvider;
-use Sts\KafkaBundle\Exception\ConsumerProviderException;
+use Sts\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
 use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne;
 use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOneClone;
 use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerTwo;
@@ -36,7 +36,7 @@ class ConsumerProviderTest extends KernelTestCase
     {
         $this->provider->addConsumer(new DummyConsumerOneClone());
 
-        $this->expectException(ConsumerProviderException::class);
+        $this->expectException(InvalidConsumerException::class);
         $this->expectExceptionMessageMatches('/Multiple consumers found/');
 
         $this->provider->provide(DummyConsumerOneClone::NAME);
@@ -44,7 +44,7 @@ class ConsumerProviderTest extends KernelTestCase
 
     public function testNoConsumersFound(): void
     {
-        $this->expectException(ConsumerProviderException::class);
+        $this->expectException(InvalidConsumerException::class);
         $this->expectExceptionMessageMatches('/There is no matching consumer/');
 
         $this->provider->provide('foo');

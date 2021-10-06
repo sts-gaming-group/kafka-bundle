@@ -8,8 +8,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Sts\KafkaBundle\Client\Consumer\ConsumerClient;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Factory\MessageFactory;
-use Sts\KafkaBundle\RdKafka\KafkaConfigurationFactory;
+use Sts\KafkaBundle\Client\Consumer\Factory\MessageFactory;
+use Sts\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory;
 use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

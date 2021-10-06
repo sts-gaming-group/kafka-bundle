@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Client\Traits;
 
 use RdKafka\Exception;
 use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
-use Sts\KafkaBundle\Exception\InvalidConfigurationException;
+use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\RdKafka\Context;
 
 trait CommitOffsetTrait

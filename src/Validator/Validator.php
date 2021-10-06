@@ -6,7 +6,7 @@ namespace Sts\KafkaBundle\Validator;
 
 use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
 use Sts\KafkaBundle\Configuration\Type\Validators;
-use Sts\KafkaBundle\Exception\ValidationException;
+use Sts\KafkaBundle\Validator\Exception\ValidationException;
 use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
 
 class Validator
