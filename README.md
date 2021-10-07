@@ -589,8 +589,8 @@ class Divisor implements ConfigurationInterface
 ```
 Custom option may only be passed in CLI
 ```
-bin/console kafka:consumers:consume example_consumer --divisor 4 --remainder 1
-bin/console kafka:consumers:consume example_consumer --divisor 4 --remainder 2
+bin/console kafka:consumers:consume example_consumer --divisor 4 --remainder 1 --group_id first_group
+bin/console kafka:consumers:consume example_consumer --divisor 4 --remainder 2 --group_id second_group
 etc.
 ```
 You will receive it in consume method, and you may take actions accordingly.
@@ -613,7 +613,7 @@ class ExampleConsumer implements ConsumerInterface
 }
 ```
 
-Example above shows how you could scale up your application by executing i.e. 4 consumers/commands with different remainders. Problem with scaling may exist if your topic has only one partition, and the actual message processing is the bottleneck.
+Example above shows how you could scale up your application by executing i.e. 4 consumers/commands with different remainders and group ids. You may have to resort to such tactics if your topic has only one partition and there is no way to scale up your consumer. 
 
 ## Showing current consumer/producer configuration
 
