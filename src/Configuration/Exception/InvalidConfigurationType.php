@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration\Exception;
 
-class UnknownConfigurationType extends \RuntimeException
+class InvalidConfigurationType extends \RuntimeException
 {
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Exception;
+namespace Sts\KafkaBundle\Validator\Exception;
 
 use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
 

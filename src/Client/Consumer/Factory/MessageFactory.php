@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Factory;
+namespace Sts\KafkaBundle\Client\Consumer\Factory;
 
 use RdKafka\Message as RdKafkaMessage;
 use Sts\KafkaBundle\Client\Consumer\Message;

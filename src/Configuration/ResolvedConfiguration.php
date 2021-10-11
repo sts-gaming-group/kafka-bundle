@@ -8,7 +8,7 @@ use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Exception\UnknownConfigurationType;
+use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationType;
 
 class ResolvedConfiguration
 {
@@ -54,7 +54,7 @@ class ResolvedConfiguration
                 $interface = ProducerConfigurationInterface::class;
                 break;
             default:
-                throw new UnknownConfigurationType(sprintf('Unknown configuration type %s', $type));
+                throw new InvalidConfigurationType(sprintf('Unknown configuration type %s', $type));
         }
 
         $configurations = [];

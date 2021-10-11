@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Sts\KafkaBundle\Configuration;
 
-use Sts\KafkaBundle\Exception\InvalidConfigurationException;
+use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
 use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 
 class RawConfiguration

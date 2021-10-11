@@ -1,6 +1,6 @@
 <?php
 
-namespace Sts\KafkaBundle\RdKafka;
+namespace Sts\KafkaBundle\RdKafka\Factory;
 
 use RdKafka\Conf;
 use Sts\KafkaBundle\Client\Contract\CallableInterface;

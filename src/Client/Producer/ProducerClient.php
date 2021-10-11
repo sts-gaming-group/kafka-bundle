@@ -8,7 +8,7 @@ use RdKafka\Producer;
 use Sts\KafkaBundle\Configuration\ConfigurationResolver;
 use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
 use Sts\KafkaBundle\Configuration\Type\ProducerTopic;
-use Sts\KafkaBundle\RdKafka\KafkaConfigurationFactory;
+use Sts\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory;
 use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
 class ProducerClient

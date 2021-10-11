@@ -21,8 +21,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInterface
 {
     private const XML_CONFIGS = [
-        'rd_kafka_factories',
-        'factories',
+        'rd_kafka',
         'consumers',
         'commands',
         'configurations',

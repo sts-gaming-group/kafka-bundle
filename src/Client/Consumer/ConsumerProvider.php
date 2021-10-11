@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Sts\KafkaBundle\Client\Consumer;
 
 use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Exception\ConsumerProviderException;
+use Sts\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
 
 class ConsumerProvider
 {
@@ -36,11 +36,11 @@ class ConsumerProvider
         }
 
         if (count($consumers) > 1) {
-            throw new ConsumerProviderException(sprintf('Multiple consumers found with name %s', $name));
+            throw new InvalidConsumerException(sprintf('Multiple consumers found with name %s', $name));
         }
 
         if (!$consumers) {
-            throw new ConsumerProviderException(sprintf('There is no matching consumer with name %s.', $name));
+            throw new InvalidConsumerException(sprintf('There is no matching consumer with name %s.', $name));
         }
 
         return $consumers[0];
