@@ -1,7 +1,7 @@
 ![sts_480](/uploads/23f3aacf196e506ed269b0d7059f17da/sts_480.png)
 ![apache_kafka](/uploads/53153b4471214fcdb035d70d49d54e79/apache_kafka.png)
 
-<h1> High level Apache Kafka consumer/producer</h1>
+<!-- DOCTOC SKIP --> <h1>High level Apache Kafka consumer/producer</h1>
 
 [[_TOC_]]
 
