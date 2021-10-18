@@ -1,5 +1,5 @@
-![sts_480](/uploads/e34c20ee3ed116a9d506796c801f966c/sts_480.png)
-![apache_kafka](/uploads/808ac0b899b8d17715588b3c7d886289/apache_kafka.png)
+![sts_480](/uploads/23f3aacf196e506ed269b0d7059f17da/sts_480.png)
+![apache_kafka](/uploads/53153b4471214fcdb035d70d49d54e79/apache_kafka.png)
 
 # High level Apache Kafka consumer/producer
 
