@@ -1,8 +1,6 @@
 ![sts_480](/uploads/23f3aacf196e506ed269b0d7059f17da/sts_480.png)
 ![apache_kafka](/uploads/53153b4471214fcdb035d70d49d54e79/apache_kafka.png)
 
-<!-- DOCTOC SKIP --> <h1>High level Apache Kafka consumer/producer</h1>
-
 [[_TOC_]]
 
 ## Technology stack
@@ -11,10 +9,9 @@
 - ext-rdkafka for PHP
 - symfony components: refer to composer.json `require` section for required package versions
 
-## Example project
+## Quick start
 
 If you want to test out capabilities of this bundle in a Symfony project, please refer to {{ link to kafka-bundle-testing-app on github}} project which ships with kafka-bundle and docker-compose file for convenience.
-## Quick start
    
 ## Basic Configuration
 
