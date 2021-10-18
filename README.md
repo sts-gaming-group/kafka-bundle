@@ -3,17 +3,17 @@
 
 [[_TOC_]]
 
-## Technology stack
+# Technology stack
 
 - PHP >=7.4
 - ext-rdkafka for PHP
 - symfony components: refer to composer.json `require` section for required package versions
 
-## Quick start
+# Quick start
 
 If you want to test out capabilities of this bundle in a Symfony project, please refer to {{ link to kafka-bundle-testing-app on github}} project which ships with kafka-bundle and docker-compose file for convenience.
    
-## Basic Configuration
+# Basic Configuration
 
 1. Add sts_kafka.yaml to config folder at \<root_folder>/config/packages/sts_kafka.yaml or in a specific env folder i.e. \<root_folder>/config/packages/prod/sts_kafka.yaml
 2. Add configuration to sts_kafka.yaml for example:
@@ -44,7 +44,7 @@ The configurations are resolved in runtime. The priority is as follows:
 - Configurations passed in CLI will always take precedence
 - Configurations passed per consumer/producer basis (```instances:``` section in `consumers:` or `producers:` in sts_kafka.yaml)
 
-## Consuming messages
+# Consuming messages
 1. Create consumer
 ```php
 <?php
@@ -83,7 +83,7 @@ class ExampleConsumer implements ConsumerInterface
  bin/console kafka:consumers:consume example_consumer
  ```
 
-## Events
+# Events
 Consumer dispatches events using **symfony/event-dispatcher** component as an optional dependency:
 
 Only for currently running consumer:
@@ -128,7 +128,7 @@ class ExampleConsumerEventSubscriber implements EventSubscriberInterface
 }
 ```
 
-## Retrying failed messages
+# Retrying failed messages
 
 To trigger a backoff retry, your consumer should throw RecoverableMessageException in `consume` method. Also, you have to configure few retry options in sts_kafka.yaml
 ```php
@@ -153,7 +153,7 @@ Before the second retry, there will be 900 ms delay (retry_delay * retry_multipl
 
 Any uncaught exception in your consumer will shut down the consumer.
 
-## Handling offsets
+# Handling offsets
 
 By default, option `enable.auto.commit` is set true. In such cases after consuming a message, offsets will be committed automatically to Kafka brokers.
 Frequency in which offsets are committed is described by option `auto.commit.interval.ms` (defaults to 50ms). It means
@@ -199,7 +199,7 @@ and will be much faster - but again in case your PHP process dies while committi
 Looking at above situations it is rather recommended to keep `enable.auto.commit` option set to true and handle possible duplicated
 messages inside your application.
 
-## Decoders
+# Decoders
 
 Decoders are meant to turn raw Kafka data (json, avro, plain text or anything else) into PHP array (or actually any format you'd like). There are three decoders available:
 - AvroDecoder
@@ -238,7 +238,7 @@ sts_kafka:
         decoder: App\Decoder\CustomDecoder
 ```
 
-## Denormalizers
+# Denormalizers
 
 You may also want to denormalize the message into some kind of DTO or any other object you wish.
 By default, this bundle does not denormalize the message into any object and passes you an array (which comes from the AvroDecoder).
@@ -289,7 +289,7 @@ class ExampleConsumer implements ConsumerInterface
 }
 ```
 
-## Validators
+# Validators
 
 After of before denormalization, you may want to validate if given object should be passed to your consumer - you may want, for example, to filter out incomplete data that came from Broker.
 
@@ -357,7 +357,7 @@ If a validator returns false, an instance of ValidatorException is thrown.
 ```
 `Offset for a message which has not passed validation is committed automatically.`
 
-## Kafka Callbacks
+# Kafka Callbacks
 
 Librdkafka (C/C++ library used underneath PHP) provides several callbacks that you can use in different situations (consuming/producing/error handling/logging). 
 Your consumer must implement CallableInterface which requires you to define `callbacks` method. This method should return an array
@@ -397,7 +397,7 @@ class ExampleConsumer implements ConsumerInterface, CallableInterface
  
 ```
 
-## Producing Messages
+# Producing Messages
 
 1. To produce messages you must configure few options in sts_kafka.yaml:
 ```yaml 
@@ -521,7 +521,7 @@ If you produce big messages and do not call poll frequently there might be an is
 - polling timeout ms - how long librdkafka will wait until polling of a message finishes
 - flush timeout ms, max flush retries - after calling `flush()` ProducerClient will try to flush remaining messages in librdkafka internal queue. Remaining messages are those who have not been `poll`ed yet.
 
-## Custom configurations
+# Custom configurations
 
 Some times you may wish to pass some additional options to your Consumer object. You may add your own configuration:
 ```php
@@ -590,7 +590,7 @@ class ExampleConsumer implements ConsumerInterface
 
 Example above shows how you could scale up your application by executing i.e. 4 consumers/commands with different remainders and group ids. You may have to resort to such tactics if your topic has only one partition and there is no way to scale up your consumer. 
 
-## Showing current consumer/producer configuration
+# Showing current consumer/producer configuration
 
 You can show current configuration that will be passed to consumer by calling following command
 ```
@@ -635,7 +635,7 @@ bin/console kafka:producers:describe
 └────────────────────┴─────────────────────────────────────────────────────────┘
 ```
 
-## License
+# License
 
 This package is distributed under **MIT license**. Please refer to LICENSE.md for more details. 
 
