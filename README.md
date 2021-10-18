@@ -1,5 +1,5 @@
-![sts_480](/uploads/23f3aacf196e506ed269b0d7059f17da/sts_480.png)
-![apache_kafka](/uploads/53153b4471214fcdb035d70d49d54e79/apache_kafka.png)
+![sts_small](https://user-images.githubusercontent.com/89898915/137724049-29de71f0-ebd5-4132-9899-b2aa4806e196.png)
+![apache_kafka](https://user-images.githubusercontent.com/89898915/137724062-8b10e236-9976-42e6-a21c-6fd97523e336.png)
 
 [[_TOC_]]
 
