@@ -25,7 +25,7 @@
 
 # Quick start
 
-If you want to test out capabilities of this bundle in a Symfony project, please refer to {{ link to kafka-bundle-testing-app on github}} project which ships with kafka-bundle and docker-compose file for convenience.
+If you want to test out capabilities of this bundle in a Symfony project, please refer to https://github.com/sts-gaming-group/kafka-bundle-app project which ships with kafka-bundle and docker-compose file for convenience.
    
 # Basic Configuration
 
