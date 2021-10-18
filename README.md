@@ -1,7 +1,7 @@
 ![sts_480](/uploads/23f3aacf196e506ed269b0d7059f17da/sts_480.png)
 ![apache_kafka](/uploads/53153b4471214fcdb035d70d49d54e79/apache_kafka.png)
 
-# High level Apache Kafka consumer/producer
+<h1> High level Apache Kafka consumer/producer</h1>
 
 [[_TOC_]]
 
@@ -11,41 +11,10 @@
 - ext-rdkafka for PHP
 - symfony components: refer to composer.json `require` section for required package versions
 
-## Ultra quick start
+## Example project
 
 If you want to test out capabilities of this bundle in a Symfony project, please refer to {{ link to kafka-bundle-testing-app on github}} project which ships with kafka-bundle and docker-compose file for convenience.
-
 ## Quick start
-
-
-
-## Setup # TODO: SA-5151
-
-Published versions of this package are available at https://gitlab.sts.pl/tech/kafka-bundle/-/packages
-
-1. Create personal access token from GitLab
-
-    - Sign in to GitLab.
-    - In the top-right corner, select your avatar.
-    - Select Edit profile.
-    - In the left sidebar, select Access Tokens.
-    - Choose a name and optional expiry date for the token.
-    - Choose the desired scopes.
-    - Select Create personal access token.
-
-2. Add STS self-managed GitLab instance to composer
-
-    - composer config gitlab-domains gitlab.sts.pl
-
-3. Authorize to gitlab with auth.json in your project
-
-    - composer config gitlab-token.gitlab.sts.pl <personal_access_token>
-
-4. Add a repository to your project
-    - composer config repositories.gitlab.sts.pl/26 '{"type": "composer", "url":"https://gitlab.sts.pl/api/v4/group/26/-/packages/composer/packages.json"}'
-
-5. Install package with desired version
-    - composer req sts/kafka-bundle:\<version>
    
 ## Basic Configuration
 
