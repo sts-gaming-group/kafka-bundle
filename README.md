@@ -1,7 +1,21 @@
-![sts_small](https://user-images.githubusercontent.com/89898915/137724049-29de71f0-ebd5-4132-9899-b2aa4806e196.png)
+![sts_480](https://user-images.githubusercontent.com/89898915/137724485-55ed744b-2cfb-4ebf-9151-16a05452970c.png)
 ![apache_kafka](https://user-images.githubusercontent.com/89898915/137724062-8b10e236-9976-42e6-a21c-6fd97523e336.png)
 
-[[_TOC_]]
+- [Technology stack](#technology-stack)
+- [Quick start](#quick-start)
+- [Basic Configuration](#basic-configuration)
+- [Consuming messages](#consuming-messages)
+- [Events](#events)
+- [Retrying failed messages](#retrying-failed-messages)
+- [Handling offsets](#handling-offsets)
+- [Decoders](#decoders)
+- [Denormalizers](#denormalizers)
+- [Validators](#validators)
+- [Kafka Callbacks](#kafka-callbacks)
+- [Producing Messages](#producing-messages)
+- [Custom configurations](#custom-configurations)
+- [Showing current consumer/producer configuration](#showing-current-consumer-producer-configuration)
+- [License](#license)
 
 # Technology stack
 
