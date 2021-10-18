@@ -371,7 +371,8 @@ declare(strict_types=1);
 namespace App\Consumers;
 
 use Sts\KafkaBundle\Client\Contract\CallableInterface;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;use Sts\KafkaBundle\RdKafka\Callbacks;
+use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
+use Sts\KafkaBundle\RdKafka\Callbacks;
 
 class ExampleConsumer implements ConsumerInterface, CallableInterface
 {
@@ -633,4 +634,8 @@ bin/console kafka:producers:describe
 │ producer_topic     │ topic_i_want_to_produce_to                              │
 └────────────────────┴─────────────────────────────────────────────────────────┘
 ```
+
+## License
+
+This package is distributed under **MIT license**. Please refer to LICENSE.md for more details. 
 
