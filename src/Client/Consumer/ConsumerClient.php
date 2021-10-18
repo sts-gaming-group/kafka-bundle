@@ -77,7 +77,10 @@ class ConsumerClient
                 $rdKafkaMessage = $rdKafkaConsumer->consume($timeout);
                 $this->validateRdKafkaMessage($rdKafkaMessage);
             } catch (NullMessageException $exception) {
-                $consumer->handleException($exception, new Context($configuration, 0));
+                $consumer->handleException(
+                    $exception,
+                    new Context($configuration, $rdKafkaConsumer, $rdKafkaMessage, 0)
+                );
 
                 $this->setConsumptionTime($consumptionStart);
 
@@ -85,7 +88,7 @@ class ConsumerClient
             }
 
             for ($retry = 0; $retry <= $maxRetries; ++$retry) {
-                $context = new Context($configuration, $retry);
+                $context = new Context($configuration, $rdKafkaConsumer, $rdKafkaMessage, $retry);
                 try {
                     $message = $this->messageFactory->create($rdKafkaMessage, $configuration);
                     $consumer->consume($message, $context);
