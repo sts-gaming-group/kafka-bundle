@@ -9,7 +9,7 @@ class Message
     private string $payload;
     private ?string $key;
 
-    public function __construct(string $payload, ?string $key)
+    public function __construct(string $payload, ?string $key = null)
     {
         $this->payload = $payload;
         $this->key = $key;
