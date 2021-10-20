@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Producer;
+namespace StsGamingGroup\KafkaBundle\Client\Producer;
 
 class Message
 {

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Unit\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Tests\Unit\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Type\AutoCommitIntervalMs;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Type\AutoCommitIntervalMs;
 
 class AutoCommitIntervalMsTest extends AbstractConfigurationTest
 {

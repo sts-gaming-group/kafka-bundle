@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Dummy\Validator;
+namespace StsGamingGroup\KafkaBundle\Tests\Dummy\Validator;
 
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
-use Sts\KafkaBundle\Validator\Validator;
+use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
+use StsGamingGroup\KafkaBundle\Validator\Validator;
 
 class DummyValidatorOne implements ValidatorInterface
 {

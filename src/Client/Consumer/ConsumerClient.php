@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Consumer;
+namespace StsGamingGroup\KafkaBundle\Client\Consumer;
 
 use RdKafka\KafkaConsumer as RdKafkaConsumer;
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
-use Sts\KafkaBundle\Configuration\Type\MaxRetries;
-use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
-use Sts\KafkaBundle\Configuration\Type\RetryDelay;
-use Sts\KafkaBundle\Configuration\Type\RetryMultiplier;
-use Sts\KafkaBundle\Configuration\Type\Timeout;
-use Sts\KafkaBundle\Configuration\Type\Topics;
-use Sts\KafkaBundle\Event\PostMessageConsumedEvent;
-use Sts\KafkaBundle\Event\PreMessageConsumedEvent;
-use Sts\KafkaBundle\Client\Consumer\Exception\NullMessageException;
-use Sts\KafkaBundle\Client\Consumer\Exception\RecoverableMessageException;
-use Sts\KafkaBundle\Validator\Exception\ValidationException;
-use Sts\KafkaBundle\Client\Consumer\Factory\MessageFactory;
-use Sts\KafkaBundle\RdKafka\Context;
-use Sts\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory;
-use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
+use StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoCommit;
+use StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetries;
+use StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetryDelay;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RetryDelay;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RetryMultiplier;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Timeout;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Topics;
+use StsGamingGroup\KafkaBundle\Event\PostMessageConsumedEvent;
+use StsGamingGroup\KafkaBundle\Event\PreMessageConsumedEvent;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Exception\NullMessageException;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Exception\RecoverableMessageException;
+use StsGamingGroup\KafkaBundle\Validator\Exception\ValidationException;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Factory\MessageFactory;
+use StsGamingGroup\KafkaBundle\RdKafka\Context;
+use StsGamingGroup\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory;
+use StsGamingGroup\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

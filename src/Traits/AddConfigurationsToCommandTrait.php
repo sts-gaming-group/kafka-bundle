@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Traits;
+namespace StsGamingGroup\KafkaBundle\Traits;
 
-use Sts\KafkaBundle\Configuration\RawConfiguration;
+use StsGamingGroup\KafkaBundle\Configuration\RawConfiguration;
 use Symfony\Component\Console\Command\Command;
 
 trait AddConfigurationsToCommandTrait

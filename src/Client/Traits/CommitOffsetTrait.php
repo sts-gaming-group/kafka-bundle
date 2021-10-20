@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Traits;
+namespace StsGamingGroup\KafkaBundle\Client\Traits;
 
 use RdKafka\Exception;
-use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
-use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
-use Sts\KafkaBundle\RdKafka\Context;
+use StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoCommit;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
+use StsGamingGroup\KafkaBundle\RdKafka\Context;
 
 trait CommitOffsetTrait
 {

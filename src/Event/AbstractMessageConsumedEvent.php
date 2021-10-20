@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Event;
+namespace StsGamingGroup\KafkaBundle\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 

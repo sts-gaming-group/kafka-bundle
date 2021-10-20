@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Contract;
+namespace StsGamingGroup\KafkaBundle\Configuration\Contract;
 
 interface ConsumerConfigurationInterface extends ConfigurationInterface
 {

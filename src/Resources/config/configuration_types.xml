@@ -5,81 +5,81 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Configuration\Type\Topics" id="sts_kafka.configuration.type.topics">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\Topics" id="sts_gaming_group_kafka.configuration.type.topics">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\GroupId" id="sts_kafka.configuration.type.group_id">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\GroupId" id="sts_gaming_group_kafka.configuration.type.group_id">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\Brokers" id="sts_kafka.configuration.type.brokers">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\Brokers" id="sts_gaming_group_kafka.configuration.type.brokers">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\Timeout" id="sts_kafka.configuration.type.timeout">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\Timeout" id="sts_gaming_group_kafka.configuration.type.timeout">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\AutoOffsetReset"
-                 id="sts_kafka.configuration.type.auto_offset_reset">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\AutoOffsetReset"
+                 id="sts_gaming_group_kafka.configuration.type.auto_offset_reset">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\AutoCommitIntervalMs"
-                 id="sts_kafka.configuration.type.auto_commit_interval_ms">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\AutoCommitIntervalMs"
+                 id="sts_gaming_group_kafka.configuration.type.auto_commit_interval_ms">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\Decoder" id="sts_kafka.configuration.type.decoder">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\Decoder" id="sts_gaming_group_kafka.configuration.type.decoder">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\SchemaRegistry"
-                 id="sts_kafka.configuration.type.schema_registry">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\SchemaRegistry"
+                 id="sts_gaming_group_kafka.configuration.type.schema_registry">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore"
-                 id="sts_kafka.configuration.type.enable_auto_offset_store">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoOffsetStore"
+                 id="sts_gaming_group_kafka.configuration.type.enable_auto_offset_store">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\EnableAutoCommit"
-                 id="sts_kafka.configuration.type.enable_auto_commit">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoCommit"
+                 id="sts_gaming_group_kafka.configuration.type.enable_auto_commit">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\LogLevel" id="sts_kafka.configuration.type.log_level">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\LogLevel" id="sts_gaming_group_kafka.configuration.type.log_level">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas"
-                 id="sts_kafka.configuration.type.register_missing_schemas">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\RegisterMissingSchemas"
+                 id="sts_gaming_group_kafka.configuration.type.register_missing_schemas">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects"
-                 id="sts_kafka.configuration.type.register_missing_subjects">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\RegisterMissingSubjects"
+                 id="sts_gaming_group_kafka.configuration.type.register_missing_subjects">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\ProducerPartition"
-                 id="sts_kafka.configuration.type.producer_partition">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\ProducerPartition"
+                 id="sts_gaming_group_kafka.configuration.type.producer_partition">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\Denormalizer"
-                 id="sts_kafka.configuration.type.denormalizer">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\Denormalizer"
+                 id="sts_gaming_group_kafka.configuration.type.denormalizer">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\MaxRetries"
-                 id="sts_kafka.configuration.type.max_retries">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetries"
+                 id="sts_gaming_group_kafka.configuration.type.max_retries">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\RetryDelay"
-                 id="sts_kafka.configuration.type.retry_delay">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\RetryDelay"
+                 id="sts_gaming_group_kafka.configuration.type.retry_delay">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\RetryMultiplier"
-                 id="sts_kafka.configuration.type.retry_multiplier">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\RetryMultiplier"
+                 id="sts_gaming_group_kafka.configuration.type.retry_multiplier">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\MaxRetryDelay"
-                 id="sts_kafka.configuration.type.max_retry_delay">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetryDelay"
+                 id="sts_gaming_group_kafka.configuration.type.max_retry_delay">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\ProducerTopic" id="sts_kafka.configuration.type.producer_topic">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\ProducerTopic" id="sts_gaming_group_kafka.configuration.type.producer_topic">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
-        <service class="Sts\KafkaBundle\Configuration\Type\Validators" id="sts_kafka.configuration.type.validators">
-            <tag name="sts_kafka.configuration.type"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\Type\Validators" id="sts_gaming_group_kafka.configuration.type.validators">
+            <tag name="sts_gaming_group_kafka.configuration.type"/>
         </service>
     </services>
 </container>

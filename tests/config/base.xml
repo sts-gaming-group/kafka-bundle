@@ -10,49 +10,49 @@
 
     <services>
         <!-- consumers -->
-        <service class="Sts\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_kafka.client.consumer.consumer_provider" public="true"/>
-        <service class="Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne" id="sts_kafka.test.dummy.consumer.one">
-            <tag name="sts_kafka.kafka.consumer"/>
+        <service class="StsGamingGroup\KafkaBundle\Client\Consumer\ConsumerProvider" id="sts_gaming_group_kafka.client.consumer.consumer_provider" public="true"/>
+        <service class="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne" id="sts_gaming_group_kafka.test.dummy.consumer.one">
+            <tag name="sts_gaming_group_kafka.kafka.consumer"/>
         </service>
-        <service class="Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerTwo" id="sts_kafka.test.dummy.consumer.two">
-            <tag name="sts_kafka.kafka.consumer"/>
+        <service class="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerTwo" id="sts_gaming_group_kafka.test.dummy.consumer.two">
+            <tag name="sts_gaming_group_kafka.kafka.consumer"/>
         </service>
         <!-- consumers -->
 
         <!-- producers -->
-        <service class="Sts\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerOne" id="sts_kafka.test.dummy.producer.one">
-            <tag name="sts_kafka.kafka.producer"/>
+        <service class="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerOne" id="sts_gaming_group_kafka.test.dummy.producer.one">
+            <tag name="sts_gaming_group_kafka.kafka.producer"/>
         </service>
-        <service class="Sts\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerTwo" id="sts_kafka.test.dummy.producer.two">
-            <tag name="sts_kafka.kafka.producer"/>
+        <service class="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerTwo" id="sts_gaming_group_kafka.test.dummy.producer.two">
+            <tag name="sts_gaming_group_kafka.kafka.producer"/>
         </service>
         <!-- producers -->
 
         <!-- decoders -->
-        <service class="Sts\KafkaBundle\Tests\Dummy\Decoder\DummyDecoderOne" id="sts_kafka.test.dummy.decoder.one" public="true">
-            <tag name="sts_kafka.decoder"/>
+        <service class="StsGamingGroup\KafkaBundle\Tests\Dummy\Decoder\DummyDecoderOne" id="sts_gaming_group_kafka.test.dummy.decoder.one" public="true">
+            <tag name="sts_gaming_group_kafka.decoder"/>
         </service>
         <!-- decoders -->
 
         <!-- denormalizers -->
-        <service class="Sts\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne" id="sts_kafka.test.dummy.denormalizer.one" public="true">
-            <tag name="sts_kafka.denormalizer"/>
+        <service class="StsGamingGroup\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne" id="sts_gaming_group_kafka.test.dummy.denormalizer.one" public="true">
+            <tag name="sts_gaming_group_kafka.denormalizer"/>
         </service>
         <!-- denormalizers -->
 
         <!-- validators -->
-        <service class="Sts\KafkaBundle\Tests\Dummy\Validator\DummyValidatorOne" id="sts_kafka.test.dummy.validator.one" public="true">
-            <tag name="sts_kafka.validator"/>
+        <service class="StsGamingGroup\KafkaBundle\Tests\Dummy\Validator\DummyValidatorOne" id="sts_gaming_group_kafka.test.dummy.validator.one" public="true">
+            <tag name="sts_gaming_group_kafka.validator"/>
         </service>
         <!-- validators -->
 
         <!-- configurations -->
-        <service class="Sts\KafkaBundle\Configuration\ConfigurationResolver" id="sts_kafka.configuration.configuration_resolver">
-            <argument type="service" id="sts_kafka.configuration.raw_configuration"/>
+        <service class="StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver" id="sts_gaming_group_kafka.configuration.configuration_resolver">
+            <argument type="service" id="sts_gaming_group_kafka.configuration.raw_configuration"/>
             <argument type="collection">
                 <argument type="collection" key="consumers">
                     <argument type="collection" key="instances">
-                        <argument type="collection" key="Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne">
+                        <argument type="collection" key="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne">
                             <argument type="collection" key="brokers">
                                 <argument>127.0.0.1:9092</argument>
                                 <argument>127.0.0.2:9092</argument>
@@ -66,11 +66,11 @@
                             <argument key="schema_registry">http://127.0.0.1:8081</argument>
                             <argument key="max_retries">5</argument>
                             <argument key="max_retry_delay">1000</argument>
-                            <argument key="denormalizer">Sts\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne</argument>
+                            <argument key="denormalizer">StsGamingGroup\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne</argument>
                             <argument type="collection" key="validators">
-                                <argument>Sts\KafkaBundle\Tests\Dummy\Validator\DummyValidatorOne</argument>
+                                <argument>StsGamingGroup\KafkaBundle\Tests\Dummy\Validator\DummyValidatorOne</argument>
                             </argument>
-                            <argument key="decoder">Sts\KafkaBundle\Tests\Dummy\Decoder\DummyDecoderOne</argument>
+                            <argument key="decoder">StsGamingGroup\KafkaBundle\Tests\Dummy\Decoder\DummyDecoderOne</argument>
                             <argument type="string" key="auto_commit_interval_ms">50</argument>
                             <argument key="auto_offset_reset">smallest</argument>
                             <argument key="timeout">1000</argument>
@@ -82,7 +82,7 @@
                             <argument key="retry_multiplier">2</argument>
                             <argument key="log_level">3</argument>
                         </argument>
-                        <argument type="collection" key="Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerTwo">
+                        <argument type="collection" key="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerTwo">
                             <argument type="collection" key="brokers">
                                 <argument>127.0.0.4:9092</argument>
                                 <argument>127.0.0.5:9092</argument>
@@ -96,11 +96,11 @@
                             <argument key="schema_registry">http://127.0.0.2:8081</argument>
                             <argument key="max_retries">4</argument>
                             <argument key="max_retry_delay">2000</argument>
-                            <argument key="denormalizer">Sts\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne</argument>
+                            <argument key="denormalizer">StsGamingGroup\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne</argument>
                             <argument type="collection" key="validators">
-                                <argument>Sts\KafkaBundle\Tests\Dummy\Validator\DummyValidatorOne</argument>
+                                <argument>StsGamingGroup\KafkaBundle\Tests\Dummy\Validator\DummyValidatorOne</argument>
                             </argument>
-                            <argument key="decoder">Sts\KafkaBundle\Tests\Dummy\Decoder\DummyDecoderOne</argument>
+                            <argument key="decoder">StsGamingGroup\KafkaBundle\Tests\Dummy\Decoder\DummyDecoderOne</argument>
                             <argument type="string" key="auto_commit_interval_ms">40</argument>
                             <argument key="auto_offset_reset">largest</argument>
                             <argument key="timeout">2000</argument>
@@ -116,7 +116,7 @@
                 </argument>
                 <argument type="collection" key="producers">
                     <argument type="collection" key="instances">
-                        <argument type="collection" key="Sts\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerOne">
+                        <argument type="collection" key="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerOne">
                             <argument type="collection" key="brokers">
                                 <argument>127.0.0.1:9092</argument>
                                 <argument>127.0.0.2:9092</argument>
@@ -126,7 +126,7 @@
                             <argument key="producer_partition">1</argument>
                             <argument key="log_level">3</argument>
                         </argument>
-                        <argument type="collection" key="Sts\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerTwo">
+                        <argument type="collection" key="StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerTwo">
                             <argument type="collection" key="brokers">
                                 <argument>127.0.0.4:9092</argument>
                                 <argument>127.0.0.5:9092</argument>

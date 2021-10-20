@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Unit\Configuration;
+namespace StsGamingGroup\KafkaBundle\Tests\Unit\Configuration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Exception\InvalidClientException;
-use Sts\KafkaBundle\Configuration\RawConfiguration;
-use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
-use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne;
-use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerThree;
+use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\CastValueInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidClientException;
+use StsGamingGroup\KafkaBundle\Configuration\RawConfiguration;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerThree;
 use Symfony\Component\Console\Input\Input;
 
 class ConfigurationResolverTest extends TestCase

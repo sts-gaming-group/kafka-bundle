@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Command;
+namespace StsGamingGroup\KafkaBundle\Command;
 
-use Sts\KafkaBundle\Client\Producer\ProducerProvider;
-use Sts\KafkaBundle\Command\Traits\DescribeTrait;
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
+use StsGamingGroup\KafkaBundle\Client\Producer\ProducerProvider;
+use StsGamingGroup\KafkaBundle\Command\Traits\DescribeTrait;
+use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\DependencyInjection;
+namespace StsGamingGroup\KafkaBundle\DependencyInjection;
 
-use Sts\KafkaBundle\Configuration\Type\AutoCommitIntervalMs;
-use Sts\KafkaBundle\Configuration\Type\AutoOffsetReset;
-use Sts\KafkaBundle\Configuration\Type\Brokers;
-use Sts\KafkaBundle\Configuration\Type\Decoder;
-use Sts\KafkaBundle\Configuration\Type\Denormalizer;
-use Sts\KafkaBundle\Configuration\Type\EnableAutoCommit;
-use Sts\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
-use Sts\KafkaBundle\Configuration\Type\GroupId;
-use Sts\KafkaBundle\Configuration\Type\LogLevel;
-use Sts\KafkaBundle\Configuration\Type\MaxRetries;
-use Sts\KafkaBundle\Configuration\Type\MaxRetryDelay;
-use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
-use Sts\KafkaBundle\Configuration\Type\ProducerTopic;
-use Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
-use Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
-use Sts\KafkaBundle\Configuration\Type\RetryDelay;
-use Sts\KafkaBundle\Configuration\Type\RetryMultiplier;
-use Sts\KafkaBundle\Configuration\Type\SchemaRegistry;
-use Sts\KafkaBundle\Configuration\Type\Timeout;
-use Sts\KafkaBundle\Configuration\Type\Topics;
-use Sts\KafkaBundle\Configuration\Type\Validators;
+use StsGamingGroup\KafkaBundle\Configuration\Type\AutoCommitIntervalMs;
+use StsGamingGroup\KafkaBundle\Configuration\Type\AutoOffsetReset;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Brokers;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Decoder;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Denormalizer;
+use StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoCommit;
+use StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
+use StsGamingGroup\KafkaBundle\Configuration\Type\GroupId;
+use StsGamingGroup\KafkaBundle\Configuration\Type\LogLevel;
+use StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetries;
+use StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetryDelay;
+use StsGamingGroup\KafkaBundle\Configuration\Type\ProducerPartition;
+use StsGamingGroup\KafkaBundle\Configuration\Type\ProducerTopic;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RetryDelay;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RetryMultiplier;
+use StsGamingGroup\KafkaBundle\Configuration\Type\SchemaRegistry;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Timeout;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Topics;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Validators;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -33,7 +33,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('sts_kafka');
+        $treeBuilder = new TreeBuilder('sts_gaming_group_kafka');
 
         $rootNode = $treeBuilder->getRootNode();
         $builder = $rootNode->children();

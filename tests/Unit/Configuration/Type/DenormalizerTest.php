@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Unit\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Tests\Unit\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Type\Denormalizer;
-use Sts\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Denormalizer;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Denormalizer\DummyDenormalizerOne;
 
 class DenormalizerTest extends AbstractObjectConfigurationTest
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Denormalizer;
+namespace StsGamingGroup\KafkaBundle\Denormalizer;
 
-use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use StsGamingGroup\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
 
 class PlainDenormalizer implements DenormalizerInterface
 {

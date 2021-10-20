@@ -5,11 +5,11 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory"
-                 id="sts_kafka.rd_kafka.factory.kafka_configuration_factory" shared="false">
-            <argument type="service" id="sts_kafka.configuration.configuration_resolver"/>
+        <service class="StsGamingGroup\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory"
+                 id="sts_gaming_group_kafka.rd_kafka.factory.kafka_configuration_factory" shared="false">
+            <argument type="service" id="sts_gaming_group_kafka.configuration.configuration_resolver"/>
         </service>
-        <service id="Sts\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory"
-                 alias="sts_kafka.rd_kafka.factory.kafka_configuration_factory"/>
+        <service id="StsGamingGroup\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory"
+                 alias="sts_gaming_group_kafka.rd_kafka.factory.kafka_configuration_factory"/>
     </services>
 </container>

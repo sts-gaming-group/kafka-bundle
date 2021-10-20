@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Event;
+namespace StsGamingGroup\KafkaBundle\Event;
 
 class PreMessageConsumedEvent extends AbstractMessageConsumedEvent
 {
-    private const NAME = 'sts_kafka.pre_message_consumed';
+    private const NAME = 'sts_gaming_group_kafka.pre_message_consumed';
 
     public static function getEventName(string $consumerName): string
     {

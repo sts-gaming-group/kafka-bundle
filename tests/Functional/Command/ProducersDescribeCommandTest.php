@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Functional\Command;
+namespace StsGamingGroup\KafkaBundle\Tests\Functional\Command;
 
-use Sts\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerOne;
-use Sts\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerTwo;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerOne;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Producer\DummyProducerTwo;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;

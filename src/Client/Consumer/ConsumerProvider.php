@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Consumer;
+namespace StsGamingGroup\KafkaBundle\Client\Consumer;
 
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
 
 class ConsumerProvider
 {

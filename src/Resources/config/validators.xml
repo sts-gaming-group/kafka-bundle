@@ -5,11 +5,11 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Validator\Validator" id="sts_kafka.validator.validator">
-            <argument type="tagged_iterator" tag="sts_kafka.validator"/>
+        <service class="StsGamingGroup\KafkaBundle\Validator\Validator" id="sts_gaming_group_kafka.validator.validator">
+            <argument type="tagged_iterator" tag="sts_gaming_group_kafka.validator"/>
         </service>
-        <service class="Sts\KafkaBundle\Validator\Type\PlainValidator" id="sts_kafka.validator.type.plain_validator">
-            <tag name="sts_kafka.validator"/>
+        <service class="StsGamingGroup\KafkaBundle\Validator\Type\PlainValidator" id="sts_gaming_group_kafka.validator.type.plain_validator">
+            <tag name="sts_gaming_group_kafka.validator"/>
         </service>
     </services>
 </container>

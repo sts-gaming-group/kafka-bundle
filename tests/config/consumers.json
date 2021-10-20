@@ -1,7 +1,7 @@
 {
   "consumers": {
     "instances": {
-      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Consumer\\DummyConsumerOne": {
+      "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Client\\Consumer\\DummyConsumerOne": {
         "brokers": [
           "127.0.0.1:9092",
           "127.0.0.2:9092",
@@ -15,11 +15,11 @@
         "schema_registry": "http://127.0.0.1:8081",
         "max_retries": 5,
         "max_retry_delay": 1000,
-        "denormalizer": "Sts\\KafkaBundle\\Tests\\Dummy\\Denormalizer\\DummyDenormalizerOne",
+        "denormalizer": "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Denormalizer\\DummyDenormalizerOne",
         "validators": [
-          "Sts\\KafkaBundle\\Tests\\Dummy\\Validator\\DummyValidatorOne"
+          "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Validator\\DummyValidatorOne"
         ],
-        "decoder": "Sts\\KafkaBundle\\Tests\\Dummy\\Decoder\\DummyDecoderOne",
+        "decoder": "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Decoder\\DummyDecoderOne",
         "auto_commit_interval_ms": "50",
         "auto_offset_reset": "smallest",
         "timeout": 1000,
@@ -31,7 +31,7 @@
         "retry_multiplier": 2,
         "log_level": 3
       },
-      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Consumer\\DummyConsumerTwo": {
+      "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Client\\Consumer\\DummyConsumerTwo": {
         "brokers": [
           "127.0.0.4:9092",
           "127.0.0.5:9092",
@@ -45,11 +45,11 @@
         "schema_registry": "http://127.0.0.2:8081",
         "max_retries": 4,
         "max_retry_delay": 2000,
-        "denormalizer": "Sts\\KafkaBundle\\Tests\\Dummy\\Denormalizer\\DummyDenormalizerOne",
+        "denormalizer": "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Denormalizer\\DummyDenormalizerOne",
         "validators": [
-          "Sts\\KafkaBundle\\Tests\\Dummy\\Validator\\DummyValidatorOne"
+          "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Validator\\DummyValidatorOne"
         ],
-        "decoder": "Sts\\KafkaBundle\\Tests\\Dummy\\Decoder\\DummyDecoderOne",
+        "decoder": "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Decoder\\DummyDecoderOne",
         "auto_commit_interval_ms": "40",
         "auto_offset_reset": "largest",
         "timeout": 2000,

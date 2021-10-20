@@ -29,10 +29,10 @@ If you want to test out capabilities of this bundle in a Symfony project, please
    
 # Basic Configuration
 
-1. Add sts_kafka.yaml to config folder at \<root_folder>/config/packages/sts_kafka.yaml or in a specific env folder i.e. \<root_folder>/config/packages/prod/sts_kafka.yaml
-2. Add configuration to sts_kafka.yaml for example:
+1. Add sts_gaming_group_kafka.yaml to config folder at \<root_folder>/config/packages/sts_gaming_group_kafka.yaml or in a specific env folder i.e. \<root_folder>/config/packages/prod/sts_gaming_group_kafka.yaml
+2. Add configuration to sts_gaming_group_kafka.yaml for example:
  ```yaml
-sts_kafka:
+sts_gaming_group_kafka:
   consumers:
     instances:
       App\Consumers\ExampleConsumer:
@@ -46,7 +46,7 @@ sts_kafka:
         brokers: [ '127.0.0.1:9092', '127.0.0.2:9092', '127.0.0.3:9092' ]    
         producer_topic: 'my_app_failed_message_topic'
    ```
-3. Most of the time you would like to keep your kafka configuration in sts_kafka.yaml, but you can also pass configuration directly in CLI for example:
+3. Most of the time you would like to keep your kafka configuration in sts_gaming_group_kafka.yaml, but you can also pass configuration directly in CLI for example:
 ```
 bin/console kafka:consumers:consume example_consumer --group_id some_other_group_id
 ```
@@ -56,7 +56,7 @@ Currently, options passed in CLI only work for consumers which are run by comman
 The configurations are resolved in runtime. The priority is as follows:
 
 - Configurations passed in CLI will always take precedence
-- Configurations passed per consumer/producer basis (```instances:``` section in `consumers:` or `producers:` in sts_kafka.yaml)
+- Configurations passed per consumer/producer basis (```instances:``` section in `consumers:` or `producers:` in sts_gaming_group_kafka.yaml)
 
 # Consuming messages
 1. Create consumer
@@ -67,9 +67,9 @@ declare(strict_types=1);
 
 namespace App\Consumers;
 
-use Sts\KafkaBundle\Client\Consumer\Message;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\RdKafka\Context;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Message;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\RdKafka\Context;
 
 class ExampleConsumer implements ConsumerInterface
 {
@@ -101,20 +101,20 @@ class ExampleConsumer implements ConsumerInterface
 Consumer dispatches events using **symfony/event-dispatcher** component as an optional dependency:
 
 Only for currently running consumer:
-- **sts_kafka.pre_message_consumed_{consumer_name}** e.g. sts_kafka.pre_message_consumed_example_consumer
-- **sts_kafka.post_message_consumed_{consumer_name}** e.g. sts_kafka.post_message_consumed_example_consumer
+- **sts_gaming_group_kafka.pre_message_consumed_{consumer_name}** e.g. sts_gaming_group_kafka.pre_message_consumed_example_consumer
+- **sts_gaming_group_kafka.post_message_consumed_{consumer_name}** e.g. sts_gaming_group_kafka.post_message_consumed_example_consumer
   
 Global event for all consumers:
-- **Sts\KafkaBundle\Event\PreMessageConsumedEvent**
-- **Sts\KafkaBundle\Event\PostMessageConsumedEvent**
+- **StsGamingGroup\KafkaBundle\Event\PreMessageConsumedEvent**
+- **StsGamingGroup\KafkaBundle\Event\PostMessageConsumedEvent**
 
 As the name suggests - first event is dispatched before the message is consumed, and the second event is dispatched just after the message has been consumed (retry mechanism is not taken into account, message needs to be processed fully for the event to be dispatched).
 You can hook up into these events using symfony event subscriber/listener i.e.
 
 ```php
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sts\KafkaBundle\Event\PostMessageConsumedEvent;
-use Sts\KafkaBundle\Event\PreMessageConsumedEvent;
+use StsGamingGroup\KafkaBundle\Event\PostMessageConsumedEvent;
+use StsGamingGroup\KafkaBundle\Event\PreMessageConsumedEvent;
 
 class ExampleConsumerEventSubscriber implements EventSubscriberInterface
 {
@@ -144,12 +144,12 @@ class ExampleConsumerEventSubscriber implements EventSubscriberInterface
 
 # Retrying failed messages
 
-To trigger a backoff retry, your consumer should throw RecoverableMessageException in `consume` method. Also, you have to configure few retry options in sts_kafka.yaml
+To trigger a backoff retry, your consumer should throw RecoverableMessageException in `consume` method. Also, you have to configure few retry options in sts_gaming_group_kafka.yaml
 ```php
-use Sts\KafkaBundle\Client\Consumer\Exception\RecoverableMessageException;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Exception\RecoverableMessageException;
 ```
 ```yaml
-sts_kafka:
+sts_gaming_group_kafka:
   consumers:
      ... # global consumers configurations
     instances:
@@ -188,7 +188,7 @@ declare(strict_types=1);
 
 namespace App\Consumers;
 
-use Sts\KafkaBundle\Client\Traits\CommitOffsetTrait;
+use StsGamingGroup\KafkaBundle\Client\Traits\CommitOffsetTrait;
 
 class ExampleConsumer implements ConsumerInterface
 {
@@ -230,14 +230,14 @@ You can also implement your own decoder by implementing `DecoderInterface`
 
 namespace App\Decoder;
 
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Decoder\Contract\DecoderInterface;
 
 class CustomDecoder implements DecoderInterface
 {
     public function decode(ResolvedConfiguration $configuration, string $message)
     {
-        // $configuration contains values from sts_kafka.yaml or CLI
+        // $configuration contains values from sts_gaming_group_kafka.yaml or CLI
         // $message contains raw value from Kafka
     }
 }
@@ -245,7 +245,7 @@ class CustomDecoder implements DecoderInterface
 
 Register it in your configuration
 ```yaml
-sts_kafka:
+sts_gaming_group_kafka:
   consumers:
     instances:
       App\Consumers\ExampleConsumer:
@@ -265,7 +265,7 @@ declare(strict_types=1);
 
 namespace App\Normalizer;
 
-use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use StsGamingGroup\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
 
 class CustomDenormalizer implements DenormalizerInterface
 {
@@ -281,7 +281,7 @@ class CustomDenormalizer implements DenormalizerInterface
 ```
 Register it in your configuration:
 ```yaml
-sts_kafka:
+sts_gaming_group_kafka:
   consumers:
     instances:
       App\Consumers\ExampleConsumer:
@@ -315,8 +315,8 @@ declare(strict_types=1);
 
 namespace App\Validator;
 
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
-use Sts\KafkaBundle\Validator\Validator;
+use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
+use StsGamingGroup\KafkaBundle\Validator\Validator;
 
 class ExampleValidator implements ValidatorInterface
 {
@@ -339,7 +339,7 @@ class ExampleValidator implements ValidatorInterface
 ```
 Register it in your configuration:
 ```yaml
-sts_kafka:
+sts_gaming_group_kafka:
   consumers:
     instances:
       App\Consumers\ExampleConsumer:
@@ -347,14 +347,14 @@ sts_kafka:
          - App\Validator\ExampleValidator
          - App\Validator\SomeOtherValidator      
 ```
-You may have multiple validators attached to one consumer. The priority of called validators is exactly how you defined them in sts_kafka.yaml - 
+You may have multiple validators attached to one consumer. The priority of called validators is exactly how you defined them in sts_gaming_group_kafka.yaml - 
 so in this case ExampleValidator is called first, and then SomeOtherValidator is called.
 
 If a validator returns false, an instance of ValidatorException is thrown. 
 ```php
  ...
  
- use Sts\KafkaBundle\Validator\Exception\ValidationException;
+ use StsGamingGroup\KafkaBundle\Validator\Exception\ValidationException;
  
  public function handleException(\Exception $exception, Context $context)
  {
@@ -384,9 +384,9 @@ declare(strict_types=1);
 
 namespace App\Consumers;
 
-use Sts\KafkaBundle\Client\Contract\CallableInterface;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\RdKafka\Callbacks;
+use StsGamingGroup\KafkaBundle\Client\Contract\CallableInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\RdKafka\Callbacks;
 
 class ExampleConsumer implements ConsumerInterface, CallableInterface
 {
@@ -413,7 +413,7 @@ class ExampleConsumer implements ConsumerInterface, CallableInterface
 
 # Producing Messages
 
-1. To produce messages you must configure few options in sts_kafka.yaml:
+1. To produce messages you must configure few options in sts_gaming_group_kafka.yaml:
 ```yaml 
 producers:
  instances:
@@ -458,8 +458,8 @@ declare(strict_types=1);
 
 namespace App\Producers;
 
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Client\Producer\Message;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
+use StsGamingGroup\KafkaBundle\Client\Producer\Message;
 
 class ExampleProducer implements ProducerInterface
 {
@@ -486,7 +486,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use Sts\KafkaBundle\Client\Producer\ProducerClient;
+use StsGamingGroup\KafkaBundle\Client\Producer\ProducerClient;
 
 class ExampleCommand extends Command
 { 
@@ -510,8 +510,8 @@ class ExampleCommand extends Command
 ```
 You can also set callbacks array to Producer, for example, to check if messages were sent successfully. Your producer class should implement CallableInterface.
 ```php
-use Sts\KafkaBundle\Client\Contract\CallableInterface;
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\CallableInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
 
 class ExampleProducer implements ProducerInterface, CallableInterface
 {
@@ -545,7 +545,7 @@ declare(strict_types=1);
 
 namespace App\Configuration;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 class Divisor implements ConfigurationInterface
@@ -620,7 +620,7 @@ bin/console kafka:consumers:describe example_consumer
 │ timeout                   │ 1000                                                    │
 │ auto_offset_reset         │ smallest                                                │
 │ auto_commit_interval_ms   │ 5                                                       │
-│ decoder                   │ Sts\KafkaBundle\Decoder\AvroDecoder                     │
+│ decoder                   │ StsGamingGroup\KafkaBundle\Decoder\AvroDecoder                     │
 │ schema_registry           │ http://127.0.0.1:8081                                   │
 │ enable_auto_offset_store  │ true                                                    │
 │ enable_auto_commit        │ true                                                    │

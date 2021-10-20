@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Validator\Exception;
+namespace StsGamingGroup\KafkaBundle\Validator\Exception;
 
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
+use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
 
 class ValidationException extends \RuntimeException
 {

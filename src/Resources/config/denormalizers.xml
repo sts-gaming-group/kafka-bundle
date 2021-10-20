@@ -5,8 +5,8 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Denormalizer\PlainDenormalizer" id="sts_kafka.denormalizer.plain_denormalizer">
-            <tag name="sts_kafka.denormalizer"/>
+        <service class="StsGamingGroup\KafkaBundle\Denormalizer\PlainDenormalizer" id="sts_gaming_group_kafka.denormalizer.plain_denormalizer">
+            <tag name="sts_gaming_group_kafka.denormalizer"/>
         </service>
     </services>
 </container>

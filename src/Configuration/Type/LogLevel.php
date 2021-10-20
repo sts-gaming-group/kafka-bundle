@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\CastValueInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 class LogLevel implements KafkaConfigurationInterface, ConsumerConfigurationInterface, ProducerConfigurationInterface, CastValueInterface

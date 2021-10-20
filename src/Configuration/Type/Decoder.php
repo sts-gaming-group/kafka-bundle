@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
-use Sts\KafkaBundle\Decoder\AvroDecoder;
-use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
-use Sts\KafkaBundle\Decoder\JsonDecoder;
-use Sts\KafkaBundle\Decoder\PlainDecoder;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Decoder\AvroDecoder;
+use StsGamingGroup\KafkaBundle\Decoder\Contract\DecoderInterface;
+use StsGamingGroup\KafkaBundle\Decoder\JsonDecoder;
+use StsGamingGroup\KafkaBundle\Decoder\PlainDecoder;
 use Symfony\Component\Console\Input\InputOption;
 
 class Decoder implements ConsumerConfigurationInterface

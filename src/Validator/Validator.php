@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Validator;
+namespace StsGamingGroup\KafkaBundle\Validator;
 
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Configuration\Type\Validators;
-use Sts\KafkaBundle\Validator\Exception\ValidationException;
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Validators;
+use StsGamingGroup\KafkaBundle\Validator\Exception\ValidationException;
+use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
 
 class Validator
 {

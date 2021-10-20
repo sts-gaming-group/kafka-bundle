@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests;
+namespace StsGamingGroup\KafkaBundle\Tests;
 
-use Sts\KafkaBundle\StsKafkaBundle;
+use StsGamingGroup\KafkaBundle\StsGamingGroupKafkaBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
@@ -16,7 +14,7 @@ class AppKernel extends Kernel
     public function registerBundles(): array
     {
         return [
-            new StsKafkaBundle(),
+            new StsGamingGroupKafkaBundle(),
             new FrameworkBundle()
         ];
     }

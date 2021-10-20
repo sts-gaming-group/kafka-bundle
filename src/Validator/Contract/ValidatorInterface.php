@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Validator\Contract;
+namespace StsGamingGroup\KafkaBundle\Validator\Contract;
 
 interface ValidatorInterface
 {

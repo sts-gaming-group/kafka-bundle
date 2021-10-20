@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Unit\Configuration;
+namespace StsGamingGroup\KafkaBundle\Tests\Unit\Configuration;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationType;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidConfigurationType;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
 
 class ResolvedConfigurationTest extends TestCase
 {

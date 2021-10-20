@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\DependencyInjection;
+namespace StsGamingGroup\KafkaBundle\DependencyInjection;
 
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
-use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Decoder\Contract\DecoderInterface;
+use StsGamingGroup\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidDefinitionException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInterface
+class StsGamingGroupKafkaExtension extends ConfigurableExtension implements CompilerPassInterface
 {
     private const XML_CONFIGS = [
         'rd_kafka',
@@ -40,24 +40,24 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         }
 
         $container->registerForAutoconfiguration(ConsumerInterface::class)
-            ->addTag('sts_kafka.kafka.consumer');
+            ->addTag('sts_gaming_group_kafka.kafka.consumer');
 
         $container->registerForAutoconfiguration(ProducerInterface::class)
-            ->addTag('sts_kafka.kafka.producer');
+            ->addTag('sts_gaming_group_kafka.kafka.producer');
 
         $container->registerForAutoconfiguration(ConfigurationInterface::class)
-            ->addTag('sts_kafka.configuration.type');
+            ->addTag('sts_gaming_group_kafka.configuration.type');
 
         $container->registerForAutoconfiguration(DecoderInterface::class)
-            ->addTag('sts_kafka.decoder');
+            ->addTag('sts_gaming_group_kafka.decoder');
 
         $container->registerForAutoconfiguration(DenormalizerInterface::class)
-            ->addTag('sts_kafka.denormalizer');
+            ->addTag('sts_gaming_group_kafka.denormalizer');
 
         $container->registerForAutoconfiguration(ValidatorInterface::class)
-            ->addTag('sts_kafka.validator');
+            ->addTag('sts_gaming_group_kafka.validator');
 
-        $configurationResolver = $container->getDefinition('sts_kafka.configuration.configuration_resolver');
+        $configurationResolver = $container->getDefinition('sts_gaming_group_kafka.configuration.configuration_resolver');
         $configurationResolver->setArgument(1, $mergedConfig);
     }
 
@@ -70,7 +70,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
 
     private function addConsumersAndProvider(ContainerBuilder $container): void
     {
-        $providerId = 'sts_kafka.client.consumer.consumer_provider';
+        $providerId = 'sts_gaming_group_kafka.client.consumer.consumer_provider';
         if (!$container->has($providerId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find any consumer provider. Looking for service id %s', $providerId)
@@ -78,7 +78,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         }
 
         $consumerProvider = $container->findDefinition($providerId);
-        $consumers = $container->findTaggedServiceIds('sts_kafka.kafka.consumer');
+        $consumers = $container->findTaggedServiceIds('sts_gaming_group_kafka.kafka.consumer');
         foreach ($consumers as $id => $tags) {
             $consumerProvider->addMethodCall('addConsumer', [new Reference($id)]);
         }
@@ -86,7 +86,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
 
     private function addProducersAndProvider(ContainerBuilder $container): void
     {
-        $providerId = 'sts_kafka.client.producer.producer_provider';
+        $providerId = 'sts_gaming_group_kafka.client.producer.producer_provider';
         if (!$container->has($providerId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find any producer provider. Looking for service id %s', $providerId)
@@ -94,7 +94,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         }
 
         $producerProvider = $container->findDefinition($providerId);
-        $producers = $container->findTaggedServiceIds('sts_kafka.kafka.producer');
+        $producers = $container->findTaggedServiceIds('sts_gaming_group_kafka.kafka.producer');
         foreach ($producers as $id => $tags) {
             $producerProvider->addMethodCall('addProducer', [new Reference($id)]);
         }
@@ -102,7 +102,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
 
     private function addConfigurations(ContainerBuilder $container): void
     {
-        $configurationsId = 'sts_kafka.configuration.raw_configuration';
+        $configurationsId = 'sts_gaming_group_kafka.configuration.raw_configuration';
         if (!$container->has($configurationsId)) {
             throw new InvalidDefinitionException(
                 sprintf('Unable to find configurations class. Looking for service id %s', $configurationsId)
@@ -110,7 +110,7 @@ class StsKafkaExtension extends ConfigurableExtension implements CompilerPassInt
         }
 
         $configurations = $container->findDefinition($configurationsId);
-        $configurationTypes = $container->findTaggedServiceIds('sts_kafka.configuration.type');
+        $configurationTypes = $container->findTaggedServiceIds('sts_gaming_group_kafka.configuration.type');
         foreach ($configurationTypes as $id => $tags) {
             $configurations->addMethodCall('addConfiguration', [new Reference($id)]);
         }

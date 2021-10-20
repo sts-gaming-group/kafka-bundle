@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Decoder;
+namespace StsGamingGroup\KafkaBundle\Decoder;
 
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
-use Sts\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
-use Sts\KafkaBundle\Configuration\Type\SchemaRegistry;
-use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RegisterMissingSchemas;
+use StsGamingGroup\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
+use StsGamingGroup\KafkaBundle\Configuration\Type\SchemaRegistry;
+use StsGamingGroup\KafkaBundle\Decoder\Contract\DecoderInterface;
 use FlixTech\SchemaRegistryApi\Registry\Cache\AvroObjectCacheAdapter;
 use FlixTech\SchemaRegistryApi\Registry\CachedRegistry;
 use FlixTech\SchemaRegistryApi\Registry\PromisingRegistry;

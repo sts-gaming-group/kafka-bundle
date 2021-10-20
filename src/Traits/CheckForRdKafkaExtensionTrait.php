@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Traits;
+namespace StsGamingGroup\KafkaBundle\Traits;
 
 trait CheckForRdKafkaExtensionTrait
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Unit\Client\Consumer;
+namespace StsGamingGroup\KafkaBundle\Tests\Unit\Client\Consumer;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sts\KafkaBundle\Client\Consumer\ConsumerProvider;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
+use StsGamingGroup\KafkaBundle\Client\Consumer\ConsumerProvider;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
 
 class ConsumerProviderTest extends TestCase
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Sts\KafkaBundle\RdKafka\Factory;
+namespace StsGamingGroup\KafkaBundle\RdKafka\Factory;
 
 use RdKafka\Conf;
-use Sts\KafkaBundle\Client\Contract\CallableInterface;
-use Sts\KafkaBundle\Client\Contract\ClientInterface;
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Client\Contract\CallableInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ClientInterface;
+use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
 use Symfony\Component\Console\Input\InputInterface;
 
 class KafkaConfigurationFactory
