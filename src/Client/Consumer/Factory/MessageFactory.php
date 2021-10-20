@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Consumer\Factory;
+namespace StsGamingGroup\KafkaBundle\Client\Consumer\Factory;
 
 use RdKafka\Message as RdKafkaMessage;
-use Sts\KafkaBundle\Client\Consumer\Message;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Configuration\Type\Decoder;
-use Sts\KafkaBundle\Configuration\Type\Denormalizer;
-use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
-use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
-use Sts\KafkaBundle\Validator\Validator;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Message;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Decoder;
+use StsGamingGroup\KafkaBundle\Configuration\Type\Denormalizer;
+use StsGamingGroup\KafkaBundle\Decoder\Contract\DecoderInterface;
+use StsGamingGroup\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use StsGamingGroup\KafkaBundle\Validator\Validator;
 
 class MessageFactory
 {

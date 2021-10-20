@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration;
+namespace StsGamingGroup\KafkaBundle\Configuration;
 
-use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 
 class RawConfiguration
 {

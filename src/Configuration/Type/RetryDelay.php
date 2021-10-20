@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 class RetryDelay implements ConsumerConfigurationInterface

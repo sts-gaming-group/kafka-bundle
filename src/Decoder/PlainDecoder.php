@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Decoder;
+namespace StsGamingGroup\KafkaBundle\Decoder;
 
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
-use Sts\KafkaBundle\Decoder\Contract\DecoderInterface;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Decoder\Contract\DecoderInterface;
 
 class PlainDecoder implements DecoderInterface
 {

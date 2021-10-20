@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Contract;
+namespace StsGamingGroup\KafkaBundle\Client\Contract;
 
 interface CallableInterface
 {

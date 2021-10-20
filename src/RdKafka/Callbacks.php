@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\RdKafka;
+namespace StsGamingGroup\KafkaBundle\RdKafka;
 
 /**
  * @method setErrorCb(\RdKafka\KafkaConsumer $kafkaConsumer, int $error, array $partitions)

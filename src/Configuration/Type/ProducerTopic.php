@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 class ProducerTopic implements ProducerConfigurationInterface
@@ -33,6 +33,6 @@ class ProducerTopic implements ProducerConfigurationInterface
 
     public function getDefaultValue(): string
     {
-        return 'sts_kafka_producer_topic';
+        return 'sts_gaming_group_kafka_producer_topic';
     }
 }

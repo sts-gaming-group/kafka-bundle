@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Decoder\Contract;
+namespace StsGamingGroup\KafkaBundle\Decoder\Contract;
 
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
 
 interface DecoderInterface
 {

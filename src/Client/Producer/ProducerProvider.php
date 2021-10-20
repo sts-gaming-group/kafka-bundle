@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Producer;
+namespace StsGamingGroup\KafkaBundle\Client\Producer;
 
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Client\Producer\Exception\InvalidProducerException;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
+use StsGamingGroup\KafkaBundle\Client\Producer\Exception\InvalidProducerException;
 
 class ProducerProvider
 {

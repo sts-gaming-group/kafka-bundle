@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Command\Traits;
+namespace StsGamingGroup\KafkaBundle\Command\Traits;
 
-use Sts\KafkaBundle\Client\Contract\ClientInterface;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Configuration\ResolvedConfiguration;
+use StsGamingGroup\KafkaBundle\Client\Contract\ClientInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
 

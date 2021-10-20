@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Validator\Type;
+namespace StsGamingGroup\KafkaBundle\Validator\Type;
 
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
-use Sts\KafkaBundle\Validator\Validator;
+use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
+use StsGamingGroup\KafkaBundle\Validator\Validator;
 
 class PlainValidator implements ValidatorInterface
 {

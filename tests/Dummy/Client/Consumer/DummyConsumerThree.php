@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Dummy\Client\Consumer;
+namespace StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer;
 
-use Sts\KafkaBundle\Client\Consumer\Message;
-use Sts\KafkaBundle\RdKafka\Context;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Message;
+use StsGamingGroup\KafkaBundle\RdKafka\Context;
 
 class DummyConsumerThree extends DummyConsumerTwo
 {

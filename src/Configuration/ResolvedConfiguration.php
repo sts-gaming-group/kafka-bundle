@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration;
+namespace StsGamingGroup\KafkaBundle\Configuration;
 
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationType;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidConfigurationType;
 
 class ResolvedConfiguration
 {

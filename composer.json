@@ -1,5 +1,5 @@
 {
-  "name": "sts/kafka-bundle",
+  "name": "sts-gaming-group/kafka-bundle",
   "description": "Bundle to consume and produce messages from/to Apache Kafka.",
   "type": "symfony-bundle",
   "license": "MIT",
@@ -22,12 +22,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Sts\\KafkaBundle\\": "src/"
+      "StsGamingGroup\\KafkaBundle\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Sts\\KafkaBundle\\Tests\\": "tests/"
+      "StsGamingGroup\\KafkaBundle\\Tests\\": "tests/"
     }
   },
   "require-dev": {

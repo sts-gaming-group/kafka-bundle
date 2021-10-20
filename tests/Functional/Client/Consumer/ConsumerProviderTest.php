@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Functional\Client\Consumer;
+namespace StsGamingGroup\KafkaBundle\Tests\Functional\Client\Consumer;
 
-use Sts\KafkaBundle\Client\Consumer\ConsumerProvider;
-use Sts\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
-use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne;
-use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOneClone;
-use Sts\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerTwo;
+use StsGamingGroup\KafkaBundle\Client\Consumer\ConsumerProvider;
+use StsGamingGroup\KafkaBundle\Client\Consumer\Exception\InvalidConsumerException;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOne;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerOneClone;
+use StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Consumer\DummyConsumerTwo;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class ConsumerProviderTest extends KernelTestCase
@@ -20,7 +20,7 @@ class ConsumerProviderTest extends KernelTestCase
         self::bootKernel();
         $container = self::$kernel->getContainer();
 
-        $this->provider = $container->get('sts_kafka.client.consumer.consumer_provider');
+        $this->provider = $container->get('sts_gaming_group_kafka.client.consumer.consumer_provider');
     }
 
     public function testConsumersRegistered(): void

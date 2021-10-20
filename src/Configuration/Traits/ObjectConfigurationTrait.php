@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Traits;
+namespace StsGamingGroup\KafkaBundle\Configuration\Traits;
 
 trait ObjectConfigurationTrait
 {

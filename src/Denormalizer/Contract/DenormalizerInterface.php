@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Denormalizer\Contract;
+namespace StsGamingGroup\KafkaBundle\Denormalizer\Contract;
 
 interface DenormalizerInterface
 {

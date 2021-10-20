@@ -1,7 +1,7 @@
 {
   "producers": {
     "instances": {
-      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Producer\\DummyProducerOne": {
+      "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Client\\Producer\\DummyProducerOne": {
         "brokers": [
           "127.0.0.1:9092",
           "127.0.0.2:9092",
@@ -11,7 +11,7 @@
         "producer_partition": "1",
         "log_level": 3
       },
-      "Sts\\KafkaBundle\\Tests\\Dummy\\Client\\Producer\\DummyProducerTwo": {
+      "StsGamingGroup\\KafkaBundle\\Tests\\Dummy\\Client\\Producer\\DummyProducerTwo": {
         "brokers": [
           "127.0.0.4:9092",
           "127.0.0.5:9092",

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Contract;
+namespace StsGamingGroup\KafkaBundle\Client\Contract;
 
-use Sts\KafkaBundle\Client\Producer\Message;
+use StsGamingGroup\KafkaBundle\Client\Producer\Message;
 
 interface ProducerInterface extends ClientInterface
 {

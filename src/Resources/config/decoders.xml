@@ -5,17 +5,17 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service class="Sts\KafkaBundle\Decoder\AvroDecoder" id="sts_kafka.decoder.avro_decoder">
-            <tag name="sts_kafka.decoder"/>
+        <service class="StsGamingGroup\KafkaBundle\Decoder\AvroDecoder" id="sts_gaming_group_kafka.decoder.avro_decoder">
+            <tag name="sts_gaming_group_kafka.decoder"/>
         </service>
-        <service id="Sts\KafkaBundle\Decoder\AvroDecoder" alias="sts_kafka.decoder.avro_decoder"/>
-        <service class="Sts\KafkaBundle\Decoder\PlainDecoder" id="sts_kafka.decoder.plain_decoder">
-            <tag name="sts_kafka.decoder"/>
+        <service id="StsGamingGroup\KafkaBundle\Decoder\AvroDecoder" alias="sts_gaming_group_kafka.decoder.avro_decoder"/>
+        <service class="StsGamingGroup\KafkaBundle\Decoder\PlainDecoder" id="sts_gaming_group_kafka.decoder.plain_decoder">
+            <tag name="sts_gaming_group_kafka.decoder"/>
         </service>
-        <service id="Sts\KafkaBundle\Decoder\PlainDecoder" alias="sts_kafka.decoder.plain_decoder"/>
-        <service class="Sts\KafkaBundle\Decoder\JsonDecoder" id="sts_kafka.decoder.json_decoder">
-            <tag name="sts_kafka.decoder"/>
+        <service id="StsGamingGroup\KafkaBundle\Decoder\PlainDecoder" alias="sts_gaming_group_kafka.decoder.plain_decoder"/>
+        <service class="StsGamingGroup\KafkaBundle\Decoder\JsonDecoder" id="sts_gaming_group_kafka.decoder.json_decoder">
+            <tag name="sts_gaming_group_kafka.decoder"/>
         </service>
-        <service id="Sts\KafkaBundle\Decoder\JsonDecoder" alias="sts_kafka.decoder.json_decoder"/>
+        <service id="StsGamingGroup\KafkaBundle\Decoder\JsonDecoder" alias="sts_gaming_group_kafka.decoder.json_decoder"/>
     </services>
 </container>

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration;
+namespace StsGamingGroup\KafkaBundle\Configuration;
 
-use Sts\KafkaBundle\Client\Contract\ClientInterface;
-use Sts\KafkaBundle\Client\Contract\ConsumerInterface;
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Configuration\Contract\CastValueInterface;
-use Sts\KafkaBundle\Configuration\Contract\ConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Exception\InvalidClientException;
-use Sts\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
+use StsGamingGroup\KafkaBundle\Client\Contract\ClientInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\CastValueInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidClientException;
+use StsGamingGroup\KafkaBundle\Configuration\Exception\InvalidConfigurationException;
 use Symfony\Component\Console\Input\InputInterface;
 
 class ConfigurationResolver

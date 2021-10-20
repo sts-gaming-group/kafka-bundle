@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Unit\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Tests\Unit\Configuration\Type;
 
 abstract class AbstractBooleanConfigurationTest extends AbstractConfigurationTest
 {

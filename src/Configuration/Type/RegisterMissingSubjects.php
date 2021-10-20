@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Traits\BooleanConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\BooleanConfigurationTrait;
 
 class RegisterMissingSubjects implements ConsumerConfigurationInterface
 {

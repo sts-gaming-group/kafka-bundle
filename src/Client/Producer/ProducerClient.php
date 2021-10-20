@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Client\Producer;
+namespace StsGamingGroup\KafkaBundle\Client\Producer;
 
 use RdKafka\Producer;
-use Sts\KafkaBundle\Configuration\ConfigurationResolver;
-use Sts\KafkaBundle\Configuration\Type\ProducerPartition;
-use Sts\KafkaBundle\Configuration\Type\ProducerTopic;
-use Sts\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory;
-use Sts\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
+use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
+use StsGamingGroup\KafkaBundle\Configuration\Type\ProducerPartition;
+use StsGamingGroup\KafkaBundle\Configuration\Type\ProducerTopic;
+use StsGamingGroup\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory;
+use StsGamingGroup\KafkaBundle\Traits\CheckForRdKafkaExtensionTrait;
 
 class ProducerClient
 {

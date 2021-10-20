@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle;
+namespace StsGamingGroup\KafkaBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class StsKafkaBundle extends Bundle
+class StsGamingGroupKafkaBundle extends Bundle
 {
     public function getPath(): string
     {

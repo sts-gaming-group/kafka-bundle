@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
-use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
-use Sts\KafkaBundle\Denormalizer\PlainDenormalizer;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use StsGamingGroup\KafkaBundle\Denormalizer\PlainDenormalizer;
 use Symfony\Component\Console\Input\InputOption;
 
 class Denormalizer implements ConsumerConfigurationInterface

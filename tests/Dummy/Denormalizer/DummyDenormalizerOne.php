@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Dummy\Denormalizer;
+namespace StsGamingGroup\KafkaBundle\Tests\Dummy\Denormalizer;
 
-use Sts\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
+use StsGamingGroup\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
 
 class DummyDenormalizerOne implements DenormalizerInterface
 {

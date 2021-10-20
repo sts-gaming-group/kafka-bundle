@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Type;
+namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
-use Sts\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
-use Sts\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
-use Sts\KafkaBundle\Validator\Contract\ValidatorInterface;
-use Sts\KafkaBundle\Validator\Type\PlainValidator;
+use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
+use StsGamingGroup\KafkaBundle\Validator\Type\PlainValidator;
 use Symfony\Component\Console\Input\InputOption;
 
 class Validators implements ConsumerConfigurationInterface

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Tests\Dummy\Client\Producer;
+namespace StsGamingGroup\KafkaBundle\Tests\Dummy\Client\Producer;
 
-use Sts\KafkaBundle\Client\Contract\ProducerInterface;
-use Sts\KafkaBundle\Client\Producer\Message;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
+use StsGamingGroup\KafkaBundle\Client\Producer\Message;
 
 class DummyProducerTwo implements ProducerInterface
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sts\KafkaBundle\Configuration\Exception;
+namespace StsGamingGroup\KafkaBundle\Configuration\Exception;
 
 class InvalidClientException extends \RuntimeException
 {
