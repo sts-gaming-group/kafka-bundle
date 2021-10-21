@@ -6,12 +6,12 @@
 - [Example project](#example-project)
 - [Basic Configuration](#basic-configuration)
 - [Consuming messages](#consuming-messages)
-- [Events](#events)
 - [Retrying failed messages](#retrying-failed-messages)
 - [Handling offsets](#handling-offsets)
 - [Decoders](#decoders)
 - [Denormalizers](#denormalizers)
 - [Validators](#validators)
+- [Events](#events)
 - [Kafka Callbacks](#kafka-callbacks)
 - [Producing Messages](#producing-messages)
 - [Custom configurations](#custom-configurations)
@@ -38,7 +38,7 @@ If you want to test out capabilities of this bundle in a Symfony project, please
 
 # Basic Configuration
 
-1. Add sts_gaming_group_kafka.yaml to config folder at \<root_folder>/config/packages/sts_gaming_group_kafka.yaml or in a specific env folder i.e. \<root_folder>/config/packages/prod/sts_gaming_group_kafka.yaml
+1. Add **sts_gaming_group_kafka.yaml** to config folder at **config/packages/sts_gaming_group_kafka.yaml** or in a specific env folder i.e. **config/packages/prod/sts_gaming_group_kafka.yaml**
 2. Add configuration to sts_gaming_group_kafka.yaml for example:
  ```yaml
 sts_gaming_group_kafka:
@@ -55,7 +55,7 @@ sts_gaming_group_kafka:
         brokers: [ '127.0.0.1:9092', '127.0.0.2:9092', '127.0.0.3:9092' ]    
         producer_topic: 'my_app_failed_message_topic'
    ```
-3. Most of the time you would like to keep your kafka configuration in sts_gaming_group_kafka.yaml, but you can also pass configuration directly in CLI for example:
+3. Most of the time you would like to keep your kafka configuration in the yaml file, but you can also pass configuration directly in CLI for example:
 ```
 bin/console kafka:consumers:consume example_consumer --group_id some_other_group_id
 ```
@@ -105,51 +105,6 @@ class ExampleConsumer implements ConsumerInterface
  ```
  bin/console kafka:consumers:consume example_consumer
  ```
-
-# Events
-Consumer dispatches events using **symfony/event-dispatcher** component as an optional dependency:
-
-Only for currently running consumer:
-- **sts_gaming_group_kafka.pre_message_consumed_{consumer_name}** e.g. sts_gaming_group_kafka.pre_message_consumed_example_consumer
-- **sts_gaming_group_kafka.post_message_consumed_{consumer_name}** e.g. sts_gaming_group_kafka.post_message_consumed_example_consumer
-  
-Global event for all consumers:
-- **StsGamingGroup\KafkaBundle\Event\PreMessageConsumedEvent**
-- **StsGamingGroup\KafkaBundle\Event\PostMessageConsumedEvent**
-
-As the name suggests - first event is dispatched before the message is consumed, and the second event is dispatched just after the message has been consumed (retry mechanism is not taken into account, message needs to be processed fully for the event to be dispatched).
-You can hook up into these events using symfony event subscriber/listener i.e.
-
-```php
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use StsGamingGroup\KafkaBundle\Event\PostMessageConsumedEvent;
-use StsGamingGroup\KafkaBundle\Event\PreMessageConsumedEvent;
-
-class ExampleConsumerEventSubscriber implements EventSubscriberInterface
-{
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            PreMessageConsumedEvent::getEventName('example_consumer') => 'onPreMessageConsumed',
-            PostMessageConsumedEvent::getEventName('example_consumer') => 'onPostMessageConsumed',
-            PreMessageConsumedEvent::class => 'onGlobalPreMessageConsumed',
-            PostMessageConsumedEvent::class => 'onGlobalPostMessageConsumed'
-        ];
-    }
-
-    public function onPreMessageConsumed(PreMessageConsumedEvent $event): void
-    {
-        $event->getConsumedMessages(); // number of processed messages
-        $event->getConsumptionTimeMs(); // how long consumer is running
-    }
-
-    public function onPostMessageConsumed(PostMessageConsumedEvent $event): void
-    {
-        $event->getConsumedMessages();
-        $event->getConsumptionTimeMs();
-    }
-}
-```
 
 # Retrying failed messages
 
@@ -379,6 +334,52 @@ If a validator returns false, an instance of ValidatorException is thrown.
  }
 ```
 `Offset for a message which has not passed validation is committed automatically.`
+
+
+# Events
+Consumer dispatches events using **symfony/event-dispatcher** component as an optional dependency:
+
+Only for currently running consumer:
+- **sts_gaming_group_kafka.pre_message_consumed_{consumer_name}** e.g. sts_gaming_group_kafka.pre_message_consumed_example_consumer
+- **sts_gaming_group_kafka.post_message_consumed_{consumer_name}** e.g. sts_gaming_group_kafka.post_message_consumed_example_consumer
+
+Global event for all consumers:
+- **StsGamingGroup\KafkaBundle\Event\PreMessageConsumedEvent**
+- **StsGamingGroup\KafkaBundle\Event\PostMessageConsumedEvent**
+
+As the name suggests - first event is dispatched before the message is consumed, and the second event is dispatched just after the message has been consumed (retry mechanism is not taken into account, message needs to be processed fully for the event to be dispatched).
+You can hook up into these events using symfony event subscriber/listener i.e.
+
+```php
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use StsGamingGroup\KafkaBundle\Event\PostMessageConsumedEvent;
+use StsGamingGroup\KafkaBundle\Event\PreMessageConsumedEvent;
+
+class ExampleConsumerEventSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents(): array
+    {
+        return [
+            PreMessageConsumedEvent::getEventName('example_consumer') => 'onPreMessageConsumed',
+            PostMessageConsumedEvent::getEventName('example_consumer') => 'onPostMessageConsumed',
+            PreMessageConsumedEvent::class => 'onGlobalPreMessageConsumed',
+            PostMessageConsumedEvent::class => 'onGlobalPostMessageConsumed'
+        ];
+    }
+
+    public function onPreMessageConsumed(PreMessageConsumedEvent $event): void
+    {
+        $event->getConsumedMessages(); // number of processed messages
+        $event->getConsumptionTimeMs(); // how long consumer is running
+    }
+
+    public function onPostMessageConsumed(PostMessageConsumedEvent $event): void
+    {
+        $event->getConsumedMessages();
+        $event->getConsumptionTimeMs();
+    }
+}
+```
 
 # Kafka Callbacks
 
