@@ -3,6 +3,7 @@
 
 - [Technology stack](#technology-stack)
 - [Quick start](#quick-start)
+- [Example project](#example-project)
 - [Basic Configuration](#basic-configuration)
 - [Consuming messages](#consuming-messages)
 - [Events](#events)
@@ -25,8 +26,16 @@
 
 # Quick start
 
-If you want to test out capabilities of this bundle in a Symfony project, please refer to https://github.com/sts-gaming-group/kafka-bundle-app project which ships with kafka-bundle and docker-compose file for convenience.
-   
+If you wish to install it in your Symfony project:
+```
+composer require sts-gaming-group/kafka-bundle
+```
+
+# Example project
+
+If you want to test out capabilities of this bundle in a Symfony project, please refer to **https://github.com/sts-gaming-group/kafka-bundle-app** project which ships with kafka-bundle and docker-compose file for convenience.   
+
+
 # Basic Configuration
 
 1. Add sts_gaming_group_kafka.yaml to config folder at \<root_folder>/config/packages/sts_gaming_group_kafka.yaml or in a specific env folder i.e. \<root_folder>/config/packages/prod/sts_gaming_group_kafka.yaml
