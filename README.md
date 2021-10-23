@@ -1,5 +1,4 @@
-![sts_480](https://user-images.githubusercontent.com/89898915/137724485-55ed744b-2cfb-4ebf-9151-16a05452970c.png)
-![apache_kafka](https://user-images.githubusercontent.com/89898915/137724062-8b10e236-9976-42e6-a21c-6fd97523e336.png)
+![kafka-bundle](https://user-images.githubusercontent.com/12221744/138563639-180ddfe2-a922-4fa5-a29a-d3140f50621d.png)
 
 - [Technology stack](#technology-stack)
 - [Quick start](#quick-start)
