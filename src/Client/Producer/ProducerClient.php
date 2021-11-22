@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace StsGamingGroup\KafkaBundle\Client\Producer;
 
 use RdKafka\Producer;
+use StsGamingGroup\KafkaBundle\Client\Contract\PartitionAwareProducerInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
 use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
+use StsGamingGroup\KafkaBundle\Configuration\ResolvedConfiguration;
 use StsGamingGroup\KafkaBundle\Configuration\Type\ProducerPartition;
 use StsGamingGroup\KafkaBundle\Configuration\Type\ProducerTopic;
 use StsGamingGroup\KafkaBundle\RdKafka\Factory\KafkaConfigurationFactory;
@@ -59,7 +62,7 @@ class ProducerClient
 
         $message = $producer->produce($data);
         $topic->produce(
-            $configuration->getValue(ProducerPartition::NAME),
+            $this->getPartition($data, $producer, $configuration),
             0,
             $message->getPayload(),
             $message->getKey()
@@ -119,5 +122,14 @@ class ProducerClient
         if (RD_KAFKA_RESP_ERR_NO_ERROR !== $result) {
             throw new \RuntimeException('Unable to flush, messages might be lost.');
         }
+    }
+
+    private function getPartition($data, ProducerInterface $producer, ResolvedConfiguration $configuration): int
+    {
+        if (!$producer instanceof PartitionAwareProducerInterface) {
+            return $configuration->getValue(ProducerPartition::NAME);
+        }
+
+        return $producer->getPartition($data, $configuration);
     }
 }
