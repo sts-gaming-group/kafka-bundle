@@ -517,7 +517,33 @@ class ExampleCommand extends Command
      return Command::SUCCESS;
  }
 ```
-You can also set callbacks array to Producer, for example, to check if messages were sent successfully. Your producer class should implement CallableInterface.
+5. To produce message to a specific partition your Producer can implement PartitionAwareProducerInterface
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Producers;
+
+use StsGamingGroup\KafkaBundle\Client\Contract\PartitionAwareProducerInterface;
+use StsGamingGroup\KafkaBundle\Client\Producer\Message;
+
+class ExampleProducer implements ProducerInterface
+{
+    public function produce($data): Message
+    {
+        /** @var SomeEntity $data */
+        return new Message(json_encode($data->toArray()), $data->getId());
+    }
+
+    public function getPartition($data, ResolvedConfiguration $configuration): int
+    {
+        /** @var SomeEntity $data */
+        return $data->getId() % 16; // calculating modulo from object id to produce to maximum of 16 partitions (0-15)
+    }
+}
+```
+6. You can also set callbacks array to Producer, for example, to check if messages were sent successfully. Your producer class should implement CallableInterface.
 ```php
 use StsGamingGroup\KafkaBundle\Client\Contract\CallableInterface;
 use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
@@ -530,7 +556,7 @@ class ExampleProducer implements ProducerInterface, CallableInterface
     }
 }
 ```
-Other options that can be configured for ProducerClient at runtime:
+7. Other options that can be configured for ProducerClient at runtime:
 ```php 
 $this->producerClient
    ->setPollingBatch(25000)   
