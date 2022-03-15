@@ -22,6 +22,7 @@ use StsGamingGroup\KafkaBundle\Configuration\Type\RegisterMissingSubjects;
 use StsGamingGroup\KafkaBundle\Configuration\Type\RetryDelay;
 use StsGamingGroup\KafkaBundle\Configuration\Type\RetryMultiplier;
 use StsGamingGroup\KafkaBundle\Configuration\Type\SchemaRegistry;
+use StsGamingGroup\KafkaBundle\Configuration\Type\StatisticsIntervalMs;
 use StsGamingGroup\KafkaBundle\Configuration\Type\Timeout;
 use StsGamingGroup\KafkaBundle\Configuration\Type\Topics;
 use StsGamingGroup\KafkaBundle\Configuration\Type\Validators;
@@ -95,6 +96,9 @@ class Configuration implements ConfigurationInterface
             ->integerNode(LogLevel::NAME)
                 ->defaultValue((new LogLevel)->getDefaultValue())
             ->end()
+            ->integerNode(StatisticsIntervalMs::NAME)
+                ->defaultValue((new StatisticsIntervalMs)->getDefaultValue())
+            ->end()
             ->arrayNode(Brokers::NAME)
                 ->defaultValue((new Brokers)->getDefaultValue())
                 ->cannotBeEmpty()
@@ -135,6 +139,9 @@ class Configuration implements ConfigurationInterface
             ->scalarNode(AutoCommitIntervalMs::NAME)
                 ->defaultValue((new AutoCommitIntervalMs)->getDefaultValue())
                 ->cannotBeEmpty()
+            ->end()
+            ->integerNode(StatisticsIntervalMs::NAME)
+                ->defaultValue((new StatisticsIntervalMs)->getDefaultValue())
             ->end()
             ->scalarNode(AutoOffsetReset::NAME)
                 ->defaultValue((new AutoOffsetReset)->getDefaultValue())
