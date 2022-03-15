@@ -16,7 +16,7 @@ class StatisticsIntervalMsTest extends AbstractConfigurationTest
 
     protected function getValidValues(): array
     {
-        return ['1', 2, 1000, 5000, 30000, 100000];
+        return ['1', 2, 1000, '1000', 5000, 30000, 100000];
     }
 
     protected function getInvalidValues(): array

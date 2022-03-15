@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
+use StsGamingGroup\KafkaBundle\Configuration\Contract\CastValueInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-class StatisticsIntervalMs implements ConsumerConfigurationInterface, KafkaConfigurationInterface
+class StatisticsIntervalMs implements ConsumerConfigurationInterface, KafkaConfigurationInterface, CastValueInterface
 {
     public const NAME = 'statistics_interval_ms';
 
@@ -48,9 +49,6 @@ class StatisticsIntervalMs implements ConsumerConfigurationInterface, KafkaConfi
         return 0;
     }
 
-    /**
-     * @param mixed $validatedValue
-     */
     public function cast($validatedValue): int
     {
         return (int) $validatedValue;
