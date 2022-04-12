@@ -124,6 +124,9 @@ class ProducerClient
         }
     }
 
+    /**
+     * @param mixed $data
+     */
     private function getPartition($data, ProducerInterface $producer, ResolvedConfiguration $configuration): int
     {
         if (!$producer instanceof PartitionAwareProducerInterface) {
