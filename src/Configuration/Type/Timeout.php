@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\CastValueInterface;
-use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use Symfony\Component\Console\Input\InputOption;
 
 class Timeout implements ConsumerConfigurationInterface, CastValueInterface
 {
+    use SupportsConsumerTrait;
+
     public const NAME = 'timeout';
 
     public function getName(): string

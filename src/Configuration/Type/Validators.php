@@ -6,12 +6,14 @@ namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use StsGamingGroup\KafkaBundle\Validator\Contract\ValidatorInterface;
 use StsGamingGroup\KafkaBundle\Validator\Type\PlainValidator;
 use Symfony\Component\Console\Input\InputOption;
 
 class Validators implements ConsumerConfigurationInterface
 {
+    use SupportsConsumerTrait;
     use ObjectConfigurationTrait;
 
     public const NAME = 'validators';

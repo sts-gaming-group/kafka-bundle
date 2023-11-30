@@ -6,6 +6,7 @@ namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use StsGamingGroup\KafkaBundle\Decoder\AvroDecoder;
 use StsGamingGroup\KafkaBundle\Decoder\Contract\DecoderInterface;
 use StsGamingGroup\KafkaBundle\Decoder\JsonDecoder;
@@ -14,6 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class Decoder implements ConsumerConfigurationInterface
 {
+    use SupportsConsumerTrait;
     use ObjectConfigurationTrait;
 
     public const NAME = 'decoder';

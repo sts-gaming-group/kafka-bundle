@@ -43,6 +43,10 @@ class ConfigurationResolverTest extends TestCase
             ->method('getDefaultValue')
             ->willReturn('foo');
 
+        $this->configurationOne
+            ->method('supportsClient')
+            ->willReturn(true);
+
         $rawConfiguration = (new RawConfiguration())
             ->addConfiguration($this->configurationOne);
 
@@ -66,6 +70,10 @@ class ConfigurationResolverTest extends TestCase
             ->method('cast')
             ->willReturn(1);
 
+        $this->configurationThree
+            ->method('supportsClient')
+            ->willReturn(true);
+
         $rawConfiguration = (new RawConfiguration())
             ->addConfiguration($this->configurationThree);
 
@@ -77,6 +85,10 @@ class ConfigurationResolverTest extends TestCase
 
     public function testWrongClientException(): void
     {
+        $this->configurationOne
+            ->method('supportsClient')
+            ->willReturn(true);
+
         $rawConfiguration = (new RawConfiguration())
             ->addConfiguration($this->configurationOne);
 
@@ -94,6 +106,10 @@ class ConfigurationResolverTest extends TestCase
 
         $this->configurationOne
             ->method('isValueValid')
+            ->willReturn(true);
+
+        $this->configurationOne
+            ->method('supportsClient')
             ->willReturn(true);
 
         $this->input
@@ -122,6 +138,10 @@ class ConfigurationResolverTest extends TestCase
         $this->configurationOne
             ->method('isValueValid')
             ->willReturn(false);
+
+        $this->configurationOne
+            ->method('supportsClient')
+            ->willReturn(true);
 
         $this->input
             ->method('getParameterOption')
@@ -152,6 +172,10 @@ class ConfigurationResolverTest extends TestCase
             ->method('isValueValid')
             ->willReturn(true);
 
+        $this->configurationOne
+            ->method('supportsClient')
+            ->willReturn(true);
+
         $rawConfiguration = (new RawConfiguration())
             ->addConfiguration($this->configurationOne);
 
@@ -170,6 +194,10 @@ class ConfigurationResolverTest extends TestCase
         $this->configurationOne
             ->method('isValueValid')
             ->willReturn(false);
+
+        $this->configurationOne
+            ->method('supportsClient')
+            ->willReturn(true);
 
         $rawConfiguration = (new RawConfiguration())
             ->addConfiguration($this->configurationOne);
@@ -190,6 +218,10 @@ class ConfigurationResolverTest extends TestCase
 
         $this->configurationOne
             ->method('isValueValid')
+            ->willReturn(true);
+
+        $this->configurationOne
+            ->method('supportsClient')
             ->willReturn(true);
 
         $rawConfiguration = (new RawConfiguration())

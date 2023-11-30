@@ -7,9 +7,11 @@ namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Traits\BooleanConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 
 class EnableAutoOffsetStore implements KafkaConfigurationInterface, ConsumerConfigurationInterface
 {
+    use SupportsConsumerTrait;
     use BooleanConfigurationTrait;
 
     public const NAME = 'enable_auto_offset_store';

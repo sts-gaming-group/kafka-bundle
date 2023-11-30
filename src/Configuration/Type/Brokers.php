@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
-use StsGamingGroup\KafkaBundle\Configuration\Contract\ConfigurationInterface;
+use ReflectionClass;
+use StsGamingGroup\KafkaBundle\Client\Contract\ClientInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
@@ -52,5 +55,13 @@ class Brokers implements KafkaConfigurationInterface, ConsumerConfigurationInter
     public function getDefaultValue(): array
     {
         return ['127.0.0.1', '127.0.0.2'];
+    }
+
+    public function supportsClient(ClientInterface $client): bool
+    {
+        $clientRef = new ReflectionClass($client::class);
+
+        return $clientRef->implementsInterface(ConsumerInterface::class)
+            || $clientRef->implementsInterface(ProducerInterface::class);
     }
 }

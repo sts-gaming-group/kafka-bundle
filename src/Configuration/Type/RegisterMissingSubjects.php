@@ -7,9 +7,11 @@ namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 use FlixTech\AvroSerializer\Objects\RecordSerializer;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Traits\BooleanConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 
 class RegisterMissingSubjects implements ConsumerConfigurationInterface
 {
+    use SupportsConsumerTrait;
     use BooleanConfigurationTrait;
 
     public const NAME = RecordSerializer::OPTION_REGISTER_MISSING_SUBJECTS;
