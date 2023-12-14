@@ -6,10 +6,13 @@ namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\CastValueInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use Symfony\Component\Console\Input\InputOption;
 
 class MaxRetries implements ConsumerConfigurationInterface, CastValueInterface
 {
+    use SupportsConsumerTrait;
+
     public const NAME = 'max_retries';
 
     public function getName(): string

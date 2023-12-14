@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use Symfony\Component\Console\Input\InputOption;
 
 class RetryMultiplier implements ConsumerConfigurationInterface
 {
+    use SupportsConsumerTrait;
+
     public const NAME = 'retry_multiplier';
 
     public function getName(): string

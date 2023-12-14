@@ -6,10 +6,13 @@ namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use Symfony\Component\Console\Input\InputOption;
 
 class AutoOffsetReset implements ConsumerConfigurationInterface, KafkaConfigurationInterface
 {
+    use SupportsConsumerTrait;
+
     public const NAME = 'auto_offset_reset';
     public const SMALLEST = 'smallest';
     public const LARGEST = 'largest';

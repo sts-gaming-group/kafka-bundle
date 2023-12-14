@@ -34,6 +34,10 @@ class ConfigurationResolver
         $configuration = new ResolvedConfiguration();
 
         foreach ($this->rawConfiguration->getConfigurations() as $rawConfiguration) {
+            if (is_object($clientClass) && !$rawConfiguration->supportsClient($clientClass)) {
+                continue;
+            }
+
             $resolvedValue = $this->getResolvedValue($rawConfiguration, $clientClass, $input);
 
             if ($rawConfiguration instanceof CastValueInterface) {

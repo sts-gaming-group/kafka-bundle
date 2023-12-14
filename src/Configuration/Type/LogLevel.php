@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
+use ReflectionClass;
+use StsGamingGroup\KafkaBundle\Client\Contract\ClientInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ConsumerInterface;
+use StsGamingGroup\KafkaBundle\Client\Contract\ProducerInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\CastValueInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Contract\KafkaConfigurationInterface;
@@ -50,5 +54,13 @@ class LogLevel implements KafkaConfigurationInterface, ConsumerConfigurationInte
     public function getDefaultValue(): int
     {
         return LOG_ERR;
+    }
+
+    public function supportsClient(ClientInterface $client): bool
+    {
+        $clientRef = new ReflectionClass($client::class);
+
+        return $clientRef->implementsInterface(ConsumerInterface::class)
+            || $clientRef->implementsInterface(ProducerInterface::class);
     }
 }

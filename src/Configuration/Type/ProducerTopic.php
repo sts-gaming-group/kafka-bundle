@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ProducerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsProducerTrait;
 use Symfony\Component\Console\Input\InputOption;
 
 class ProducerTopic implements ProducerConfigurationInterface
 {
+    use SupportsProducerTrait;
+
     public const NAME = 'producer_topic';
 
     public function getName(): string

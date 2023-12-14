@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use Symfony\Component\Console\Input\InputOption;
 
 class RetryDelay implements ConsumerConfigurationInterface
 {
+    use SupportsConsumerTrait;
+
     public const NAME = 'retry_delay';
 
     public function getName(): string

@@ -6,12 +6,14 @@ namespace StsGamingGroup\KafkaBundle\Configuration\Type;
 
 use StsGamingGroup\KafkaBundle\Configuration\Contract\ConsumerConfigurationInterface;
 use StsGamingGroup\KafkaBundle\Configuration\Traits\ObjectConfigurationTrait;
+use StsGamingGroup\KafkaBundle\Configuration\Traits\SupportsConsumerTrait;
 use StsGamingGroup\KafkaBundle\Denormalizer\Contract\DenormalizerInterface;
 use StsGamingGroup\KafkaBundle\Denormalizer\PlainDenormalizer;
 use Symfony\Component\Console\Input\InputOption;
 
 class Denormalizer implements ConsumerConfigurationInterface
 {
+    use SupportsConsumerTrait;
     use ObjectConfigurationTrait;
 
     public const NAME = 'denormalizer';

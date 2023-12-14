@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace StsGamingGroup\KafkaBundle\Configuration\Contract;
 
+use StsGamingGroup\KafkaBundle\Client\Contract\ClientInterface;
+
 interface ConfigurationInterface
 {
     public function getName(): string;
@@ -19,4 +21,6 @@ interface ConfigurationInterface
      * @return mixed
      */
     public function getDefaultValue();
+
+    public function supportsClient(ClientInterface $client): bool;
 }
