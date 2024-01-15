@@ -13,6 +13,7 @@ use StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoCommit;
 use StsGamingGroup\KafkaBundle\Configuration\Type\EnableAutoOffsetStore;
 use StsGamingGroup\KafkaBundle\Configuration\Type\GroupId;
 use StsGamingGroup\KafkaBundle\Configuration\Type\LogLevel;
+use StsGamingGroup\KafkaBundle\Configuration\Type\MaxPollIntervalMs;
 use StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetries;
 use StsGamingGroup\KafkaBundle\Configuration\Type\MaxRetryDelay;
 use StsGamingGroup\KafkaBundle\Configuration\Type\ProducerPartition;
@@ -142,6 +143,9 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->integerNode(StatisticsIntervalMs::NAME)
                 ->defaultValue((new StatisticsIntervalMs)->getDefaultValue())
+            ->end()
+            ->integerNode(MaxPollIntervalMs::NAME)
+                ->defaultValue((new MaxPollIntervalMs)->getDefaultValue())
             ->end()
             ->scalarNode(AutoOffsetReset::NAME)
                 ->defaultValue((new AutoOffsetReset)->getDefaultValue())
