@@ -13,11 +13,11 @@
     "php": ">=8.1.0",
     "ext-rdkafka": "*",
     "ext-json": "*",
-    "symfony/config": "6.4|^7.0",
-    "symfony/dependency-injection": "6.4|^7.0",
-    "symfony/http-kernel": "6.4|^7.0",
-    "symfony/console": "6.4|^7.0",
-    "symfony/options-resolver": "6.4|^7.0",
+    "symfony/config": "^6.4|^7.0",
+    "symfony/dependency-injection": "^6.4|^7.0",
+    "symfony/http-kernel": "^6.4|^7.0",
+    "symfony/console": "^6.4|^7.0",
+    "symfony/options-resolver": "^6.4|^7.0",
     "flix-tech/avro-serde-php": "^2.0"
   },
   "autoload": {
@@ -31,14 +31,14 @@
     }
   },
   "require-dev": {
-    "symfony/phpunit-bridge": "6.4|^7.0",
-    "symfony/dotenv": "6.4|^7.0",
+    "symfony/phpunit-bridge": "^6.4|^7.0",
+    "symfony/dotenv": "^6.4|^7.0",
     "phpstan/phpstan": "^0.12.75|^1.12",
     "phpstan/phpstan-symfony": "^0.12.18|^1.4",
     "phpstan/phpstan-phpunit": "^0.12.17|^1.4",
     "squizlabs/php_codesniffer": "^3.5",
     "phpstan/extension-installer": "^1.1",
-    "symfony/framework-bundle": "6.4|^7.0",
-    "symfony/event-dispatcher": "6.4|^7.0"
+    "symfony/framework-bundle": "^6.4|^7.0",
+    "symfony/event-dispatcher": "^6.4|^7.0"
   }
 }
