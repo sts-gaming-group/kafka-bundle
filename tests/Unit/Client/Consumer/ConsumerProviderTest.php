@@ -47,7 +47,7 @@ class ConsumerProviderTest extends TestCase
             ->addConsumer($this->consumerTwo);
 
         $this->expectException(InvalidConsumerException::class);
-        $this->expectErrorMessageMatches('/Multiple consumers/');
+        $this->expectExceptionMessageMatches('/Multiple consumers/');
         $this->consumerProvider->provide('consumer_2');
     }
 
@@ -62,7 +62,7 @@ class ConsumerProviderTest extends TestCase
             ->addConsumer($this->consumerTwo);
 
         $this->expectException(InvalidConsumerException::class);
-        $this->expectErrorMessageMatches('/no matching consumer/');
+        $this->expectExceptionMessageMatches('/no matching consumer/');
         $this->consumerProvider->provide('consumer_3');
     }
 }

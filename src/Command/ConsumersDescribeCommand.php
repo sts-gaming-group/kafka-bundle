@@ -7,16 +7,19 @@ namespace StsGamingGroup\KafkaBundle\Command;
 use StsGamingGroup\KafkaBundle\Client\Consumer\ConsumerProvider;
 use StsGamingGroup\KafkaBundle\Command\Traits\DescribeTrait;
 use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'kafka:consumers:describe',
+    description: 'Show consumers configuration.'
+)]
 class ConsumersDescribeCommand extends Command
 {
     use DescribeTrait;
-
-    protected static $defaultName = 'kafka:consumers:describe';
 
     private ConsumerProvider $consumerProvider;
     private ConfigurationResolver $configurationResolver;
@@ -33,9 +36,11 @@ class ConsumersDescribeCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->setDescription('Show consumers configuration.')
-            ->addOption('name', null, InputOption::VALUE_REQUIRED, 'Shows specific consumer configuration.');
+        $this->addOption(
+            name: 'name',
+            mode: InputOption::VALUE_REQUIRED,
+            description: 'Shows specific consumer configuration.'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -47,6 +52,6 @@ class ConsumersDescribeCommand extends Command
             $this->describe($this->configurationResolver->resolve($consumer), $output, $consumer);
         }
 
-        return 0;
+        return self::SUCCESS;
     }
 }
