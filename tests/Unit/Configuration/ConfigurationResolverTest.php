@@ -157,7 +157,7 @@ class ConfigurationResolverTest extends TestCase
         $resolver = new ConfigurationResolver($rawConfiguration, $this->yamlConfig);
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectDeprecationMessageMatches('/configuration_one/');
+        $this->expectExceptionMessageMatches('/configuration_one/');
 
         $resolver->resolve(DummyConsumerOne::class, $this->input);
     }
@@ -205,7 +205,7 @@ class ConfigurationResolverTest extends TestCase
         $resolver = new ConfigurationResolver($rawConfiguration, $this->yamlConfig);
 
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectDeprecationMessageMatches('/group_id/');
+        $this->expectExceptionMessageMatches('/group_id/');
 
         $resolver->resolve(DummyConsumerOne::class);
     }

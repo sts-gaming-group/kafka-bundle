@@ -11,18 +11,21 @@ use StsGamingGroup\KafkaBundle\Command\Traits\DescribeTrait;
 use StsGamingGroup\KafkaBundle\Configuration\ConfigurationResolver;
 use StsGamingGroup\KafkaBundle\Configuration\RawConfiguration;
 use StsGamingGroup\KafkaBundle\Traits\AddConfigurationsToCommandTrait;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand(
+    name: 'kafka:consumers:consume',
+    description: 'Starts consuming messages from kafka using class implementing '.ConsumerInterface::class
+)]
 class ConsumeCommand extends Command
 {
     use AddConfigurationsToCommandTrait;
     use DescribeTrait;
-
-    protected static $defaultName = 'kafka:consumers:consume';
 
     private RawConfiguration $rawConfiguration;
     private ConsumerProvider $consumerProvider;
@@ -45,14 +48,9 @@ class ConsumeCommand extends Command
 
     protected function configure(): void
     {
-        $this->setDescription(
-            sprintf(
-                'Starts consuming messages from kafka using class implementing %s.',
-                ConsumerInterface::class
-            )
-        )
-            ->addArgument('name', InputArgument::REQUIRED, 'Name of the registered consumer.')
-            ->addOption('describe', null, InputOption::VALUE_NONE, 'Describes consumer');
+        $this
+            ->addArgument(name: 'name', mode: InputArgument::REQUIRED, description: 'Name of the registered consumer.')
+            ->addOption(name: 'describe', mode: InputOption::VALUE_NONE, description: 'Describes consumer');
 
         $this->addConfigurations($this->rawConfiguration);
     }
@@ -64,11 +62,11 @@ class ConsumeCommand extends Command
         if ($input->getOption('describe')) {
             $this->describe($this->configurationResolver->resolve($consumer, $input), $output, $consumer);
 
-            return 0;
+            return self::SUCCESS;
         }
 
         $this->consumerClient->consume($consumer, $input);
 
-        return 0;
+        return self::SUCCESS;
     }
 }
